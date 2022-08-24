@@ -1,0 +1,53 @@
+@import 'normalize.css';
+:root {
+    --primary: #5b9dac;
+    --secondary: #edeff8;
+    --height-header: 40px;
+    --height-footer: 20px;
+    --height-body: calc(100vh - var(--height-footer) - var(--height-header))
+}
+
+html {
+    // font-size: 62.5%;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1.6rem;
+    line-height: 1.5;
+    text-rendering: optimizeSpeed;
+}
+
+a {
+    text-decoration: none;
+}
+
+.pd-0 {
+    padding: 0;
+}
+
+.mg-0 {
+    margin: 0;
+}
+
+.w-100 {
+    width: 100vw;
+}
+
+.o-50 {
+    opacity: 50%;
+}
+
+button {
+    border: None;
+}
+
+#components-layout-demo-side .logo {
+    height: 32px;
+    margin: 16px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.site-layout .site-layout-background {
+    background: #fff;
+}
