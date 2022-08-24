@@ -35,6 +35,7 @@
               style={{
                 padding: 24,
                 minHeight: 360,
+                borderRadius: "10px",
               }}
             >
                 <USMBody Component={Component}/>

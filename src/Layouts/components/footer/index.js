@@ -6,10 +6,13 @@ const USMFooter = () => {
   return (
     <Footer
       style={{
-        textAlign: 'center',
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between"
       }}
     >
-      Ultimate Store Management ©2018 Created by Tran Cong Hoang
+      <span><strong>Ultimate Store Management</strong> ©2022</span>
+      <span>Created by <strong>Tran Cong Hoang</strong></span> 
     </Footer>
   )
 }
