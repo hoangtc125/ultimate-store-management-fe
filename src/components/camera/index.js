@@ -1,4 +1,4 @@
-import { Image, Button, Space, Card } from 'antd';
+import { Image, Button, Space } from 'antd';
 import { ReloadOutlined, CameraOutlined, VideoCameraAddOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 
@@ -216,6 +216,7 @@ const USMImage = ({loadings, enterLoading, setImages}) => {
 }
 
 const USMCamera = () => {
+  // eslint-disable-next-line 
   const [ipCamera, setIpCamera] = useState('192.168.1.222')
   const [images, setImages] = useState([])
   const [loadings, setLoadings] = useState([]);

@@ -1,84 +1,41 @@
-import { MoreOutlined } from '@ant-design/icons';
-import { Button, Dropdown, Menu, PageHeader, Tag} from 'antd';
+import { Button, Descriptions, PageHeader } from 'antd';
 import React from 'react';
-const menu = (
-  <Menu
-    items={[
-      {
-        key: '1',
-        label: (
-          <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
-            1st menu item
-          </a>
-        ),
-      },
-      {
-        key: '2',
-        label: (
-          <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
-            2nd menu item
-          </a>
-        ),
-      },
-      {
-        key: '3',
-        label: (
-          <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
-            3rd menu item
-          </a>
-        ),
-      },
-    ]}
-  />
-);
-
-const DropdownMenu = () => (
-  <Dropdown key="more" overlay={menu} placement="bottomRight">
-    <Button
-      type="text"
-      icon={
-        <MoreOutlined
-          style={{
-            fontSize: 20,
-          }}
-        />
-      }
-    />
-  </Dropdown>
-);
-
-const routes = [
-  {
-    path: 'index',
-    breadcrumbName: 'First-level Menu',
-  },
-  {
-    path: 'first',
-    breadcrumbName: 'Second-level Menu',
-  },
-  {
-    path: 'second',
-    breadcrumbName: 'Third-level Menu',
-  },
-];
 
 const Header = () => (
-  <PageHeader
-    title="Title"
-    className="site-page-header"
-    subTitle="This is a subtitle"
-    tags={<Tag color="blue">Running</Tag>}
-    extra={[
-      <DropdownMenu key="more" />,
-    ]}
-    avatar={{
-      src: 'https://avatars1.githubusercontent.com/u/8186664?s=460&v=4',
-    }}
-    breadcrumb={{
-      routes,
+  <div className="site-page-header-ghost-wrapper"
+    style={{
+      margin: "0px 15px",
     }}
   >
-  </PageHeader>
+    <PageHeader
+      ghost={false}
+      title="USM"
+      subTitle="Ultimate Store Management"
+      extra={[
+        <Button key="3">Operation</Button>,
+        <Button key="2">Operation</Button>,
+        <Button key="1" type="primary">
+          Primary
+        </Button>,
+      ]}
+      style={{
+        borderRadius: "10px",
+        boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
+      }}
+    >
+      <Descriptions size="small" column={3}>
+        <Descriptions.Item label="Created">Lili Qu</Descriptions.Item>
+        <Descriptions.Item label="Association">
+          <p>421421</p>
+        </Descriptions.Item>
+        <Descriptions.Item label="Creation Time">2017-01-10</Descriptions.Item>
+        <Descriptions.Item label="Effective Time">2017-10-10</Descriptions.Item>
+        <Descriptions.Item label="Remarks">
+          Gonghu Road, Xihu District, Hangzhou, Zhejiang, China
+        </Descriptions.Item>
+      </Descriptions>
+    </PageHeader>
+  </div>
 );
 
 export default Header;

@@ -4,7 +4,7 @@
     --secondary: #edeff8;
     --height-header: 40px;
     --height-footer: 20px;
-    --height-body: calc(100vh - var(--height-footer) - var(--height-header))
+    // --height-body: calc(100vh - var(--height-footer) - var(--height-header))
 }
 
 html {
@@ -24,6 +24,7 @@ body {
 
 a {
     text-decoration: none;
+    color: none;
 }
 
 .pd-0 {
@@ -55,3 +56,8 @@ button {
 .site-layout .site-layout-background {
     background: #fff;
 }
+
+.ant-layout-sider-children {
+    position: fixed;
+    width: 200px;
+  }
