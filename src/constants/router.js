@@ -1,4 +1,5 @@
 import * as URL from './url'
+import * as ROLE from './role'
 import DefaultLayout from '../Layouts/DefaultLayout'
 import ErrorLayout from '../Layouts/ErrorLayout'
 import LoginLayout from '../Layouts/LoginLayout'
@@ -11,14 +12,14 @@ import USMListAccount from '../components/account/list'
 function Mapping(url, element) {
     return {
         url,
-        element
+        element,
     }
 }
 
 export const Page = [
-    Mapping(URL.LOGIN, < LoginLayout Component={<USMLogin />}/> ),
-    Mapping(URL.HOME, < DefaultLayout Component={<USMHome />}/> ),
-    Mapping(URL.CAMERA, < DefaultLayout Component={<USMCamera />}/> ),
-    Mapping(URL.ACCOUNTS, < DefaultLayout Component={<USMListAccount />}/> ),
-    Mapping(URL.ERROR_404, < ErrorLayout Component={<USMError />}/> ),
+    Mapping(URL.LOGIN, <LoginLayout Component={<USMLogin />}/> ),
+    Mapping(URL.HOME, <DefaultLayout Component={<USMHome />}/> ),
+    Mapping(URL.CAMERA, <DefaultLayout Component={<USMCamera />} Role={[ROLE.ADMIN]}/> ),
+    Mapping(URL.ACCOUNTS, <DefaultLayout Component={<USMListAccount />}/> ),
+    Mapping(URL.ERROR_404, <ErrorLayout Component={<USMError />}/> ),
 ]

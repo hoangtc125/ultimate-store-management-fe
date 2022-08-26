@@ -6,6 +6,7 @@ import {
   LogoutOutlined,
   UsergroupAddOutlined,
   UnorderedListOutlined,
+  FundProjectionScreenOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Image, Switch } from 'antd';
 import React, { useState } from 'react';
@@ -31,16 +32,12 @@ const USMSideBar = () => {
   
   const items = [
     getItem(<Link to={URL.HOME}>Trang chủ</Link>, 'home', <HomeOutlined />),
-    getItem(<Link to={URL.CAMERA}>Kết nối Camera</Link>, 'camera', <VideoCameraOutlined />),
+    isRole(ROLE.ADMIN) && getItem(<Link to={URL.CAMERA}>Kết nối Camera</Link>, 'camera', <VideoCameraOutlined />),
     getItem('Người dùng', 'user', <UsergroupAddOutlined />, [
       isRole(ROLE.ADMIN) && getItem(<Link to={URL.ACCOUNTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Danh sách</span><UnorderedListOutlined /></Link>, 'account-list'),
     ]),
-    getItem('Tài khoản', 'me', <UserOutlined />, [
-      getItem(<Link to={URL.HOME} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Trang cá nhân</span><UserOutlined /></Link>, 'me-profile'),
-      getItem(<Link to={URL.HOME} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Cài đặt</span><SettingOutlined /></Link>, 'me-setting'),
-      getItem(<Link to={URL.LOGIN} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Đăng xuất</span><LogoutOutlined /></Link>, 'me-logout'),
-    ]),
-    getItem(<Switch checkedChildren="Giao diện sáng" unCheckedChildren="Giao diện tối" defaultChecked id="theme-check"
+    getItem('Giao diện', 'inteface', <FundProjectionScreenOutlined />, [
+      getItem(<Switch checkedChildren="Chế độ sáng" unCheckedChildren="Chế độ tối" defaultChecked id="theme-check"
       onClick={() => {
         // eslint-disable-next-line
         if(theme == 'dark') {
@@ -49,7 +46,13 @@ const USMSideBar = () => {
           setTheme('dark')
         }
       }}
-    />, 'theme')
+      />, 'theme')
+    ]),
+    getItem('Tài khoản', 'me', <UserOutlined />, [
+      getItem(<Link to={URL.HOME} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Trang cá nhân</span><UserOutlined /></Link>, 'me-profile'),
+      getItem(<Link to={URL.HOME} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Cài đặt</span><SettingOutlined /></Link>, 'me-setting'),
+      getItem(<a href={URL.LOGIN} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Đăng xuất</span><LogoutOutlined /></a>, 'me-logout'),
+    ]),
   ];
 
   return (

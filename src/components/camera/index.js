@@ -2,10 +2,6 @@ import { Image, Button, Space } from 'antd';
 import { ReloadOutlined, CameraOutlined, VideoCameraAddOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import openNotificationWithIcon from '../../utils/notification';
-import * as URL from '../../constants/url'
-import * as ROLE from '../../constants/role'
-import { isVisit } from "../../utils/check"
-import { useNavigate } from 'react-router-dom';
 
 const USMVideo = ({ipCamera, loadings, enterLoading}) => {
 
@@ -229,13 +225,6 @@ const USMCamera = () => {
   const [ipCamera, setIpCamera] = useState('0.0.0.0')
   const [images, setImages] = useState([])
   const [loadings, setLoadings] = useState([]);
-  const navigate = useNavigate()
-
-  useEffect(() => {
-      if (!isVisit([ROLE.ADMIN, ROLE.STAFF])) {
-          navigate(URL.LOGIN)
-      }
-  })
 
   const enterLoading = (index, timeout) => {
     setLoadings((prevLoadings) => {
