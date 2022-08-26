@@ -1,9 +1,11 @@
-import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table } from 'antd';
+import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Input, Space, Table, Tooltip } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import * as MODE from '../../../constants/mode'
-import { isMode } from '../../../utils/check';
+import * as ROLE from '../../../constants/role'
+import { isMode, isRole } from '../../../utils/check';
 import Highlighter from 'react-highlight-words';
+import USMCreateAccount from './create';
 
 const USMListAccount = () => {
   const [searchText, setSearchText] = useState('');
@@ -13,17 +15,50 @@ const USMListAccount = () => {
     pageSize: 10,
   });
   const [data, setData] = useState([])
+  const [visibleCreate, setVisibleCreate] = useState(false);
+  const [placemenCreate, setPlacementCreate] = useState('right')
   const searchInput = useRef(null);
+
+  const showDrawer = () => {
+    setVisibleCreate(true);
+  };
+
+  const handleDelete = (index) => {
+    console.log(index)
+  }
   
   useEffect(() => {
-    if (isMode(MODE.TEST)) {
+    if (isMode([MODE.TEST])) {
       let vals = []
-      for (let i = 0; i < 149; i++) {
+      for (let i = 0; i < 50; i++) {
         vals.push({
           key: i,
           name: `Edward King ${i}`,
           age: 32,
           address: i,
+          action: 
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-around",
+                alignItems: "center",
+              }}
+            >
+              <Tooltip title="Chỉnh sửa">
+                <Button shape="circle" type="primary" ghost icon={<EditOutlined />} 
+                  onClick={() => {
+                    setPlacementCreate('left')
+                    showDrawer()
+                  }}
+                />
+              </Tooltip>
+              <Tooltip title="Xóa">
+                <Button shape="circle" danger ghost icon={<DeleteOutlined />} 
+                  onClick={() => handleDelete(i)}
+                />
+              </Tooltip>
+            </div>,
         });
       }
       setData(vals)
@@ -126,7 +161,7 @@ const USMListAccount = () => {
       ),
   });
 
-  const columns = [
+  let columns = [
     {
       title: 'Name',
       dataIndex: 'name',
@@ -151,21 +186,66 @@ const USMListAccount = () => {
     },
   ];
 
+  if (isRole([ROLE.ADMIN])) {
+    columns.push({
+      title: 'Action',
+      dataIndex: 'action',
+      key: 'action',
+      width: '8%',
+    })
+  }
+
   const handleTableChange = (newPagination) => {
     setPagination({
       ...newPagination,
-      total: 200,
     });
   };
 
   return (
-    <Table 
-      columns={columns} 
-      dataSource={data}
-      pagination={pagination} 
-      onChange={handleTableChange}
-      size="large"
-    />);
+    <div>
+      {
+        isRole([ROLE.ADMIN]) &&
+        <div>
+          <Button type="primary" icon={<PlusOutlined />} shape="round"
+            style={{
+              boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
+            }}
+            onClick={() => {
+              setPlacementCreate('right')
+              showDrawer()
+            }}
+          >
+            Thêm tài khoản
+          </Button>
+          <USMCreateAccount visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} placemenCreate={placemenCreate}/>
+        </div>
+      }
+      <Table
+        columns={columns}
+        dataSource={data}
+        pagination={pagination}
+        onChange={handleTableChange}
+        size="large"
+        style={{
+          borderRadius: "10px",
+          boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
+          margin: "10px 0px",
+          padding: "0px 10px",
+        }}
+        expandable={{
+          expandedRowRender: (record) => (
+            <p
+              style={{
+                margin: 0,
+              }}
+            >
+              {record.description}
+            </p>
+          ),
+        }}
+      />
+    </div>
+  );
 };
 
 export default USMListAccount;

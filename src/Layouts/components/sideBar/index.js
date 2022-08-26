@@ -32,9 +32,9 @@ const USMSideBar = () => {
   
   const items = [
     getItem(<Link to={URL.HOME}>Trang chủ</Link>, 'home', <HomeOutlined />),
-    isRole(ROLE.ADMIN) && getItem(<Link to={URL.CAMERA}>Kết nối Camera</Link>, 'camera', <VideoCameraOutlined />),
-    getItem('Người dùng', 'user', <UsergroupAddOutlined />, [
-      isRole(ROLE.ADMIN) && getItem(<Link to={URL.ACCOUNTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Danh sách</span><UnorderedListOutlined /></Link>, 'account-list'),
+    isRole([ROLE.ADMIN]) && getItem(<Link to={URL.CAMERA}>Kết nối Camera</Link>, 'camera', <VideoCameraOutlined />),
+    getItem('Người dùng', 'accounts', <UsergroupAddOutlined />, [
+      getItem(<Link to={URL.ACCOUNTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Danh sách</span><UnorderedListOutlined /></Link>, 'account-list'),
     ]),
     getItem('Giao diện', 'inteface', <FundProjectionScreenOutlined />, [
       getItem(<Switch checkedChildren="Chế độ sáng" unCheckedChildren="Chế độ tối" defaultChecked id="theme-check"

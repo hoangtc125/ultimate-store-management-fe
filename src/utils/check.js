@@ -1,9 +1,15 @@
-const isRole = (role) => {
-  return role === window.localStorage.getItem("USM_ROLE")
+const isRole = (roles) => {
+  if (!roles.includes(window.localStorage.getItem("USM_ROLE"))) {
+    return false
+  }
+  return true
 }
 
-const isMode = (mode) => {
-  return mode === window.localStorage.getItem("USM_MODE")
+const isMode = (modes) => {
+  if (!modes.includes(window.localStorage.getItem("USM_MODE"))) {
+    return false
+  }
+  return true
 }
 
 const isVisit = (roles) => {

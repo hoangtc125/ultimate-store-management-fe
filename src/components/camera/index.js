@@ -113,6 +113,10 @@ const USMVideo = ({ipCamera, loadings, enterLoading}) => {
             handleReconect()
             enterLoading(0, 1000)
           }}
+          style={{
+            boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
+          }}
+        
         >
           Kết nối lại
         </Button>
@@ -122,6 +126,9 @@ const USMVideo = ({ipCamera, loadings, enterLoading}) => {
             handleShotImage()
             enterLoading(1, 500)
           }}
+          style={{
+            boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
+          }}  
         >
           Chụp ảnh
         </Button>
@@ -212,6 +219,9 @@ const USMImage = ({loadings, enterLoading, setImages}) => {
             handleAdd()
             enterLoading(2, 300)
           }} 
+          style={{
+            boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
+          }}
         >
           Chọn ảnh này
         </Button>
