@@ -1,4 +1,4 @@
-import { Button, Descriptions, PageHeader } from 'antd';
+import { Button, Descriptions, PageHeader, Tag } from 'antd';
 import React from 'react';
 
 const Header = () => (
@@ -9,8 +9,8 @@ const Header = () => (
   >
     <PageHeader
       ghost={false}
-      title="USM"
-      subTitle="Ultimate Store Management"
+      title={<Tag color="blue"><strong>{window.localStorage.getItem("USM_MODE")}</strong> - <strong>{window.localStorage.getItem("USM_ROLE")}</strong></Tag>}
+      subTitle="Phần mềm chuyển đổi số cho cửa hàng kinh doanh quy mô hộ gia đình"
       extra={[
         <Button key="3">Operation</Button>,
         <Button key="2">Operation</Button>,

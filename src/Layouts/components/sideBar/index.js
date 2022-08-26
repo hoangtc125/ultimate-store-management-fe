@@ -11,6 +11,8 @@ import { Layout, Menu, Image, Switch } from 'antd';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as URL from '../../../constants/url'
+import * as ROLE from '../../../constants/role'
+import { isRole } from '../../../utils/check';
 import images from '../../../assets/images'
 
 const { Sider } = Layout;
@@ -31,7 +33,7 @@ const USMSideBar = () => {
     getItem(<Link to={URL.HOME}>Trang chủ</Link>, 'home', <HomeOutlined />),
     getItem(<Link to={URL.CAMERA}>Kết nối Camera</Link>, 'camera', <VideoCameraOutlined />),
     getItem('Người dùng', 'user', <UsergroupAddOutlined />, [
-      getItem(<Link to={URL.ACCOUNTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Danh sách</span><UnorderedListOutlined /></Link>, 'me-profile'),
+      isRole(ROLE.ADMIN) && getItem(<Link to={URL.ACCOUNTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Danh sách</span><UnorderedListOutlined /></Link>, 'account-list'),
     ]),
     getItem('Tài khoản', 'me', <UserOutlined />, [
       getItem(<Link to={URL.HOME} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Trang cá nhân</span><UserOutlined /></Link>, 'me-profile'),

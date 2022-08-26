@@ -1,18 +1,9 @@
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table } from 'antd';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import * as MODE from '../../../constants/mode'
+import { isMode } from '../../../utils/check';
 import Highlighter from 'react-highlight-words';
-
-const data = [];
-
-for (let i = 0; i < 149; i++) {
-  data.push({
-    key: i,
-    name: `Edward King ${i}`,
-    age: 32,
-    address: i,
-  });
-}
 
 const USMListAccount = () => {
   const [searchText, setSearchText] = useState('');
@@ -21,7 +12,23 @@ const USMListAccount = () => {
     current: 1,
     pageSize: 10,
   });
+  const [data, setData] = useState([])
   const searchInput = useRef(null);
+  
+  useEffect(() => {
+    if (isMode(MODE.TEST)) {
+      let vals = []
+      for (let i = 0; i < 149; i++) {
+        vals.push({
+          key: i,
+          name: `Edward King ${i}`,
+          age: 32,
+          address: i,
+        });
+      }
+      setData(vals)
+    }
+  }, [])
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
