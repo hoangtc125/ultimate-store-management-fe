@@ -6,4 +6,16 @@ const isMode = (mode) => {
   return mode === window.localStorage.getItem("USM_MODE")
 }
 
-export { isRole, isMode }
+const isVisit = (roles) => {
+  const role = window.localStorage.getItem("USM_ROLE")
+  const mode = window.localStorage.getItem("USM_MODE")
+  if (!mode) {
+    return false
+  }
+  if (!roles.includes(role)) {
+    return false
+  }
+  return true
+}
+
+export { isRole, isMode, isVisit }

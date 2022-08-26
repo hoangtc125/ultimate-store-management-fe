@@ -1,7 +1,19 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Space } from "antd"
+import * as URL from '../../constants/url'
+import * as ROLE from '../../constants/role'
+import { isVisit } from "../../utils/check"
+import { useEffect } from "react"
 
 const USMHome = () => {
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (!isVisit([ROLE.ADMIN, ROLE.STAFF])) {
+            navigate(URL.LOGIN)
+        }
+    })
+
     return (
         <>
             <Space>
