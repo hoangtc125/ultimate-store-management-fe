@@ -4,6 +4,8 @@ import {
   HomeOutlined,
   SettingOutlined,
   LogoutOutlined,
+  UsergroupAddOutlined,
+  UnorderedListOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Image, Switch } from 'antd';
 import React, { useState } from 'react';
@@ -28,10 +30,13 @@ const USMSideBar = () => {
   const items = [
     getItem(<Link to={URL.HOME}>Trang chủ</Link>, 'home', <HomeOutlined />),
     getItem(<Link to={URL.CAMERA}>Kết nối Camera</Link>, 'camera', <VideoCameraOutlined />),
-    getItem('Người dùng', 'user', <UserOutlined />, [
-      getItem(<Link to={URL.HOME} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Trang cá nhân</span><UserOutlined /></Link>, 'user-profile'),
-      getItem(<Link to={URL.HOME} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Cài đặt</span><SettingOutlined /></Link>, 'user-setting'),
-      getItem(<Link to={URL.LOGIN} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Đăng xuất</span><LogoutOutlined /></Link>, 'user-logout'),
+    getItem('Người dùng', 'user', <UsergroupAddOutlined />, [
+      getItem(<Link to={URL.ACCOUNTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Danh sách</span><UnorderedListOutlined /></Link>, 'me-profile'),
+    ]),
+    getItem('Tài khoản', 'me', <UserOutlined />, [
+      getItem(<Link to={URL.HOME} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Trang cá nhân</span><UserOutlined /></Link>, 'me-profile'),
+      getItem(<Link to={URL.HOME} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Cài đặt</span><SettingOutlined /></Link>, 'me-setting'),
+      getItem(<Link to={URL.LOGIN} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Đăng xuất</span><LogoutOutlined /></Link>, 'me-logout'),
     ]),
     getItem(<Switch checkedChildren="Giao diện sáng" unCheckedChildren="Giao diện tối" defaultChecked id="theme-check"
       onClick={() => {
@@ -49,6 +54,7 @@ const USMSideBar = () => {
     <Sider theme={theme}
       style={{
         boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
+        overflow: 'auto',
       }}
     >
       <div className="logo" ><Image src={images.logolong}/></div>

@@ -6,6 +6,9 @@ const USMError = () => (
     status="404"
     title="404"
     subTitle="Sorry, the page you visited does not exist."
+    style={{
+      height: "80vh",
+    }}
     extra={<Button type="primary">Back Home</Button>}
   />
 );

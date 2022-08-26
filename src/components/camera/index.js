@@ -1,6 +1,7 @@
 import { Image, Button, Space } from 'antd';
 import { ReloadOutlined, CameraOutlined, VideoCameraAddOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
+import openNotificationWithIcon from '../../utils/notification';
 
 const USMVideo = ({ipCamera, loadings, enterLoading}) => {
 
@@ -36,7 +37,11 @@ const USMVideo = ({ipCamera, loadings, enterLoading}) => {
         window.localStorage.setItem("USM_TEMP_IMAGE", res)
       })
       .catch(e => {
-        alert('Error')
+        openNotificationWithIcon(
+          'error',
+          'Chụp không thành công',
+          'Lỗi có thể do mất kết nối với Camera, hãy kết nối lại!'
+        )
       })
   }
   

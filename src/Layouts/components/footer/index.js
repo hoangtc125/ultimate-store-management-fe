@@ -18,7 +18,7 @@ const USMFooter = () => {
     >
       <span><strong>Ultimate Store Management</strong> ©2022</span>
       <Image src={images.logo} preview={false} height={30}/>
-      <span>Created by <strong>Tran Cong Hoang</strong></span> 
+      <span>Phát triển bởi <strong>Trần Công Hoàng</strong></span> 
     </Footer>
   )
 }
