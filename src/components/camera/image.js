@@ -21,8 +21,7 @@ const USMImage = ({loadings, enterLoading, setImages}) => {
     <div
       style={{
         position: "relative",
-        width: "48%",
-        margin: 10,
+        width: "49%",
         backgroundColor: "",
         minHeight: 300,
         minWidth: 300,

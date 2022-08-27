@@ -33,8 +33,19 @@ const USMCamera = () => {
       flexWrap: "wrap"
     }}>
       <USMIntro setIpCamera={setIpCamera}/>
-      <USMVideo ipCamera={ipCamera} loadings={loadings} enterLoading={enterLoading}/>
-      <USMImage loadings={loadings} enterLoading={enterLoading} setImages={setImages}/>
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          margin: "10px 0px 10px",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          flexWrap: "wrap"
+        }}
+      >
+        <USMVideo ipCamera={ipCamera} loadings={loadings} enterLoading={enterLoading}/>
+        <USMImage loadings={loadings} enterLoading={enterLoading} setImages={setImages}/>
+      </div>
       <div
         style={{
           display: "flex",

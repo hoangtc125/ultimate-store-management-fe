@@ -1,10 +1,12 @@
-import { Select, Image, Button, message, Steps, Card } from 'antd';
+import { Image, Button, message, Steps, Card, Alert } from 'antd';
 import { useState } from 'react';
 import images from '../../assets/images';
-const { Option } = Select;
+import USMIP from './ip';
+import { Tabs } from 'antd';
+const { TabPane } = Tabs;
 const { Step } = Steps;
 
-const steps = [
+const steps1 = [
   {
     title: 'Bước 1',
     content: 
@@ -83,15 +85,120 @@ const steps = [
   },
 ];
 
-const StepsIntro = () => {
-  const [current, setCurrent] = useState(0);
+const steps2 = [
+  {
+    title: 'Bước 1',
+    content: 
+      <div
+        style={{
+          margin: "20px",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+          height: "100px",
+        }}
+      >
+        <span>Cài đăt phần mềm <strong>IP Camera</strong> từ <strong>CH Play</strong> hoặc <strong>App Store</strong></span>
+        <Image src={images.ipcamera} height={100} preview={false}/>
+      </div>,
+  },
+  {
+    title: 'Bước 2',
+    content: 
+    <div
+      style={{
+        margin: "20px",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+        height: "100px",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <span>Truy cập <strong>IP Camera</strong>, chọn <strong>Start server</strong></span>
+        <span>tại kí hiệu <strong>3 chấm</strong> trên góc phải màn hình</span>
+      </div>
+      <Image src={images.ipstart} height={130} preview={false}/>
+    </div>,
+  },
+  {
+    title: 'Bước 3',
+    content: 
+    <div
+      style={{
+        margin: "20px",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+        height: "100px",
+      }}
+    >
+      <span>Lấy mã số <strong>IPv4</strong> bên dưới màn hình thiết bị đang sử dụng <strong>IP Camera</strong>, ví dụ: 192.168.1.222</span>
+      <Image src={images.ipv4} height={100} preview={false}/>
+    </div>,
+  },
+  {
+    title: 'Bước 4',
+    content: 
+    <div
+      style={{
+        margin: "20px",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+        height: "100px",
+      }}
+    >
+      <span>Chọn ô <strong>Chọn thiết bị kết nối Camera</strong> và thêm mới mã số vừa lấy được</span>
+      <Image src={images.ipinput} height={130} preview={false}/>
+    </div>,
+  },
+  {
+    title: 'Bước 5',
+    content: 
+    <div
+      style={{
+        margin: "20px",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+        height: "100px",
+      }}
+    >
+      <span>Trong ô <strong>Chọn thiết bị kết nối Camera</strong>, chọn mã số bạn vừa thêm mới</span>
+      <Image src={images.ipchoose} height={130} preview={false}/>
+    </div>,
+  },
+];
 
-  const next = () => {
-    setCurrent(current + 1);
+const StepsIntro = () => {
+  const [current1, setCurrent1] = useState(0);
+  const [current2, setCurrent2] = useState(0);
+
+  const next1 = () => {
+    setCurrent1(current1 + 1);
   };
 
-  const prev = () => {
-    setCurrent(current - 1);
+  const prev1 = () => {
+    setCurrent1(current1 - 1);
+  };
+
+  const next2 = () => {
+    setCurrent2(current2 + 1);
+  };
+
+  const prev2 = () => {
+    setCurrent2(current2 - 1);
   };
 
   return (
@@ -111,36 +218,76 @@ const StepsIntro = () => {
           boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
         }}
       >
-        <div>
-          <Steps current={current}>
-            {steps.map((item) => (
-              <Step key={item.title} title={item.title} />
-            ))}
-          </Steps>
-          <div className="steps-content">{steps[current].content}</div>
-          <div className="steps-action">
-            {current < steps.length - 1 && (
-              <Button type="primary" onClick={() => next()}>
-                Bước sau
-              </Button>
-            )}
-            {current === steps.length - 1 && (
-              <Button type="primary" onClick={() => message.success('Quá trình kết nối hoàn tất!')}>
-                Hoàn thành
-              </Button>
-            )}
-            {current > 0 && (
-              <Button
-                style={{
-                  margin: '0 8px',
-                }}
-                onClick={() => prev()}
-              >
-                Bước trước
-              </Button>
-            )}
-          </div>
-        </div>
+        <Tabs defaultActiveKey="1"
+          style={{
+            marginTop: "-20px"
+          }}
+        >
+          <TabPane tab="Cách 1: Kết nối tự động quét mã QR" key="1">
+            <div>
+              <Steps current={current1}>
+                {steps1.map((item) => (
+                  <Step key={item.title} title={item.title} />
+                ))}
+              </Steps>
+              <div className="steps-content">{steps1[current1].content}</div>
+              <div className="steps-action">
+                {current1 < steps1.length - 1 && (
+                  <Button type="primary" onClick={() => next1()}>
+                    Bước sau
+                  </Button>
+                )}
+                {current1 === steps1.length - 1 && (
+                  <Button type="primary" onClick={() => message.success('Quá trình kết nối hoàn tất!')}>
+                    Hoàn thành
+                  </Button>
+                )}
+                {current1 > 0 && (
+                  <Button
+                    style={{
+                      margin: '0 8px',
+                    }}
+                    onClick={() => prev1()}
+                  >
+                    Bước trước
+                  </Button>
+                )}
+              </div>
+            </div>
+          </TabPane>
+          <TabPane tab="Cách 2: Thêm thiết bị thủ công bằng tay" key="2">
+          <div>
+              <Steps current={current2}>
+                {steps2.map((item) => (
+                  <Step key={item.title} title={item.title} />
+                ))}
+              </Steps>
+              <div className="steps-content">{steps2[current2].content}</div>
+              <div className="steps-action">
+                {current2 < steps2.length - 1 && (
+                  <Button type="primary" onClick={() => next2()}>
+                    Bước sau
+                  </Button>
+                )}
+                {current2 === steps2.length - 1 && (
+                  <Button type="primary" onClick={() => message.success('Quá trình kết nối hoàn tất!')}>
+                    Hoàn thành
+                  </Button>
+                )}
+                {current2 > 0 && (
+                  <Button
+                    style={{
+                      margin: '0 8px',
+                    }}
+                    onClick={() => prev2()}
+                  >
+                    Bước trước
+                  </Button>
+                )}
+              </div>
+            </div>
+          </TabPane>
+        </Tabs>
       </Card>
     </div>
   );
@@ -148,43 +295,38 @@ const StepsIntro = () => {
 
 const USMIntro = ({ setIpCamera }) => {
 
-  const onChange = (value) => {
-    console.log(`selected ${value}`);
-  };
-  
-  const onSearch = (value) => {
-    console.log('search:', value);
-  };
-
   return (
     <div
       style={{
         width: "100%",
-        margin: "10px",
+        margin: " 0px 0px 10px",
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
       }}
     >
-      <StepsIntro />
-      <Select
-        showSearch
-        placeholder="Chọn thiết bị kết nối Camera"
-        optionFilterProp="children"
-        onChange={onChange}
-        onSearch={onSearch}
-        filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
-        size="large"
+      <StepsIntro/>
+      <div
         style={{
-          boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
-          height: "fit-content",
-          width: "30%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-start",
+          width: "35%",
         }}
       >
-        <Option value="jack">OPPO 11 PRO - Địa chỉ IP 1.1.1.1</Option>
-        <Option value="lucy">IPHONE 12 - Địa chỉ IP 2.2.2.2</Option>
-        <Option value="tom">SAMSUNG - Địa chỉ IP 3.3.3.3 </Option>
-      </Select>
+        <USMIP setIpCamera={setIpCamera}/>
+        <Alert
+          message="Chú ý"
+          description="Thiết bị sử dụng Camera của bạn và máy tính này cần kết nối chung trong 1 mạng (Mạng Wifi hoặc mạng Lan)"
+          type="info"
+          style={{
+            marginTop: "20px",
+            borderRadius: "10px",
+            boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
+          }}
+          showIcon
+        />
+      </div>
     </div>
   )
 }

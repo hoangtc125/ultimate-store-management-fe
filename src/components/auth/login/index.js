@@ -142,7 +142,7 @@ const Login = () => {
           </Form.Item>
         </Form>
       </div>
-      <Modal title="Hãy chọn chức vụ muốn dùng thử" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+      <Modal title="Hãy chọn chức vụ muốn dùng thử" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} okText="Xác nhận" cancelText="Hủy">
         <Radio.Group buttonStyle="solid" onChange={onChange} value={role}>
           <Radio.Button value={ROLE.ADMIN}>Quản trị cửa hàng</Radio.Button>
           <Radio.Button value={ROLE.STAFF}>Nhân viên bán hàng</Radio.Button>
