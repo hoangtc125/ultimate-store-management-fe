@@ -17,6 +17,7 @@ const USMListAccount = () => {
   const [data, setData] = useState([])
   const [visibleCreate, setVisibleCreate] = useState(false);
   const [placemenCreate, setPlacementCreate] = useState('right')
+  const [title, setTitle] = useState("Tạo mới tài khoản")
   const searchInput = useRef(null);
 
   const showDrawer = () => {
@@ -36,6 +37,7 @@ const USMListAccount = () => {
           name: `Edward King ${i}`,
           age: 32,
           address: i,
+          description: i % 2 === 0 ? "Hello world" : undefined,
           action: 
             <div
               style={{
@@ -49,6 +51,7 @@ const USMListAccount = () => {
                 <Button shape="circle" type="primary" ghost icon={<EditOutlined />} 
                   onClick={() => {
                     setPlacementCreate('left')
+                    setTitle("Chỉnh sửa tài khoản")
                     showDrawer()
                   }}
                 />
@@ -212,12 +215,13 @@ const USMListAccount = () => {
             }}
             onClick={() => {
               setPlacementCreate('right')
+              setTitle("Tạo mới tài khoản")
               showDrawer()
             }}
           >
             Thêm tài khoản
           </Button>
-          <USMCreateAccount visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} placemenCreate={placemenCreate}/>
+          <USMCreateAccount visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} placemenCreate={placemenCreate} title={title}/>
         </div>
       }
       <Table
@@ -242,6 +246,7 @@ const USMListAccount = () => {
               {record.description}
             </p>
           ),
+          rowExpandable: record => record.description,
         }}
       />
     </div>

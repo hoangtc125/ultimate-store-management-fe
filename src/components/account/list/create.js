@@ -1,8 +1,17 @@
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Popconfirm } from 'antd';
 import React from 'react';
 const { Option } = Select;
 
-const USMCreateAccount = ({visibleCreate, setVisibleCreate, placemenCreate}) => {
+const USMCreateAccount = ({visibleCreate, setVisibleCreate, placemenCreate, title}) => {
+
+  const confirm = (e) => {
+    message.success('Click on Yes');
+    onClose()
+  };
+  
+  const cancel = (e) => {
+    message.error('Click on No');
+  };
 
   const onClose = () => {
     setVisibleCreate(false);
@@ -11,8 +20,8 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, placemenCreate}) => 
   return (
     <>
       <Drawer
-        title="Create a new account"
-        width={720}
+        title={title}
+        width={"60%"}
         onClose={onClose}
         visible={visibleCreate}
         placement={placemenCreate}
@@ -21,10 +30,18 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, placemenCreate}) => 
         }}
         extra={
           <Space>
-            <Button onClick={onClose}>Cancel</Button>
-            <Button onClick={onClose} type="primary">
-              Submit
-            </Button>
+            <Button onClick={onClose}>Hủy</Button>
+            <Popconfirm
+              title="Are you sure to delete this task?"
+              onConfirm={confirm}
+              onCancel={cancel}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="primary">
+                Hoàn tất
+              </Button>
+            </Popconfirm>
           </Space>
         }
       >
