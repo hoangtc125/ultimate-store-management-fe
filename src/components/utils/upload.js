@@ -1,13 +1,27 @@
 import ImgCrop from 'antd-img-crop';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, CameraOutlined } from '@ant-design/icons';
 import { Modal, Upload } from 'antd';
 import React, { useState } from 'react';
+import USMCamera from '../camera';
 
 const USMUpload = ({maxCount, setUsmImages}) => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
   const [fileList, setFileList] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCameraOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCameraCancel = () => {
+    setIsModalVisible(false);
+  };
 
   const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -47,28 +61,74 @@ const USMUpload = ({maxCount, setUsmImages}) => {
       </div>
     </div>
   );
-  return (
-    <ImgCrop>
-      <Upload
-        action={getBase64}
-        listType="picture-card"
-        fileList={fileList}
-        maxCount={maxCount || 1}
-        onPreview={handlePreview}
-        onChange={handleChange}
+
+  const ShotButton = (
+    <div
+      onClick={() => {
+        showModal()
+      }}
+      style={{
+        width: "100%",
+        height: "100%",
+        alignContent: "center",
+        alignItems: "center",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center"
+      }}
+    >
+      <CameraOutlined />
+      <div
+        style={{
+          marginTop: 8,
+        }}
       >
-        {fileList.length >= 8 ? null : uploadButton}
-      </Upload>
-      <Modal visible={previewVisible} title={previewTitle} footer={null} onCancel={handleCancel}>
-        <img
-          alt="example"
+        Chụp ảnh
+      </div>
+    </div>
+  );
+
+  return (
+    <div id="upload-container">
+      <ImgCrop>
+        <div
           style={{
-            width: '100%',
+            display: "flex",
+            flexDirection: "row",
           }}
-          src={previewImage}
-        />
+        >
+          <Upload
+            action={getBase64}
+            listType="picture-card"
+            fileList={fileList}
+            maxCount={maxCount || 1}
+            onPreview={handlePreview}
+            onChange={handleChange}
+          >
+            {fileList.length >= 8 ? null : uploadButton}
+          </Upload>
+          <Upload
+            listType="picture-card"
+            openFileDialogOnClick={false}
+      
+          >
+            {fileList.length >= 8 ? null : ShotButton}
+          </Upload>
+        </div>
+        <Modal visible={previewVisible} title={previewTitle} footer={null} onCancel={handleCancel}>
+          <img
+            alt="example"
+            style={{
+              width: '100%',
+            }}
+            src={previewImage}
+          />
+        </Modal>
+      </ImgCrop>
+      <Modal title="Chụp ảnh qua Camera" visible={isModalVisible} onOk={handleCameraOk} onCancel={handleCameraCancel} width={"80vw"}>
+        <USMCamera />
       </Modal>
-    </ImgCrop>
+    </div>
   );
 };
 

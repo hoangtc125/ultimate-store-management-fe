@@ -1,4 +1,4 @@
-import { Image, Button, Space } from 'antd';
+import { Image, Button, Space, message } from 'antd';
 import { ReloadOutlined, CameraOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import React, { useEffect } from 'react';
 import openNotificationWithIcon from '../../utils/notification';
@@ -17,6 +17,7 @@ const USMVideo = ({ipCamera, loadings, enterLoading}) => {
 
   const handleErrorVideo = () => {
     document.getElementById("browser-video").firstChild.src = listImages.default
+    message.error('Không thể kết nối Camera')
   }
 
   const getBase64FromUrl = async (url) => {
