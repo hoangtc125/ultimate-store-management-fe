@@ -43,7 +43,6 @@ const USMIP = ({setIpCamera}) => {
       placeholder="Chọn thiết bị kết nối Camera"
       size='large'
       onChange={(value) => {
-        console.log(value)
         setIpCamera(value)
       }}
       dropdownRender={(menu) => (

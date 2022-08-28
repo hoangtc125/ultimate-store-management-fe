@@ -1,11 +1,13 @@
 import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, Tooltip } from 'antd';
+import { Button, Input, Space, Table, Tooltip, Image, Card } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import * as MODE from '../../../constants/mode'
 import * as ROLE from '../../../constants/role'
 import { isMode, isRole } from '../../../utils/check';
 import Highlighter from 'react-highlight-words';
 import USMCreateAccount from './create';
+import { AccountResponse } from '../../../model/account'
+import images from '../../../assets/images';
 
 const USMListAccount = () => {
   const [searchText, setSearchText] = useState('');
@@ -31,13 +33,25 @@ const USMListAccount = () => {
   useEffect(() => {
     if (isMode([MODE.TEST])) {
       let vals = []
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 16; i++) {
+        const account = AccountResponse(
+          "string " + i,
+          "string " + i,
+          i,
+          "string " + i,
+          "string " + i,
+          "string " + i,
+          "string " + i,
+          <Image src={images.default} width={50}/>,
+          "string " + i,
+          "string " + i,
+          "string " + i,
+          "string " + i,
+          i,
+        )
         vals.push({
           key: i,
-          name: `Edward King ${i}`,
-          age: 32,
-          address: i,
-          description: i % 2 === 0 ? "Hello world" : undefined,
+          ...account, 
           action: 
             <div
               style={{
@@ -88,7 +102,8 @@ const USMListAccount = () => {
       >
         <Input
           ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
+          placeholder={`Tìm kiếm ${dataIndex}`}
+          autoComplete={false}
           value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
@@ -104,10 +119,10 @@ const USMListAccount = () => {
             icon={<SearchOutlined />}
             size="small"
             style={{
-              width: 90,
+              width: 120,
             }}
           >
-            Search
+            Tìm kiếm
           </Button>
           <Button
             onClick={() => clearFilters && handleReset(clearFilters)}
@@ -116,7 +131,7 @@ const USMListAccount = () => {
               width: 90,
             }}
           >
-            Reset
+            Xóa
           </Button>
           <Button
             type="link"
@@ -129,7 +144,7 @@ const USMListAccount = () => {
               setSearchedColumn(dataIndex);
             }}
           >
-            Filter
+            Bộ lọc
           </Button>
         </Space>
       </div>
@@ -166,35 +181,68 @@ const USMListAccount = () => {
 
   let columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      width: '30%',
-      ...getColumnSearchProps('name'),
-    },
-    {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-      width: '20%',
-      ...getColumnSearchProps('age'),
-    },
-    {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-      ...getColumnSearchProps('address'),
-      sorter: (a, b) => a.address - b.address,
+      title: 'Mã số',
+      dataIndex: 'id',
+      key: 'id',
+      width: '8%',
+      ...getColumnSearchProps('id'),
+      sorter: (a, b) => a.id - b.id,
       sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: 'Họ tên',
+      dataIndex: 'fullname',
+      key: 'fullname',
+      width: '20%',
+      ...getColumnSearchProps('fullname'),
+      sorter: (a, b) => a.role - b.role,
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: 'Số điện thoại',
+      dataIndex: 'phone',
+      key: 'phone',
+      width: '15%',
+      ...getColumnSearchProps('phone'),
+    },
+    {
+      title: 'Địa chỉ Email',
+      dataIndex: 'email',
+      key: 'email',
+      width: '20%',
+      ...getColumnSearchProps('email'),
+    },
+    {
+      title: 'Ảnh đai diện',
+      dataIndex: 'avatar',
+      key: 'avatar',
+      width: '10%',
+      ...getColumnSearchProps('avatar'),
+    },
+    {
+      title: 'Chức vụ',
+      dataIndex: 'role',
+      key: 'role',
+      ...getColumnSearchProps('role'),
+      width: '8%',
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'is_disabled',
+      key: 'is_disabled',
+      ...getColumnSearchProps('is_disabled'),
+      sorter: (a, b) => a.id - b.id,
+      sortDirections: ['descend', 'ascend'],
+      width: '10%',
     },
   ];
 
   if (isRole([ROLE.ADMIN])) {
     columns.push({
-      title: 'Action',
+      title: 'Thao tác',
       dataIndex: 'action',
       key: 'action',
-      width: '8%',
+      width: '10%',
     })
   }
 
@@ -238,15 +286,29 @@ const USMListAccount = () => {
         }}
         expandable={{
           expandedRowRender: (record) => (
-            <p
+            <div
               style={{
                 margin: 0,
+                display: "flex",
+                flexDirection: "row",
+                flexWrap: "wrap",
+                justifyContent: "flex-start",
               }}
             >
-              {record.description}
-            </p>
+              {
+                isRole([ROLE.ADMIN]) && 
+                <>
+                  <Card title="Tên đăng nhập">{record.username}</Card>
+                  <Card title="Hệ số lương">{record.ratio_salary}</Card>
+                  <Card title="Thời điểm tạo tài khoản">{record.created_at}</Card>
+                  <Card title="Mật khẩu">{record.hashed_password}</Card>
+                </>
+              }
+              <Card title="Ngày sinh">{record.birthday}</Card>
+              <Card title="Thông tin khác">{record.profile}</Card>
+            </div>
           ),
-          rowExpandable: record => record.description,
+          rowExpandable: record => true,
         }}
       />
     </div>

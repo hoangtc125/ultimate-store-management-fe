@@ -233,12 +233,20 @@ const StepsIntro = () => {
               <div className="steps-content">{steps1[current1].content}</div>
               <div className="steps-action">
                 {current1 < steps1.length - 1 && (
-                  <Button type="primary" onClick={() => next1()}>
+                  <Button type="primary" onClick={() => next1()}
+                    style={{
+                      boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
+                    }}
+                  >
                     Bước sau
                   </Button>
                 )}
                 {current1 === steps1.length - 1 && (
-                  <Button type="primary" onClick={() => message.success('Quá trình kết nối hoàn tất!')}>
+                  <Button type="primary" onClick={() => message.success('Quá trình kết nối hoàn tất!')}
+                    style={{
+                      boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
+                    }}
+                  >
                     Hoàn thành
                   </Button>
                 )}
@@ -246,6 +254,7 @@ const StepsIntro = () => {
                   <Button
                     style={{
                       margin: '0 8px',
+                      boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
                     }}
                     onClick={() => prev1()}
                   >
@@ -265,12 +274,20 @@ const StepsIntro = () => {
               <div className="steps-content">{steps2[current2].content}</div>
               <div className="steps-action">
                 {current2 < steps2.length - 1 && (
-                  <Button type="primary" onClick={() => next2()}>
+                  <Button type="primary" onClick={() => next2()}
+                    style={{
+                      boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
+                    }}
+                  >
                     Bước sau
                   </Button>
                 )}
                 {current2 === steps2.length - 1 && (
-                  <Button type="primary" onClick={() => message.success('Quá trình kết nối hoàn tất!')}>
+                  <Button type="primary" onClick={() => message.success('Quá trình kết nối hoàn tất!')}
+                    style={{
+                      boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
+                    }}
+                  >
                     Hoàn thành
                   </Button>
                 )}
@@ -278,6 +295,7 @@ const StepsIntro = () => {
                   <Button
                     style={{
                       margin: '0 8px',
+                      boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
                     }}
                     onClick={() => prev2()}
                   >

@@ -41,9 +41,9 @@ const USMHome = () => {
       }}
     >
       <Search
-        placeholder="input search text"
+        placeholder="Nhập sản phẩm muốn tìm kiếm"
         allowClear
-        enterButton="Search"
+        enterButton="Tìm kiếm"
         size="large"
         onSearch={() => {}}
         style={{
