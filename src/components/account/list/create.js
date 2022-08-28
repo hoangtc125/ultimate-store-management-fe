@@ -1,12 +1,30 @@
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Popconfirm } from 'antd';
-import React from 'react';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Popconfirm, Image } from 'antd';
+import React, { useState } from 'react';
+import images from '../../../assets/images';
+import USMUpload from '../../utils/upload';
 const { Option } = Select;
+const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMCreateAccount = ({visibleCreate, setVisibleCreate, placemenCreate, title}) => {
+const USMCreateAccount = ({visibleCreate, setVisibleCreate, placemenCreate, title, data, setData, USMAction}) => {
+  const [usmImages, setUsmImages] = useState([])
+
+  const onFinish = (values) => {
+    if  (usmImages.length === 0) {
+      values.avatar = <Image src={images.default} width={50}/>
+    } else {
+      values.avatar = <Image src={usmImages[0].thumbUrl} width={50}/>
+    }
+    values.id = data.length
+    values.key = data.length
+    values.birthday = values.birthday._d.toLocaleString()
+    values.action = <USMAction i={data.length}/>
+    setData(prev => [...prev, values])
+    onClose()
+  }
 
   const confirm = (e) => {
     message.success('Click on Yes');
-    onClose()
+    document.getElementById("usm-button-create").click()
   };
   
   const cancel = (e) => {
@@ -32,147 +50,167 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, placemenCreate, titl
           <Space>
             <Button onClick={onClose}>Hủy</Button>
             <Popconfirm
-              title="Are you sure to delete this task?"
+              title="Đồng ý lưu thay đổi?"
               onConfirm={confirm}
               onCancel={cancel}
-              okText="Yes"
-              cancelText="No"
+              placement="bottom"
+              okText="Xác nhận"
+              cancelText="Hủy"
             >
-              <Button type="primary">
+              <Button type="primary" htmlType="submit" form='usm-form-create'>
                 Hoàn tất
               </Button>
             </Popconfirm>
           </Space>
         }
       >
-        <Form layout="vertical" hideRequiredMark>
+        <Form layout="vertical" hideRequiredMark
+          onFinish={onFinish}
+          id="usm-form-create"
+        >
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="name"
-                label="Name"
+                name="fullname"
+                label="Họ tên"
                 rules={[
                   {
                     required: true,
-                    message: 'Please enter user name',
+                    message: 'Họ tên không được bỏ trống',
                   },
                 ]}
               >
-                <Input placeholder="Please enter user name" />
+                <Input placeholder="Nhập họ tên" />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                name="url"
-                label="Url"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter url',
-                  },
-                ]}
+                name="avatar"
+                label="Ảnh đại diện"
               >
-                <Input
-                  style={{
-                    width: '100%',
-                  }}
-                  addonBefore="http://"
-                  addonAfter=".com"
-                  placeholder="Please enter url"
-                />
+                <USMUpload setUsmImages={setUsmImages}/>
               </Form.Item>
             </Col>
           </Row>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="owner"
-                label="Owner"
+                name="role"
+                label="Chức vụ"
                 rules={[
                   {
                     required: true,
-                    message: 'Please select an owner',
+                    message: 'Chức vụ không được để trống ',
                   },
                 ]}
               >
-                <Select placeholder="Please select an owner">
-                  <Option value="xiao">Xiaoxiao Fu</Option>
-                  <Option value="mao">Maomao Zhou</Option>
+                <Select placeholder="Chọn chức vụ" >
+                  <Option value="staff">Nhân viên bán hàng</Option>
+                  <Option value="admin">Chủ cửa hàng</Option>
                 </Select>
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                name="type"
-                label="Type"
+                name="ratio_salary"
+                label="Hệ số lương"
                 rules={[
                   {
                     required: true,
-                    message: 'Please choose the type',
+                    message: 'Hệ số lương không được bỏ trống',
                   },
                 ]}
               >
-                <Select placeholder="Please choose the type">
-                  <Option value="private">Private</Option>
-                  <Option value="public">Public</Option>
-                </Select>
+                <Input placeholder="Nhập hệ số lương" />
               </Form.Item>
             </Col>
           </Row>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="approver"
-                label="Approver"
+                name="username"
+                label="Tên đăng nhập"
                 rules={[
                   {
                     required: true,
-                    message: 'Please choose the approver',
+                    message: 'Tên đăng nhập không được để trống',
                   },
                 ]}
               >
-                <Select placeholder="Please choose the approver">
-                  <Option value="jack">Jack Ma</Option>
-                  <Option value="tom">Tom Liu</Option>
-                </Select>
+                <Input placeholder="Nhập tên đăng nhập" />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                name="dateTime"
-                label="DateTime"
+                name="password"
+                label="Mật khẩu"
                 rules={[
                   {
                     required: true,
-                    message: 'Please choose the dateTime',
+                    message: 'Mật khẩu không được để trống',
                   },
                 ]}
               >
-                <DatePicker.RangePicker
-                  style={{
-                    width: '100%',
-                  }}
-                  getPopupContainer={(trigger) => trigger.parentElement}
-                />
+                <Input placeholder="Nhập mật khẩu" />
               </Form.Item>
             </Col>
           </Row>
           <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="phone"
+                label="Số điện thoại"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Số điện thoại không được để trống',
+                  },
+                ]}
+              >
+                <Input placeholder="Nhập số điện thoại" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="email"
+                label="Địa chỉ Email"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Địa chỉ Email không được để trống',
+                  },
+                ]}
+              >
+                <Input placeholder="Nhập địa chỉ Email" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="birthday"
+                label="Ngày sinh"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Ngày sinh không được để trống',
+                  },
+                ]}
+              >
+                <DatePicker format={dateFormatList} autocomplete="off"/>
+              </Form.Item>
+            </Col>
             <Col span={24}>
               <Form.Item
-                name="description"
-                label="Description"
-                rules={[
-                  {
-                    required: true,
-                    message: 'please enter url description',
-                  },
-                ]}
+                name="profile"
+                label="Thông tin khác"
               >
-                <Input.TextArea rows={4} placeholder="please enter url description" />
+                <Input.TextArea rows={4} placeholder="Nhập thông tin khác" />
               </Form.Item>
             </Col>
           </Row>
+          <Button type="primary" htmlType="submit" id="usm-button-create">
+          </Button>
         </Form>
       </Drawer>
     </>

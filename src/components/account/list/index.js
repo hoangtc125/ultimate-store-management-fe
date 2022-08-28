@@ -29,6 +29,34 @@ const USMListAccount = () => {
   const handleDelete = (index) => {
     console.log(index)
   }
+
+  const USMAction = (i) => {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+        }}
+      >
+        <Tooltip title="Chỉnh sửa">
+          <Button shape="circle" type="primary" ghost icon={<EditOutlined />} 
+            onClick={() => {
+              setPlacementCreate('left')
+              setTitle("Chỉnh sửa tài khoản")
+              showDrawer()
+            }}
+          />
+        </Tooltip>
+        <Tooltip title="Xóa">
+          <Button shape="circle" danger ghost icon={<DeleteOutlined />} 
+            onClick={() => handleDelete(i)}
+          />
+        </Tooltip>
+      </div>
+    )
+  }
   
   useEffect(() => {
     if (isMode([MODE.TEST])) {
@@ -52,30 +80,7 @@ const USMListAccount = () => {
         vals.push({
           key: i,
           ...account, 
-          action: 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-around",
-                alignItems: "center",
-              }}
-            >
-              <Tooltip title="Chỉnh sửa">
-                <Button shape="circle" type="primary" ghost icon={<EditOutlined />} 
-                  onClick={() => {
-                    setPlacementCreate('left')
-                    setTitle("Chỉnh sửa tài khoản")
-                    showDrawer()
-                  }}
-                />
-              </Tooltip>
-              <Tooltip title="Xóa">
-                <Button shape="circle" danger ghost icon={<DeleteOutlined />} 
-                  onClick={() => handleDelete(i)}
-                />
-              </Tooltip>
-            </div>,
+          action: <USMAction i={i}/>,
         });
       }
       setData(vals)
@@ -269,7 +274,7 @@ const USMListAccount = () => {
           >
             Thêm tài khoản
           </Button>
-          <USMCreateAccount visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} placemenCreate={placemenCreate} title={title}/>
+          <USMCreateAccount visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} placemenCreate={placemenCreate} title={title} data={data} setData={setData} USMAction={USMAction}/>
         </div>
       }
       <Table
