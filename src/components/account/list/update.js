@@ -1,12 +1,33 @@
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Popconfirm } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import images from '../../../assets/images';
 import USMUpload from '../../utils/upload';
+import moment from 'moment';
 const { Option } = Select;
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData}) => {
+const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, itemUpdate}) => {
   const [usmImages, setUsmImages] = useState([])
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    form.setFieldsValue({
+      username: itemUpdate?.username,
+      fullname: itemUpdate?.fullname,
+      role: itemUpdate?.role,
+      phone: itemUpdate?.phone,
+      email: itemUpdate?.email,
+      ratio_salary: itemUpdate?.ratio_salary,
+      created_at: itemUpdate?.created_at,
+      // avatar: itemUpdate?.avatar,
+      birthday: moment('11/2/2022', dateFormatList),
+      profile: itemUpdate?.profile,
+      hashed_password: itemUpdate?.hashed_password,
+      is_disabled: itemUpdate?.is_disabled,
+    });
+    setUsmImages([itemUpdate?.avatar])
+    // eslint-disable-next-line
+  }, [itemUpdate])
 
   const onFinish = (values) => {
     if  (usmImages.length === 0) {
@@ -16,14 +37,14 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData}) => {
     }
     values.id = data.length
     values.key = data.length
-    values.hashed_password = values.password
+    values.birthday = values.birthday._d.toLocaleString()
     setData(prev => [...prev, values])
     onClose()
   }
 
   const confirm = (e) => {
     message.success('Click on Yes');
-    document.getElementById("usm-button-create").click()
+    document.getElementById("usm-button-update").click()
   };
   
   const cancel = (e) => {
@@ -31,18 +52,18 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData}) => {
   };
 
   const onClose = () => {
-    setVisibleCreate(false);
+    setVisibleUpdate(false);
   };
 
   return (
     <>
       <Drawer
-        title="Thêm tài khoản mới"
+        title="Chỉnh sửa tài khoản"
         width={"60%"}
         onClose={onClose}
-        visible={visibleCreate}
-        placement="right"
-        destroyOnClose={false}
+        visible={visibleUpdate}
+        placement="left"
+        destroyOnClose={true}
         bodyStyle={{
           paddingBottom: 80,
         }}
@@ -57,7 +78,7 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData}) => {
               okText="Xác nhận"
               cancelText="Hủy"
             >
-              <Button type="primary" htmlType="submit" form='usm-form-create'>
+              <Button type="primary" htmlType="submit" form='usm-form-update'>
                 Hoàn tất
               </Button>
             </Popconfirm>
@@ -66,7 +87,8 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData}) => {
       >
         <Form layout="vertical" hideRequiredMark
           onFinish={onFinish}
-          id="usm-form-create"
+          id="usm-form-update"
+          form={form}
         >
           <Row gutter={16}>
             <Col span={12}>
@@ -88,7 +110,7 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData}) => {
                 name="avatar"
                 label="Ảnh đại diện"
               >
-                <USMUpload setUsmImages={setUsmImages}/>
+                <USMUpload usmImages={usmImages} setUsmImages={setUsmImages}/>
               </Form.Item>
             </Col>
           </Row>
@@ -227,7 +249,7 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData}) => {
               </Form.Item>
             </Col>
           </Row>
-          <Button type="primary" htmlType="submit" id="usm-button-create">
+          <Button type="primary" htmlType="submit" id="usm-button-update">
           </Button>
         </Form>
       </Drawer>
@@ -235,4 +257,4 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData}) => {
   );
 };
 
-export default USMCreateAccount;
+export default USMUpdateAccount;

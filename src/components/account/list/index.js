@@ -1,13 +1,17 @@
 import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, Tooltip, Image, Card } from 'antd';
+import { Button, Input, Space, Table, Tooltip, Image, Card, DatePicker } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import * as MODE from '../../../constants/mode'
 import * as ROLE from '../../../constants/role'
 import { isMode, isRole } from '../../../utils/check';
 import Highlighter from 'react-highlight-words';
 import USMCreateAccount from './create';
+import USMUpdateAccount from './update';
+import USMNote from './note';
 import { AccountResponse } from '../../../model/account'
 import images from '../../../assets/images';
+import moment from 'moment';
+const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
 const USMListAccount = () => {
   const [searchText, setSearchText] = useState('');
@@ -18,19 +22,29 @@ const USMListAccount = () => {
   });
   const [data, setData] = useState([])
   const [visibleCreate, setVisibleCreate] = useState(false);
-  const [placemenCreate, setPlacementCreate] = useState('right')
-  const [title, setTitle] = useState("Tạo mới tài khoản")
+  const [visibleUpdate, setVisibleUpdate] = useState(false);
+  const [idSelected, setIdSelected] = useState()
   const searchInput = useRef(null);
 
-  const showDrawer = () => {
+  const showDrawerCreate = () => {
     setVisibleCreate(true);
   };
 
+  const showDrawerUpdate = () => {
+    setVisibleUpdate(true);
+  };
+
   const handleDelete = (index) => {
-    console.log(index)
+    // eslint-disable-next-line
+    const newData = data.filter((e) => {
+      if (e.id !== index) {
+        return e
+      }
+    })
+    setData(newData)
   }
 
-  const USMAction = (i) => {
+  const USMAction = ({i}) => {
     return (
       <div
         style={{
@@ -43,9 +57,8 @@ const USMListAccount = () => {
         <Tooltip title="Chỉnh sửa">
           <Button shape="circle" type="primary" ghost icon={<EditOutlined />} 
             onClick={() => {
-              setPlacementCreate('left')
-              setTitle("Chỉnh sửa tài khoản")
-              showDrawer()
+              setIdSelected(i)
+              showDrawerUpdate()
             }}
           />
         </Tooltip>
@@ -65,22 +78,21 @@ const USMListAccount = () => {
         const account = AccountResponse(
           "string " + i,
           "string " + i,
-          i,
+          "staff",
           "string " + i,
           "string " + i,
           "string " + i,
           "string " + i,
-          <Image src={images.default} width={50}/>,
+          images.default,
+          moment('11/2/2022'),
           "string " + i,
           "string " + i,
-          "string " + i,
-          "string " + i,
+          "enable",
           i,
         )
         vals.push({
           key: i,
           ...account, 
-          action: <USMAction i={i}/>,
         });
       }
       setData(vals)
@@ -223,6 +235,9 @@ const USMListAccount = () => {
       key: 'avatar',
       width: '10%',
       ...getColumnSearchProps('avatar'),
+      render: (_, record) => {
+        return <Image src={record.avatar} width={50}/>
+      }
     },
     {
       title: 'Chức vụ',
@@ -248,6 +263,9 @@ const USMListAccount = () => {
       dataIndex: 'action',
       key: 'action',
       width: '10%',
+      render: (_, record) => (
+        <USMAction i={record.key}/>
+      ),
     })
   }
 
@@ -259,24 +277,33 @@ const USMListAccount = () => {
 
   return (
     <div>
-      {
-        isRole([ROLE.ADMIN]) &&
-        <div>
-          <Button type="primary" icon={<PlusOutlined />} shape="round"
-            style={{
-              boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
-            }}
-            onClick={() => {
-              setPlacementCreate('right')
-              setTitle("Tạo mới tài khoản")
-              showDrawer()
-            }}
-          >
-            Thêm tài khoản
-          </Button>
-          <USMCreateAccount visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} placemenCreate={placemenCreate} title={title} data={data} setData={setData} USMAction={USMAction}/>
-        </div>
-      }
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "end"
+        }}
+      >
+        {
+          isRole([ROLE.ADMIN]) &&
+          <div>
+            <Button type="primary" icon={<PlusOutlined />} shape="round"
+              style={{
+                boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
+              }}
+              onClick={() => {
+                showDrawerCreate()
+              }}
+            >
+              Thêm tài khoản
+            </Button>
+            <USMCreateAccount visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} data={data} setData={setData}/>
+            <USMUpdateAccount visibleUpdate={visibleUpdate} setVisibleUpdate={setVisibleUpdate} data={data} setData={setData} itemUpdate={data[idSelected]}/>
+          </div>
+        }
+        <USMNote />
+      </div>
       <Table
         columns={columns}
         dataSource={data}
@@ -309,7 +336,7 @@ const USMListAccount = () => {
                   <Card title="Mật khẩu">{record.hashed_password}</Card>
                 </>
               }
-              <Card title="Ngày sinh">{record.birthday}</Card>
+              <Card title="Ngày sinh"><DatePicker format={dateFormatList} defaultValue={record.birthday} disabled /></Card>
               <Card title="Thông tin khác">{record.profile}</Card>
             </div>
           ),

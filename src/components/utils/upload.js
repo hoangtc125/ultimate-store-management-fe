@@ -1,15 +1,27 @@
 import ImgCrop from 'antd-img-crop';
 import { PlusOutlined, CameraOutlined } from '@ant-design/icons';
-import { Modal, Upload } from 'antd';
-import React, { useState } from 'react';
+import { Modal, Upload, Space } from 'antd';
+import React, { useEffect, useState } from 'react';
 import USMCamera from '../camera';
+import urltoFile from '../../utils/dataURLToFile';
 
-const USMUpload = ({maxCount, setUsmImages}) => {
+const USMUpload = ({maxCount, usmImages, setUsmImages}) => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
   const [fileList, setFileList] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  useEffect(() => {
+    if (usmImages) {
+      // setFileList(usmImages)
+      urltoFile(usmImages[0], 'hello.png', 'data/image').then(function(file){ setFileList([file]);});
+    }
+  }, [usmImages])
+
+  useEffect(() => {
+    console.log(fileList)
+  }, [fileList])
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -90,13 +102,8 @@ const USMUpload = ({maxCount, setUsmImages}) => {
 
   return (
     <div id="upload-container">
-      <ImgCrop>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-          }}
-        >
+      <Space>
+        <ImgCrop>
           <Upload
             action={getBase64}
             listType="picture-card"
@@ -107,25 +114,26 @@ const USMUpload = ({maxCount, setUsmImages}) => {
           >
             {fileList.length >= 8 ? null : uploadButton}
           </Upload>
+        </ImgCrop>
+        <ImgCrop>
           <Upload
             listType="picture-card"
             openFileDialogOnClick={false}
-      
           >
             {fileList.length >= 8 ? null : ShotButton}
           </Upload>
-        </div>
-        <Modal visible={previewVisible} title={previewTitle} footer={null} onCancel={handleCancel}>
-          <img
-            alt="example"
-            style={{
-              width: '100%',
-            }}
-            src={previewImage}
-          />
-        </Modal>
-      </ImgCrop>
-      <Modal title="Chụp ảnh qua Camera" visible={isModalVisible} onOk={handleCameraOk} onCancel={handleCameraCancel} width={"80vw"}>
+        </ImgCrop>
+      </Space>
+      <Modal visible={previewVisible} title={previewTitle} footer={null} onCancel={handleCancel}>
+        <img
+          alt="example"
+          style={{
+            width: '100%',
+          }}
+          src={previewImage}
+        />
+      </Modal>
+      <Modal title="Chụp ảnh qua Camera" visible={isModalVisible} onOk={handleCameraOk} onCancel={handleCameraCancel} width={"85vw"} destroyOnClose={true}>
         <USMCamera />
       </Modal>
     </div>
