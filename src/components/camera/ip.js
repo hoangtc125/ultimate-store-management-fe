@@ -16,7 +16,8 @@ const USMIP = ({setIpCamera}) => {
       setItems([
         "OPPO 11 PRO - Địa chỉ IP 1.1.1.1",
         "IPHONE 12 - Địa chỉ IP 2.2.2.2",
-        "SAMSUNG - Địa chỉ IP 3.3.3.3"
+        "SAMSUNG - Địa chỉ IP 3.3.3.3",
+        window.localStorage.getItem("USM_IP_CAMERA") ? window.localStorage.getItem("USM_IP_CAMERA") : '',
       ])
     }
   }, [])
@@ -43,8 +44,10 @@ const USMIP = ({setIpCamera}) => {
       placeholder="Chọn thiết bị kết nối Camera"
       size='large'
       onChange={(value) => {
+        window.localStorage.setItem("USM_IP_CAMERA", value)
         setIpCamera(value)
       }}
+      defaultValue={window.localStorage.getItem("USM_IP_CAMERA")}
       dropdownRender={(menu) => (
         <div
           style={{

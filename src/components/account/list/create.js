@@ -12,7 +12,7 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData}) => {
     if  (usmImages.length === 0) {
       values.avatar = images.default
     } else {
-      values.avatar = usmImages[0].thumbUrl
+      values.avatar = usmImages[0]
     }
     values.id = data.length
     values.key = data.length
@@ -86,9 +86,9 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData}) => {
             <Col span={12}>
               <Form.Item
                 name="avatar"
-                label="Ảnh đại diện"
+                label="Ảnh đại diện (Ảnh đầu tiên sẽ được chọn)"
               >
-                <USMUpload setUsmImages={setUsmImages}/>
+                <USMUpload usmImages={usmImages} setUsmImages={setUsmImages}/>
               </Form.Item>
             </Col>
           </Row>

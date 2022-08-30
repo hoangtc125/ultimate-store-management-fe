@@ -75,20 +75,22 @@ const USMListAccount = () => {
     if (isMode([MODE.TEST])) {
       let vals = []
       for (let i = 0; i < 16; i++) {
-        const account = AccountResponse(
-          "string " + i,
-          "string " + i,
-          "staff",
-          "string " + i,
-          "string " + i,
-          "string " + i,
-          "string " + i,
-          images.default,
-          moment('11/2/2022'),
-          "string " + i,
-          "string " + i,
-          "enable",
-          i,
+        const account = new AccountResponse(
+          {
+            username : "string " + i,
+            fullname : "string " + i,
+            role : "staff",
+            phone : "string " + i,
+            email : "string " + i,
+            ratio_salary : "string " + i,
+            created_at : "string " + i,
+            avatar : images.default,
+            birthday : moment('11/2/2022', dateFormatList),
+            profile : "string " + i,
+            hashed_password : "string " + i,
+            is_disabled : "enable",
+            id : i,
+          }
         )
         vals.push({
           key: i,
@@ -299,7 +301,7 @@ const USMListAccount = () => {
               Thêm tài khoản
             </Button>
             <USMCreateAccount visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} data={data} setData={setData}/>
-            <USMUpdateAccount visibleUpdate={visibleUpdate} setVisibleUpdate={setVisibleUpdate} data={data} setData={setData} itemUpdate={data[idSelected]}/>
+            <USMUpdateAccount visibleUpdate={visibleUpdate} setVisibleUpdate={setVisibleUpdate} data={data} setData={setData} idSelected={idSelected}/>
           </div>
         }
         <USMNote />

@@ -32,6 +32,8 @@ const Login = () => {
   useEffect(() => {
     window.localStorage.removeItem("USM_MODE")
     window.localStorage.removeItem("USM_ROLE")
+    window.localStorage.removeItem("USM_TEMP_IMAGE")
+    window.localStorage.removeItem("USM_IP_CAMERA")
   }, [])
 
   const onFinish = (values) => {

@@ -6,39 +6,45 @@ import moment from 'moment';
 const { Option } = Select;
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, itemUpdate}) => {
+const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSelected}) => {
   const [usmImages, setUsmImages] = useState([])
   const [form] = Form.useForm();
-
+  
   useEffect(() => {
     form.setFieldsValue({
-      username: itemUpdate?.username,
-      fullname: itemUpdate?.fullname,
-      role: itemUpdate?.role,
-      phone: itemUpdate?.phone,
-      email: itemUpdate?.email,
-      ratio_salary: itemUpdate?.ratio_salary,
-      created_at: itemUpdate?.created_at,
-      // avatar: itemUpdate?.avatar,
+      username: data[idSelected]?.username,
+      fullname: data[idSelected]?.fullname,
+      role: data[idSelected]?.role,
+      phone: data[idSelected]?.phone,
+      email: data[idSelected]?.email,
+      ratio_salary: data[idSelected]?.ratio_salary,
+      created_at: data[idSelected]?.created_at,
+      // avatar: data[idSelected]?.avatar,
       birthday: moment('11/2/2022', dateFormatList),
-      profile: itemUpdate?.profile,
-      hashed_password: itemUpdate?.hashed_password,
-      is_disabled: itemUpdate?.is_disabled,
+      profile: data[idSelected]?.profile,
+      hashed_password: data[idSelected]?.hashed_password,
+      is_disabled: data[idSelected]?.is_disabled,
     });
-    setUsmImages([itemUpdate?.avatar])
+    setUsmImages([data[idSelected]?.avatar])
     // eslint-disable-next-line
-  }, [itemUpdate])
+  }, [idSelected])
 
   const onFinish = (values) => {
     if  (usmImages.length === 0) {
       values.avatar = images.default
     } else {
-      values.avatar = usmImages[0].thumbUrl
+      values.avatar = usmImages[0]
     }
-    values.id = data.length
-    values.key = data.length
+    values.id = idSelected
+    values.key = idSelected
     values.birthday = values.birthday._d.toLocaleString()
-    setData(prev => [...prev, values])
+    setData(prev => prev.map((element, id) => {
+      if (id === idSelected) {
+        return values
+      } else {
+        return element
+      }
+    }))
     onClose()
   }
 
@@ -108,7 +114,7 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, itemU
             <Col span={12}>
               <Form.Item
                 name="avatar"
-                label="Ảnh đại diện"
+                label="Ảnh đại diện (Ảnh đầu tiên sẽ được chọn)"
               >
                 <USMUpload usmImages={usmImages} setUsmImages={setUsmImages}/>
               </Form.Item>
@@ -164,7 +170,7 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, itemU
             </Col>
             <Col span={12}>
               <Form.Item
-                name="password"
+                name="hashed_password"
                 label="Mật khẩu"
                 rules={[
                   {

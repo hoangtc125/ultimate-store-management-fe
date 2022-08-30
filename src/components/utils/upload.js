@@ -3,31 +3,41 @@ import { PlusOutlined, CameraOutlined } from '@ant-design/icons';
 import { Modal, Upload, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
 import USMCamera from '../camera';
-import urltoFile from '../../utils/dataURLToFile';
+import { dataURLtoFile } from '../../utils/image';
 
-const USMUpload = ({maxCount, usmImages, setUsmImages}) => {
+const USMUpload = ({usmImages, setUsmImages}) => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
-  const [previewTitle, setPreviewTitle] = useState('');
   const [fileList, setFileList] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [imagesFromCamera, setImagesFromCamera] = useState([])
 
   useEffect(() => {
     if (usmImages) {
-      // setFileList(usmImages)
-      urltoFile(usmImages[0], 'hello.png', 'data/image').then(function(file){ setFileList([file]);});
+      if (usmImages[0]) {
+        let files = []
+        for (let i = 0; i < usmImages.length; i++) {
+          let file = dataURLtoFile(usmImages[i]);
+          const uploadFile = {
+            originFileObj: file,
+          }
+          files.push(uploadFile)
+        }
+        setFileList(files)
+      }
     }
   }, [usmImages])
-
-  useEffect(() => {
-    console.log(fileList)
-  }, [fileList])
 
   const showModal = () => {
     setIsModalVisible(true);
   };
 
   const handleCameraOk = () => {
+    if (imagesFromCamera) {
+      if (imagesFromCamera[0]) {
+        setUsmImages(prev => [...prev, ...imagesFromCamera])
+      }
+    }
     setIsModalVisible(false);
   };
 
@@ -53,12 +63,16 @@ const USMUpload = ({maxCount, usmImages, setUsmImages}) => {
     }
     setPreviewImage(file.url || file.preview);
     setPreviewVisible(true);
-    setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
   };
 
-  const handleChange = ({ fileList: newFileList }) => {
+  const handleChange = async ({ fileList: newFileList }) => {
     setFileList(newFileList)
-    setUsmImages(newFileList)
+    let list_images = []
+    for (let i = 0; i < newFileList.length; i++) {
+      const img = await getBase64(newFileList[i].originFileObj);
+      list_images.push(img)
+    }
+    setUsmImages(list_images)
   };
 
   const uploadButton = (
@@ -108,7 +122,6 @@ const USMUpload = ({maxCount, usmImages, setUsmImages}) => {
             action={getBase64}
             listType="picture-card"
             fileList={fileList}
-            maxCount={maxCount || 1}
             onPreview={handlePreview}
             onChange={handleChange}
           >
@@ -124,7 +137,7 @@ const USMUpload = ({maxCount, usmImages, setUsmImages}) => {
           </Upload>
         </ImgCrop>
       </Space>
-      <Modal visible={previewVisible} title={previewTitle} footer={null} onCancel={handleCancel}>
+      <Modal visible={previewVisible} footer={null} onCancel={handleCancel}>
         <img
           alt="example"
           style={{
@@ -134,7 +147,7 @@ const USMUpload = ({maxCount, usmImages, setUsmImages}) => {
         />
       </Modal>
       <Modal title="Chụp ảnh qua Camera" visible={isModalVisible} onOk={handleCameraOk} onCancel={handleCameraCancel} width={"85vw"} destroyOnClose={true}>
-        <USMCamera />
+        <USMCamera setImagesFromCamera={setImagesFromCamera}/>
       </Modal>
     </div>
   );

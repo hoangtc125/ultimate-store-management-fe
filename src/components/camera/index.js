@@ -1,14 +1,21 @@
 import { Image } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import USMVideo from './video';
 import USMImage from './image';
 import USMIntro from './intro';
 
-const USMCamera = () => {
+const USMCamera = ({setImagesFromCamera}) => {
   // eslint-disable-next-line 
-  const [ipCamera, setIpCamera] = useState('0.0.0.0')
+  const [ipCamera, setIpCamera] = useState(window.localStorage.getItem("USM_IP_CAMERA"))
   const [images, setImages] = useState([])
   const [loadings, setLoadings] = useState([]);
+
+  useEffect(() => {
+    if (setImagesFromCamera) {
+      setImagesFromCamera(images)
+    }
+    // eslint-disable-next-line
+  }, [images])
 
   const enterLoading = (index, timeout) => {
     setLoadings((prevLoadings) => {
