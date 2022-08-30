@@ -1,19 +1,17 @@
 import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, Tooltip, Image, Card, DatePicker } from 'antd';
+import { Button, Input, Space, Table, Tooltip, Image, Card } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import * as MODE from '../../../constants/mode'
 import * as ROLE from '../../../constants/role'
 import { isMode, isRole } from '../../../utils/check';
 import Highlighter from 'react-highlight-words';
-import USMCreateAccount from './create';
-import USMUpdateAccount from './update';
+import USMCreateProduct from './create';
+import USMUpdateProduct from './update';
 import USMNote from './note';
-import { AccountResponse } from '../../../model/account'
+import { ProductResponse } from '../../../model/product'
 import images from '../../../assets/images';
-import moment from 'moment';
-const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMListAccount = () => {
+const USMListProduct = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [pagination, setPagination] = useState({
@@ -75,26 +73,22 @@ const USMListAccount = () => {
     if (isMode([MODE.TEST])) {
       let vals = []
       for (let i = 0; i < 16; i++) {
-        const account = new AccountResponse(
+        const product = new ProductResponse(
           {
-            username : "string " + i,
-            fullname : "string " + i,
-            role : "staff",
-            phone : "string " + i,
-            email : "string " + i,
-            ratio_salary : "string " + i,
-            created_at : "string " + i,
-            avatar : images.default,
-            birthday : moment('11/2/2022', dateFormatList),
-            profile : "string " + i,
-            hashed_password : "string " + i,
-            is_disabled : "enable",
-            id : i,
+            name: "name " + i,
+            nickname: "nickname " + i,
+            priceIn: i,
+            brand: "brand " + i,
+            quantity: i,
+            priceOut: i,
+            images: [images.default, images.default, images.default, images.default, images.default, images.default],
+            is_disabled: "enable",
+            id: i,
           }
         )
         vals.push({
           key: i,
-          ...account, 
+          ...product, 
         });
       }
       setData(vals)
@@ -209,44 +203,51 @@ const USMListAccount = () => {
       sortDirections: ['descend', 'ascend'],
     },
     {
-      title: 'Họ tên',
-      dataIndex: 'fullname',
-      key: 'fullname',
+      title: 'Tên sản phẩm',
+      dataIndex: 'name',
+      key: 'name',
       width: '20%',
-      ...getColumnSearchProps('fullname'),
+      ...getColumnSearchProps('name'),
       sorter: (a, b) => a.role - b.role,
       sortDirections: ['descend', 'ascend'],
     },
     {
-      title: 'Số điện thoại',
-      dataIndex: 'phone',
-      key: 'phone',
+      title: 'Tên gọi khác',
+      dataIndex: 'nickname',
+      key: 'nickname',
       width: '15%',
-      ...getColumnSearchProps('phone'),
+      ...getColumnSearchProps('nickname'),
     },
     {
-      title: 'Địa chỉ Email',
-      dataIndex: 'email',
-      key: 'email',
-      width: '20%',
-      ...getColumnSearchProps('email'),
-    },
-    {
-      title: 'Ảnh đai diện',
-      dataIndex: 'avatar',
-      key: 'avatar',
+      title: 'Thương hiệu',
+      dataIndex: 'brand',
+      key: 'brand',
       width: '10%',
-      ...getColumnSearchProps('avatar'),
-      render: (_, record) => {
-        return <Image src={record.avatar} width={50}/>
-      }
+      ...getColumnSearchProps('brand'),
     },
     {
-      title: 'Chức vụ',
-      dataIndex: 'role',
-      key: 'role',
-      ...getColumnSearchProps('role'),
+      title: 'Giá bán',
+      dataIndex: 'priceOut',
+      key: 'priceOut',
+      width: '10%',
+      ...getColumnSearchProps('priceOut'),
+    },
+    {
+      title: 'Số lượng',
+      dataIndex: 'quantity',
+      key: 'quantity',
+      ...getColumnSearchProps('quantity'),
       width: '8%',
+    },
+    {
+      title: 'Hình ảnh',
+      dataIndex: 'images',
+      key: 'images',
+      width: '10%',
+      ...getColumnSearchProps('images'),
+      render: (_, record) => {
+        return <Image src={record.images[0]} width={50}/>
+      }
     },
     {
       title: 'Trạng thái',
@@ -298,10 +299,10 @@ const USMListAccount = () => {
                 showDrawerCreate()
               }}
             >
-              Thêm tài khoản
+              Thêm sản phẩm
             </Button>
-            <USMCreateAccount visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} data={data} setData={setData}/>
-            <USMUpdateAccount visibleUpdate={visibleUpdate} setVisibleUpdate={setVisibleUpdate} data={data} setData={setData} idSelected={idSelected}/>
+            <USMCreateProduct visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} data={data} setData={setData}/>
+            <USMUpdateProduct visibleUpdate={visibleUpdate} setVisibleUpdate={setVisibleUpdate} data={data} setData={setData} idSelected={idSelected}/>
           </div>
         }
         <USMNote />
@@ -332,14 +333,16 @@ const USMListAccount = () => {
               {
                 isRole([ROLE.ADMIN]) && 
                 <>
-                  <Card title="Tên đăng nhập">{record.username}</Card>
-                  <Card title="Hệ số lương">{record.ratio_salary}</Card>
-                  <Card title="Thời điểm tạo tài khoản">{record.created_at}</Card>
-                  <Card title="Mật khẩu">{record.hashed_password}</Card>
+                  <Card title="Giá nhập vào">{record.priceIn}</Card>
                 </>
               }
-              <Card title="Ngày sinh"><DatePicker format={dateFormatList} value={record.birthday} disabled /></Card>
-              <Card title="Thông tin khác">{record.profile}</Card>
+              <Card title="Ảnh chi tiết">
+                <Space>
+                  {record.images.map((image, id) => {
+                    return <Image key={id} src={image} width={75}/>
+                  })}  
+                </Space>  
+              </Card>
             </div>
           ),
           rowExpandable: record => true,
@@ -349,4 +352,4 @@ const USMListAccount = () => {
   );
 };
 
-export default USMListAccount;
+export default USMListProduct;

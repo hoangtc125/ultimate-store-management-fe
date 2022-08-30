@@ -1,9 +1,8 @@
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Popconfirm } from 'antd';
+import { Button, Col, Drawer, Form, Input, Row, Select, Space, message, Popconfirm } from 'antd';
 import React, { useEffect, useState } from 'react';
 import images from '../../../assets/images';
 import USMUpload from '../../utils/upload';
 const { Option } = Select;
-const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
 const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSelected}) => {
   const [usmImages, setUsmImages] = useState([])
@@ -11,27 +10,24 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
   
   useEffect(() => {
     form.setFieldsValue({
-      username: data[idSelected]?.username,
-      fullname: data[idSelected]?.fullname,
-      role: data[idSelected]?.role,
-      phone: data[idSelected]?.phone,
-      email: data[idSelected]?.email,
-      ratio_salary: data[idSelected]?.ratio_salary,
-      created_at: data[idSelected]?.created_at,
-      birthday: data[idSelected]?.birthday,
-      profile: data[idSelected]?.profile,
-      hashed_password: data[idSelected]?.hashed_password,
+      name: data[idSelected]?.name,
+      nickname: data[idSelected]?.nickname,
+      priceIn: data[idSelected]?.priceIn,
+      brand: data[idSelected]?.brand,
+      quantity: data[idSelected]?.quantity,
+      priceOut: data[idSelected]?.priceOut,
+      images: data[idSelected]?.images,
       is_disabled: data[idSelected]?.is_disabled,
     });
-    setUsmImages([data[idSelected]?.avatar])
+    setUsmImages(data[idSelected]?.images)
     // eslint-disable-next-line
   }, [idSelected])
 
   const onFinish = (values) => {
     if  (usmImages.length === 0) {
-      values.avatar = images.default
+      values.images = [images.default]
     } else {
-      values.avatar = usmImages[0]
+      values.images = usmImages
     }
     values.id = idSelected
     values.key = idSelected
@@ -96,22 +92,22 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="fullname"
-                label="Họ tên"
+                name="name"
+                label="Tên sản phẩm"
                 rules={[
                   {
                     required: true,
-                    message: 'Họ tên không được bỏ trống',
+                    message: 'Tên sản phẩm không được bỏ trống',
                   },
                 ]}
               >
-                <Input placeholder="Nhập họ tên"/>
+                <Input placeholder="Nhập tên sản phẩm"/>
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                name="avatar"
-                label="Ảnh đại diện (Ảnh đầu tiên sẽ được chọn)"
+                name="images"
+                label="Danh sách ảnh (Có thể chọn nhiều ảnh khác nhau)"
               >
                 <USMUpload usmImages={usmImages} setUsmImages={setUsmImages}/>
               </Form.Item>
@@ -120,135 +116,80 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="role"
-                label="Chức vụ"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Chức vụ không được để trống ',
-                  },
-                ]}
+                name="brand"
+                label="Thương hiệu"
               >
-                <Select placeholder="Chọn chức vụ" >
-                  <Option value="staff">Nhân viên bán hàng</Option>
-                  <Option value="admin">Chủ cửa hàng</Option>
-                </Select>
+                <Input placeholder="Nhập thương hiệu"/>
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                name="ratio_salary"
-                label="Hệ số lương"
+                name="quantity"
+                label="Số lượng"
                 rules={[
                   {
                     required: true,
-                    message: 'Hệ số lương không được bỏ trống',
+                    message: 'Số lượng không được bỏ trống',
                   },
                 ]}
               >
-                <Input placeholder="Nhập hệ số lương" />
+                <Input placeholder="Nhập số lượng" />
               </Form.Item>
             </Col>
           </Row>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="username"
-                label="Tên đăng nhập"
+                name="priceIn"
+                label="Giá nhập vào"
                 rules={[
                   {
                     required: true,
-                    message: 'Tên đăng nhập không được để trống',
+                    message: 'Giá nhập vào không được để trống',
                   },
                 ]}
               >
-                <Input placeholder="Nhập tên đăng nhập" />
+                <Input placeholder="Nhập giá nhập vào" />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                name="hashed_password"
-                label="Mật khẩu"
+                name="priceOut"
+                label="Giá bán ra"
                 rules={[
                   {
                     required: true,
-                    message: 'Mật khẩu không được để trống',
+                    message: 'Giá bán ra không được để trống',
                   },
                 ]}
               >
-                <Input placeholder="Nhập mật khẩu" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="phone"
-                label="Số điện thoại"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Số điện thoại không được để trống',
-                  },
-                ]}
-              >
-                <Input placeholder="Nhập số điện thoại" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="email"
-                label="Địa chỉ Email"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Địa chỉ Email không được để trống',
-                  },
-                ]}
-              >
-                <Input placeholder="Nhập địa chỉ Email" />
+                <Input placeholder="Nhập giá bán ra" />
               </Form.Item>
             </Col>
           </Row>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="birthday"
-                label="Ngày sinh"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Ngày sinh không được để trống',
-                  },
-                ]}
+                name="nickname"
+                label="Tên gọi khác"
               >
-                <DatePicker format={dateFormatList} autocomplete="off"/>
+                <Input placeholder="Nhập tên gọi khác" />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
                 name="is_disabled"
-                label="Trạng thái của tài khoản"
+                label="Trạng thái của sản phẩm"
                 rules={[
                   {
                     required: true,
                   },
                 ]}
               >
-                <Select placeholder="Chọn trạng thái của tài khoản" >
+                <Select placeholder="Chọn trạng thái của sản phẩm" >
                   <Option value="enable">Bình thường</Option>
                   <Option value="disabled">Vô hiệu hóa</Option>
                 </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item
-                name="profile"
-                label="Thông tin khác"
-              >
-                <Input.TextArea rows={4} placeholder="Nhập thông tin khác" />
               </Form.Item>
             </Col>
           </Row>
