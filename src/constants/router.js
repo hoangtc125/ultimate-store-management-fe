@@ -9,6 +9,8 @@ import USMHome from '../components/home'
 import USMCamera from '../components/camera'
 import USMListAccount from '../components/account/list'
 import USMListProduct from '../components/product/list'
+import USMProduct from '../components/product/detail'
+import USMChart from '../components/report/chart'
 
 function Mapping(url, element) {
     return {
@@ -23,5 +25,7 @@ export const Page = [
     Mapping(URL.CAMERA, <DefaultLayout Component={<USMCamera />} Role={[ROLE.ADMIN]}/> ),
     Mapping(URL.ACCOUNTS, <DefaultLayout Component={<USMListAccount />}/> ),
     Mapping(URL.PRODUCTS, <DefaultLayout Component={<USMListProduct />}/> ),
+    Mapping(URL.PRODUCT, <DefaultLayout Component={<USMProduct />} Role={[ROLE.ADMIN]}/> ), 
+    Mapping(URL.CHARTS, <DefaultLayout Component={<USMChart />} Role={[ROLE.ADMIN]}/> ), 
     Mapping(URL.ERROR_404, <ErrorLayout Component={<USMError />}/> ),
 ]

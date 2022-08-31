@@ -10,6 +10,7 @@ import {
   GoldOutlined,
   LineChartOutlined,
   CalendarOutlined,
+  ShoppingOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Image, Switch } from 'antd';
 import React, { useState } from 'react';
@@ -42,9 +43,10 @@ const USMSideBar = () => {
     ]),
     getItem('Sản phẩm', 'products', <GoldOutlined />, [
       getItem(<Link to={URL.PRODUCTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Danh sách</span><UnorderedListOutlined /></Link>, 'product-list'),
+      isRole([ROLE.ADMIN]) && getItem(<Link to={URL.PRODUCT} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Chi tiết</span><ShoppingOutlined /></Link>, 'product-detail'),
     ]),
-    getItem('Báo cáo', 'reports', <LineChartOutlined />, [
-      getItem(<Link to={URL.ERROR_404} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Danh sách</span><UnorderedListOutlined /></Link>, 'report-list'),
+    isRole([ROLE.ADMIN]) && getItem('Báo cáo', 'reports', <LineChartOutlined />, [
+      getItem(<Link to={URL.CHARTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Biểu đồ</span><UnorderedListOutlined /></Link>, 'report-list'),
     ]), 
     getItem('Giao diện', 'inteface', <FundProjectionScreenOutlined />, [
       getItem(<Switch checkedChildren="Chế độ sáng" unCheckedChildren="Chế độ tối" defaultChecked id="theme-check"
