@@ -1,4 +1,8 @@
 import { Statistic, Descriptions, PageHeader, Tag, Image, Space } from 'antd';
+import {
+  ShoppingCartOutlined,
+  TrademarkOutlined,
+} from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import * as MODE from '../../../constants/mode'
 import images from '../../../assets/images'
@@ -24,16 +28,19 @@ const fakeData = {
 }
 
 const renderContent = (bill) => (
-  <Descriptions size="small" column={3}>
-    <Descriptions.Item label="Khách hàng">{bill?.guest}</Descriptions.Item>
-    <Descriptions.Item label="Mã hóa đơn">
-      <p>{bill?.id}</p>
-    </Descriptions.Item>
-    <Descriptions.Item label="Ngày tạo">{bill?.created_at}</Descriptions.Item>
-    <Descriptions.Item label="Sản phẩm">
-      {bill?.products}
-    </Descriptions.Item>
-  </Descriptions>
+  <div>
+    <Tag color="error" icon={<ShoppingCartOutlined style={{fontSize: "2rem"}}/>}><strong>Giỏ hàng hiện tại</strong></Tag>
+    <Descriptions size="small" column={3}>
+      <Descriptions.Item label="Khách hàng">{bill?.guest}</Descriptions.Item>
+      <Descriptions.Item label="Mã hóa đơn">
+        <p>{bill?.id}</p>
+      </Descriptions.Item>
+      <Descriptions.Item label="Ngày tạo">{bill?.created_at}</Descriptions.Item>
+      <Descriptions.Item label="Sản phẩm">
+        {bill?.products}
+      </Descriptions.Item>
+    </Descriptions>
+  </div>
 );
 
 const extraContent = (bill) => {
@@ -70,6 +77,7 @@ const Content = ({ children, extra }) => (
   <div className="content"
     style={{
       width: "55%",
+      marginTop: "-50px",
     }}
   >
     <div className="main">{children}</div>
@@ -95,7 +103,19 @@ const Header = () => {
       <PageHeader
         ghost={false}
         title={<Tag color="blue"><strong>{window.localStorage.getItem("USM_MODE")}</strong> - <strong>{window.localStorage.getItem("USM_ROLE")}</strong></Tag>}
-        subTitle="Phần mềm chuyển đổi số cho cửa hàng kinh doanh quy mô hộ gia đình"
+        subTitle={
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "start",
+            }}
+          >
+            <span>Phần mềm chuyển đổi số cho cửa hàng</span>
+            <span>kinh doanh quy mô hộ gia đình {<TrademarkOutlined />}</span>
+          </div>
+        }
         style={{
           borderRadius: "10px",
           boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
@@ -111,6 +131,7 @@ const Header = () => {
             justifyContent: "space-between",
             alignItems: "center",
             width: "100%",
+            marginTop: "-10px",
           }}
         >
           <div
@@ -137,7 +158,9 @@ const Header = () => {
             </Descriptions>
             <Image src={data?.staff?.avatar} fallback={images.default} width={80}/>
           </div>
-          <Content extra={extraContent(data?.bill)}>{renderContent(data?.bill)}</Content>
+          <Content extra={extraContent(data?.bill)}>
+            {renderContent(data?.bill)}
+          </Content>
         </div>
       </PageHeader>
     </div>

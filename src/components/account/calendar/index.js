@@ -1,7 +1,5 @@
 import { Alert, Calendar, Select, Row, Col, Radio } from 'antd';
 import moment from 'moment';
-import 'moment/locale/zh-cn';
-import locale from 'antd/es/locale/vi_VN';
 import React, { useState } from 'react';
 
 const USMAccountCalendar = () => {
@@ -20,7 +18,7 @@ const USMAccountCalendar = () => {
   return (
     <>
       <Alert message={`Ngày đã chọn: ${selectedValue?.format('DD/MM/YYYY')}`} />
-      <Calendar value={value} onSelect={onSelect} onPanelChange={onPanelChange} locale={locale}
+      <Calendar value={value} onSelect={onSelect} onPanelChange={onPanelChange}
         headerRender={({ value, type, onChange, onTypeChange }) => {
           const start = 0;
           const end = 12;
@@ -101,9 +99,6 @@ const USMAccountCalendar = () => {
               </Row>
             </div>
           );
-        }}
-        monthCellRender={(date) => {
-          console.log(date)
         }}
       />
     </>

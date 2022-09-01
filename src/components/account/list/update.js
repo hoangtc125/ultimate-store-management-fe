@@ -222,7 +222,11 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
                   },
                 ]}
               >
-                <DatePicker format={dateFormatList} autocomplete="off"/>
+                <DatePicker format={dateFormatList} autocomplete="off" 
+                  style={{
+                    width: "100%",
+                  }}
+                />
               </Form.Item>
             </Col>
             <Col span={12}>

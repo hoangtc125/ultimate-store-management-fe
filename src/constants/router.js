@@ -11,6 +11,7 @@ import USMListAccount from '../components/account/list'
 import USMListProduct from '../components/product/list'
 import USMChart from '../components/report/chart'
 import USMAccountCalendar from '../components/account/calendar'
+import USMCart from '../components/cart'
 
 function Mapping (
     {
@@ -34,7 +35,14 @@ export const Page = [
         url: URL.HOME,
         element: {
             layout: DefaultLayout,
-            component: USMHome
+            component: USMHome,
+        },
+    }),
+    new Mapping({
+        url: URL.CART,
+        element: {
+            layout: DefaultLayout,
+            component: USMCart,
         },
     }),
     new Mapping({

@@ -11,6 +11,7 @@ import {
   LineChartOutlined,
   CalendarOutlined,
   ShoppingCartOutlined,
+  PieChartOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Image, Switch } from 'antd';
 import React, { useState } from 'react';
@@ -36,8 +37,8 @@ const USMSideBar = () => {
   
   const items = [
     getItem(<Link to={URL.HOME}>Cửa hàng</Link>, 'home', <HomeOutlined />),
-    getItem(<Link to={URL.ERROR_404}>Giỏ hàng</Link>, 'cart', <ShoppingCartOutlined />),
-    isRole([ROLE.ADMIN]) && getItem(<Link to={URL.CAMERA}>Kết nối Camera</Link>, 'camera', <VideoCameraOutlined />),
+    getItem(<Link to={URL.CART}>Giỏ hàng</Link>, 'cart', <ShoppingCartOutlined />),
+    getItem(<Link to={URL.CAMERA}>Kết nối Camera</Link>, 'camera', <VideoCameraOutlined />),
     getItem('Nhân viên', 'accounts', <UsergroupAddOutlined />, [
       getItem(<Link to={URL.ACCOUNTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Danh sách</span><UnorderedListOutlined /></Link>, 'account-list'),
       getItem(<Link to={URL.ACCOUNTS_CALENDAR} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Lịch làm việc</span><CalendarOutlined /></Link>, 'account-calendar'),
@@ -46,7 +47,7 @@ const USMSideBar = () => {
       getItem(<Link to={URL.PRODUCTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Danh sách</span><UnorderedListOutlined /></Link>, 'product-list'),
     ]),
     isRole([ROLE.ADMIN]) && getItem('Báo cáo', 'reports', <LineChartOutlined />, [
-      getItem(<Link to={URL.CHARTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Biểu đồ</span><UnorderedListOutlined /></Link>, 'report-list'),
+      getItem(<Link to={URL.CHARTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Biểu đồ</span><PieChartOutlined /></Link>, 'report-list'),
     ]), 
     getItem('Giao diện', 'inteface', <FundProjectionScreenOutlined />, [
       getItem(<Switch checkedChildren="Chế độ sáng" unCheckedChildren="Chế độ tối" defaultChecked id="theme-check"
