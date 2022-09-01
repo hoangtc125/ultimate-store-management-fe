@@ -4,13 +4,13 @@ import USMSideBar from '../components/sideBar'
 import USMHeader from '../components/header'
 import USMBody from '../components/body'
 import USMFooter from '../components/footer'
-import { genarateBreadcrumb } from '../../utils/breadcrumb'
+import USMBreadcrumb from '../components/breadcrumb';
 import { isVisit } from '../../utils/check';
 import { useNavigate } from 'react-router-dom';
   
 const { Content } = Layout;
 
-const DefaultLayout = ({ Component, Role, Time }) => {
+const DefaultLayout = ({ Component, Role }) => {
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -39,18 +39,7 @@ const DefaultLayout = ({ Component, Role, Time }) => {
             margin: '0 16px',
           }}
         >
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between"
-            }}
-          >
-            {genarateBreadcrumb(window.location.pathname)}
-            <div>{Time}</div>
-          </div>
+          <USMBreadcrumb />
           <div
             className="site-layout-background"
             style={{

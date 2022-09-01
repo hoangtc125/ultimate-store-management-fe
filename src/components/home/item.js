@@ -4,7 +4,7 @@ import { useState } from 'react';
 import USMProduct from '../product/detail';
 const { Meta } = Card;
 
-const USMItemProduct = ({title, description}) => {
+const USMItemProduct = ({item}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = () => {
@@ -30,12 +30,12 @@ const USMItemProduct = ({title, description}) => {
         onClick={showModal}
         cover={<img alt="example" src={images.default} />}
       >
-        <Meta title={title} description={description} />
+        <Meta title={item?.name} description={item?.nickname} />
       </Card>
       <Modal title="Thông tin sản phẩm" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}
-        width={"100%"}
+        width={"90%"}
       >
-        <USMProduct />
+        <USMProduct item={item}/>
       </Modal>
     </div>
   )

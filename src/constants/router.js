@@ -9,7 +9,6 @@ import USMHome from '../components/home'
 import USMCamera from '../components/camera'
 import USMListAccount from '../components/account/list'
 import USMListProduct from '../components/product/list'
-import USMProduct from '../components/product/detail'
 import USMChart from '../components/report/chart'
 import USMAccountCalendar from '../components/account/calendar'
 
@@ -58,14 +57,6 @@ export const Page = [
         element: {
             layout: DefaultLayout,
             component: USMListProduct,
-        },
-    }),
-    new Mapping({
-        url: URL.PRODUCT,
-        element: {
-            layout: DefaultLayout,
-            component: USMProduct,
-            role: [ROLE.ADMIN],
         },
     }),
     new Mapping({

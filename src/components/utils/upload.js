@@ -146,7 +146,7 @@ const USMUpload = ({usmImages, setUsmImages}) => {
           src={previewImage}
         />
       </Modal>
-      <Modal title="Chụp ảnh qua Camera" visible={isModalVisible} onOk={handleCameraOk} onCancel={handleCameraCancel} width={"max-content"} destroyOnClose={true}>
+      <Modal title="Chụp ảnh qua Camera" visible={isModalVisible} onOk={handleCameraOk} onCancel={handleCameraCancel} width={"90%"} destroyOnClose={true}>
         <USMCamera setImagesFromCamera={setImagesFromCamera}/>
       </Modal>
     </div>

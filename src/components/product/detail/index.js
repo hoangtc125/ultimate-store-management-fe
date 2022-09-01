@@ -1,32 +1,11 @@
-import { Image, Space, Badge, Descriptions } from "antd"
-import { useEffect, useState } from "react"
-import images from '../../../assets/images'
-import * as MODE from '../../../constants/mode'
-import { isMode } from '../../../utils/check'
-import { ProductResponse } from '../../../model/product'
+import { Image, Space, Badge, Descriptions, InputNumber, Button } from "antd"
+import { useState } from "react"
 
-const USMProduct = () => {
-  const [data, setData] = useState()
+const USMProduct = ({item}) => {
+  // eslint-disable-next-line
+  const [data, setData] = useState(item)
   const [idImage, setIdImage] = useState(0)
-
-  useEffect(() => {
-    if (isMode([MODE.TEST])) {
-      const product = new ProductResponse(
-        {
-          name: "name",
-          nickname: "nickname",
-          priceIn: 1,
-          brand: "brand",
-          quantity: 1,
-          priceOut: 1,
-          images: [images.default, images.logo, images.default, images.logo, images.default, images.logo],
-          is_disabled: "enable",
-          id: 1,
-        }
-      )
-      setData(product)
-    }
-  }, [])
+  const [value, setValue] = useState('1');
 
   return (
     <div
@@ -69,8 +48,32 @@ const USMProduct = () => {
             alignItems: "center",
           }}
         >
-          <Descriptions title="Thông tin sản phẩm" layout="vertical" bordered
-            column={3}
+          <Descriptions 
+            layout="vertical" bordered column={3}
+            title={
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <strong>Thông tin sản phẩm</strong>
+                <div>
+                  <Button type="primary" size="large" >
+                    Thêm vào giỏ hàng 
+                  </Button>
+                  <InputNumber size="large" min={1} max={100} value={value} onChange={setValue}
+                    formatter={(value) => `${value} sản phẩm`}
+                    style={{
+                      width: "160px",
+                    }}
+                  />
+                </div>
+              </div>
+            } 
             style={{
               width: "100%",
             }}

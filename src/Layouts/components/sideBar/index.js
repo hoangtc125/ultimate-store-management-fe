@@ -10,7 +10,7 @@ import {
   GoldOutlined,
   LineChartOutlined,
   CalendarOutlined,
-  ShoppingOutlined,
+  ShoppingCartOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Image, Switch } from 'antd';
 import React, { useState } from 'react';
@@ -36,6 +36,7 @@ const USMSideBar = () => {
   
   const items = [
     getItem(<Link to={URL.HOME}>Cửa hàng</Link>, 'home', <HomeOutlined />),
+    getItem(<Link to={URL.ERROR_404}>Giỏ hàng</Link>, 'cart', <ShoppingCartOutlined />),
     isRole([ROLE.ADMIN]) && getItem(<Link to={URL.CAMERA}>Kết nối Camera</Link>, 'camera', <VideoCameraOutlined />),
     getItem('Nhân viên', 'accounts', <UsergroupAddOutlined />, [
       getItem(<Link to={URL.ACCOUNTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Danh sách</span><UnorderedListOutlined /></Link>, 'account-list'),
@@ -43,7 +44,6 @@ const USMSideBar = () => {
     ]),
     getItem('Sản phẩm', 'products', <GoldOutlined />, [
       getItem(<Link to={URL.PRODUCTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Danh sách</span><UnorderedListOutlined /></Link>, 'product-list'),
-      isRole([ROLE.ADMIN]) && getItem(<Link to={URL.PRODUCT} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Chi tiết</span><ShoppingOutlined /></Link>, 'product-detail'),
     ]),
     isRole([ROLE.ADMIN]) && getItem('Báo cáo', 'reports', <LineChartOutlined />, [
       getItem(<Link to={URL.CHARTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Biểu đồ</span><UnorderedListOutlined /></Link>, 'report-list'),

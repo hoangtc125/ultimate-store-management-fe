@@ -1,5 +1,5 @@
 import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, Tooltip, Image, Card, DatePicker } from 'antd';
+import { Button, Input, Space, Table, Tooltip, Image, Card, DatePicker, Popconfirm, message } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import * as MODE from '../../../constants/mode'
 import * as ROLE from '../../../constants/role'
@@ -34,17 +34,19 @@ const USMListAccount = () => {
     setVisibleUpdate(true);
   };
 
-  const handleDelete = (index) => {
-    // eslint-disable-next-line
-    const newData = data.filter((e) => {
-      if (e.id !== index) {
-        return e
-      }
-    })
-    setData(newData)
-  }
-
+  
   const USMAction = ({i}) => {
+    const handleDelete = (index) => {
+      // eslint-disable-next-line
+      const newData = data.filter((e) => {
+        if (e.id !== index) {
+          return e
+        }
+      })
+      setData(newData)
+      message.success('Xóa thành công');
+    }
+
     return (
       <div
         style={{
@@ -63,9 +65,15 @@ const USMListAccount = () => {
           />
         </Tooltip>
         <Tooltip title="Xóa">
-          <Button shape="circle" danger ghost icon={<DeleteOutlined />} 
-            onClick={() => handleDelete(i)}
-          />
+          <Popconfirm
+            title="Xác nhận xóa?"
+            onConfirm={() => handleDelete(i)}
+            okText="Yes"
+            cancelText="No"
+            placement='bottom'
+          >
+            <Button shape="circle" danger ghost icon={<DeleteOutlined />} />
+          </Popconfirm>
         </Tooltip>
       </div>
     )
