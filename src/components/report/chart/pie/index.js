@@ -39,6 +39,7 @@ const USMPie = () => {
         type: 'element-active',
       },
     ],
+    
   };
 
   return <Pie {...config} 

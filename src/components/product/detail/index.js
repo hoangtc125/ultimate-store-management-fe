@@ -75,28 +75,25 @@ const USMProduct = () => {
               width: "100%",
             }}
           >
-            <Descriptions.Item label="Tên sản phẩm">Cloud Database</Descriptions.Item>
-            <Descriptions.Item label="Thương hiệu">Prepaid</Descriptions.Item>
-            <Descriptions.Item label="Số lượng">YES</Descriptions.Item>
-            <Descriptions.Item label="Thời gian nhập hàng">2018-04-24 18:00:00</Descriptions.Item>
+            <Descriptions.Item label="Tên sản phẩm">{data?.name}</Descriptions.Item>
+            <Descriptions.Item label="Thương hiệu">{data?.brand}</Descriptions.Item>
+            <Descriptions.Item label="Số lượng">{data?.quantity}</Descriptions.Item>
             <Descriptions.Item label="Trạng thái" span={3}>
-              <Badge status="processing" text="Bình thường" />
+              <Badge status="processing" text={data?.is_disabled} />
             </Descriptions.Item>
-            <Descriptions.Item label="Giá nhập">$80.00</Descriptions.Item>
-            <Descriptions.Item label="Giá bán">$20.00</Descriptions.Item>
-            <Descriptions.Item label="Mã sản phẩm">M</Descriptions.Item>
-            <Descriptions.Item label="Ảnh sản phẩm">
+            <Descriptions.Item label="Giá nhập">{data?.priceIn}</Descriptions.Item>
+            <Descriptions.Item label="Giá bán">{data?.priceOut}</Descriptions.Item>
+            <Descriptions.Item label="Mã sản phẩm">{data?.id}</Descriptions.Item>
+            <Descriptions.Item label="Ảnh sản phẩm" span={3}>
               <Space
                 style={{
                   width: "100%",
                   height: "100%",
-                  overflow: "auto",
                   display: "flex",
                   flexDirection: "row",
                   alignItems: "center",
                   justifyContent: "flex-start",
                   marginTop: "10px",
-                  overflowX: "auto",
                 }}
               >
                 {data?.images.map((image, id) => {
@@ -105,7 +102,7 @@ const USMProduct = () => {
                     style={{
                       width: "100px",
                       cursor: "pointer",
-                      opacity: id === idImage ? "1" : "0.5",
+                      opacity: id === idImage ? "1" : "0.3",
                     }}
                     onClick={() => setIdImage(id)}
                   />

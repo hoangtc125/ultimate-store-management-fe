@@ -25,11 +25,11 @@ const USMLine = () => {
     xField: 'Date',
     yField: 'scales',
     xAxis: {
-      tickCount: 5,
+      tickCount: 50,
     },
     slider: {
-      start: 0.1,
-      end: 0.5,
+      start: 0.8,
+      end: 1,
     },
   };
 

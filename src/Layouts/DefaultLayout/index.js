@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
   
 const { Content } = Layout;
 
-const DefaultLayout = ({ Component, Role }) => {
+const DefaultLayout = ({ Component, Role, Time }) => {
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -39,7 +39,18 @@ const DefaultLayout = ({ Component, Role }) => {
             margin: '0 16px',
           }}
         >
-          {genarateBreadcrumb(window.location.pathname)}
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between"
+            }}
+          >
+            {genarateBreadcrumb(window.location.pathname)}
+            <div>{Time}</div>
+          </div>
           <div
             className="site-layout-background"
             style={{

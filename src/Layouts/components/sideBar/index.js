@@ -39,7 +39,7 @@ const USMSideBar = () => {
     isRole([ROLE.ADMIN]) && getItem(<Link to={URL.CAMERA}>Kết nối Camera</Link>, 'camera', <VideoCameraOutlined />),
     getItem('Nhân viên', 'accounts', <UsergroupAddOutlined />, [
       getItem(<Link to={URL.ACCOUNTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Danh sách</span><UnorderedListOutlined /></Link>, 'account-list'),
-      getItem(<Link to={URL.ERROR_404} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Lịch làm việc</span><CalendarOutlined /></Link>, 'account-calendar'),
+      getItem(<Link to={URL.ACCOUNTS_CALENDAR} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Lịch làm việc</span><CalendarOutlined /></Link>, 'account-calendar'),
     ]),
     getItem('Sản phẩm', 'products', <GoldOutlined />, [
       getItem(<Link to={URL.PRODUCTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Danh sách</span><UnorderedListOutlined /></Link>, 'product-list'),
