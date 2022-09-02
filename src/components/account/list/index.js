@@ -82,9 +82,9 @@ const USMListAccount = () => {
   
   useEffect(() => {
     if (isMode([MODE.TEST])) {
-      const vals = accounts.map((account, id) => {
+      const vals = accounts.map(account => {
         return {
-          key: id,
+          key: account.id,
           ...account,
         }
       })

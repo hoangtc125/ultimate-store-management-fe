@@ -97,6 +97,7 @@ const USMSideBar = ({Direction, ComponentSize}) => {
               width: "100%",
             }}
             onChange={(value) => setComponentSize(value.value)}
+            size="middle"
           >
             <Option value="small">Nhỏ</Option>
             <Option value="middle">Vừa</Option>

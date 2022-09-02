@@ -1,12 +1,13 @@
 import { SearchOutlined, DeleteOutlined, ShoppingCartOutlined, DollarOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, Tooltip, Image, Card } from 'antd';
+import { Button, Input, Space, Table, Tooltip, Image, Card, Popconfirm, InputNumber } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import * as MODE from '../../constants/mode'
 import { isMode } from '../../utils/check';
 import Highlighter from 'react-highlight-words';
-import { ProductResponse } from '../../model/product'
-import images from '../../assets/images';
-import moneyToText from '../../utils/money';
+import { moneyToText, splitMoney } from '../../utils/money';
+import cart from '../../data/cart';
+import { getProducts } from '../../utils/cart';
+const { Search } = Input;
 
 const USMListProduct = () => {
   const [searchText, setSearchText] = useState('');
@@ -17,17 +18,16 @@ const USMListProduct = () => {
     position: ['bottomCenter'],
   });
   const [data, setData] = useState([])
+  const [cartData, setCartData] = useState()
+  const [totalPrice, setTotalPrice] = useState(0)
   // const [idSelected, setIdSelected] = useState()
   const searchInput = useRef(null);
 
   const handleDelete = (index) => {
-    // eslint-disable-next-line
-    const newData = data.filter((e) => {
-      if (e.id !== index) {
-        return e
-      }
-    })
-    setData(newData)
+    let newCart = {...cartData}
+    delete newCart.products[index]
+    setCartData(newCart)
+    updateData(newCart)
   }
 
   const USMAction = ({i}) => {
@@ -41,37 +41,42 @@ const USMListProduct = () => {
         }}
       >
         <Tooltip title="Xóa">
-          <Button shape="circle" danger ghost icon={<DeleteOutlined />} 
-            onClick={() => handleDelete(i)}
-          />
+          <Popconfirm
+            title="Xác nhận xóa?"
+            onConfirm={() => handleDelete(i)}
+            okText="Yes"
+            cancelText="No"
+            placement='bottom'
+          >
+            <Button shape="circle" danger ghost icon={<DeleteOutlined />} />
+          </Popconfirm>
         </Tooltip>
       </div>
+    )
+  }
+
+  const updateData = (c) => {
+    const newProducts = getProducts(c) || []
+    let vals = newProducts.map(product => {
+      return {
+        key: product?.id,
+        itemQuantity: c.products[product?.id],
+        itemSubPrice: c.products[product?.id] * product?.priceOut,
+        ...product,
+      }
+    })
+    setData(vals)
+    setTotalPrice(
+      vals.reduce((total, product) => {
+        return total + product?.itemSubPrice
+      }, 0)
     )
   }
   
   useEffect(() => {
     if (isMode([MODE.TEST])) {
-      let vals = []
-      for (let i = 0; i < 10; i++) {
-        const product = new ProductResponse(
-          {
-            name: "name " + i,
-            nickname: "nickname " + i,
-            priceIn: i,
-            brand: "brand " + i,
-            quantity: i,
-            priceOut: i,
-            images: [images.default, images.default, images.default, images.default, images.default, images.default],
-            is_disabled: "enable",
-            id: i,
-          }
-        )
-        vals.push({
-          key: i,
-          ...product, 
-        });
-      }
-      setData(vals)
+      setCartData(cart)
+      updateData(cart)
     }
   }, [])
 
@@ -204,6 +209,9 @@ const USMListProduct = () => {
       key: 'priceOut',
       width: '15%',
       ...getColumnSearchProps('priceOut'),
+      render: (_, record) => {
+        return splitMoney(record.priceOut)
+      }
     },
     {
       title: 'Số lượng sản phẩm',
@@ -211,6 +219,14 @@ const USMListProduct = () => {
       key: 'itemQuantity',
       ...getColumnSearchProps('itemQuantity'),
       width: '15%',
+      render: (_, record) => {
+        return <InputNumber min={1} max={100} defaultValue={record.itemQuantity} onChange={(value) => {
+          let newCart = {...cartData}
+          newCart.products[record.id] = value
+          setCartData(newCart)
+          updateData(newCart)
+        }} />
+      }
     },
     {
       title: 'Thành tiền',
@@ -220,6 +236,9 @@ const USMListProduct = () => {
       sorter: (a, b) => a.id - b.id,
       sortDirections: ['descend', 'ascend'],
       width: '15%',
+      render: (_, record) => {
+        return splitMoney(record.itemSubPrice)
+      }
     },{
       title: 'Thao tác',
       dataIndex: 'action',
@@ -253,9 +272,28 @@ const USMListProduct = () => {
       <Table
         title={() => {
           return (
-            <Space>
-              <ShoppingCartOutlined style={{fontSize: "2rem"}}/> 
-              <span>Giỏ hàng</span>
+            <Space
+              style={{
+                width: "100%",
+                dispaly: "flex",
+                flexDirection: "row",
+                justifyContent :"space-between",
+                alignItems: "center",
+              }}
+            >
+              <Space>
+                <ShoppingCartOutlined style={{fontSize: "2rem"}}/> 
+                <span>Giỏ hàng</span>
+              </Space>
+              <Search
+                placeholder="Nhập sản phẩm"
+                allowClear
+                enterButton="Tìm kiếm nhanh"
+                onSearch={(value) => handleSearch(value)}
+                style={{
+                  width: "100%",
+                }}
+              />
             </Space>
           )
         }}
@@ -275,7 +313,7 @@ const USMListProduct = () => {
                 }}
               >
                 <span>Tổng tiền:</span>
-                <strong>123456 VND</strong>
+                <strong>{splitMoney(totalPrice)} VND</strong>
               </Space>
               <Space
                 style={{
@@ -283,7 +321,7 @@ const USMListProduct = () => {
                 }}
               >
                 <span>Bằng chữ:</span>
-                <i>{moneyToText(123456)} VND</i>
+                <i>{moneyToText(totalPrice)} VND</i>
               </Space>
             </Space>
           )

@@ -105,7 +105,7 @@ const USMProduct = ({item}) => {
                     style={{
                       width: "100px",
                       cursor: "pointer",
-                      opacity: id === idImage ? "1" : "0.3",
+                      opacity: id === idImage ? "1" : "0.5",
                     }}
                     onClick={() => setIdImage(id)}
                   />

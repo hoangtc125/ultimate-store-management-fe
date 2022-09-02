@@ -92,12 +92,20 @@ function to_vietnamese(number) {
 }
 
 const moneyToText = (number) => {
+  if (!number) {
+    return "Không"
+  }
   const mySentence = to_vietnamese(number);
   let words = mySentence.split(" ");
   for (let i = 0; i < words.length; i++) {
+    if (!words[i]) {
+      continue
+    }
     words[i] = words[i][0].toUpperCase() + words[i].slice(1) + " ";
   }
   return words
 }
 
-export default moneyToText
+const splitMoney = (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+
+export { moneyToText, splitMoney}

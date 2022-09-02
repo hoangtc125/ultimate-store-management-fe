@@ -8,8 +8,7 @@ import Highlighter from 'react-highlight-words';
 import USMCreateProduct from './create';
 import USMUpdateProduct from './update';
 import USMNote from './note';
-import { ProductResponse } from '../../../model/product'
-import images from '../../../assets/images';
+import products from '../../../data/product';
 
 const USMListProduct = () => {
   const [searchText, setSearchText] = useState('');
@@ -80,26 +79,12 @@ const USMListProduct = () => {
   
   useEffect(() => {
     if (isMode([MODE.TEST])) {
-      let vals = []
-      for (let i = 0; i < 16; i++) {
-        const product = new ProductResponse(
-          {
-            name: "name " + i,
-            nickname: "nickname " + i,
-            priceIn: i,
-            brand: "brand " + i,
-            quantity: i,
-            priceOut: i,
-            images: [images.default, images.default, images.default, images.default, images.default, images.default],
-            is_disabled: "enable",
-            id: i,
-          }
-        )
-        vals.push({
-          key: i,
-          ...product, 
-        });
-      }
+      let vals = products.map(product => {
+        return {
+          key: product.id,
+          ...product,
+        }
+      })
       setData(vals)
     }
   }, [])

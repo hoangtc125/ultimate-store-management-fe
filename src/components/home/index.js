@@ -3,28 +3,8 @@ import * as MODE from '../../constants/mode'
 import { isMode } from "../../utils/check"
 import USMItemProduct from "./item"
 import { Input, Pagination } from 'antd';
-import { ProductResponse } from "../../model/product";
-import images from "../../assets/images";
+import products from "../../data/product";
 const { Search } = Input;
-
-const fakeData = []
-
-for (let i = 0; i < 20; i++) {
-  const product = new ProductResponse(
-    {
-      name: "name " + i,
-      nickname: "nickname " + i,
-      priceIn: i,
-      brand: "brand " + i,
-      quantity: i,
-      priceOut: i,
-      images: [images.default, images.logo, images.default, images.logo, images.default, images.logo],
-      is_disabled: "enable",
-      id: i,
-    }
-  )
-  fakeData.push(product)
-}
 
 const USMHome = () => {
   const [data, setData] = useState([])
@@ -34,14 +14,14 @@ const USMHome = () => {
   const onChange = (page) => {
     setCurrent(page);
     if (isMode([MODE.TEST])) {
-      setPageData(fakeData.slice((page - 1) * 12, page * 12))
+      setPageData(products.slice((page - 1) * 12, page * 12))
     }
   };
 
   useEffect(() => {
     if (isMode([MODE.TEST])) {
-      setData(fakeData)
-      setPageData(fakeData.slice((current - 1) * 12, current * 12))
+      setData(products)
+      setPageData(products.slice((current - 1) * 12, current * 12))
     }
     // eslint-disable-next-line
   }, [])
@@ -50,7 +30,7 @@ const USMHome = () => {
     const keyword = value.trim()
     if (!keyword) {
       if (isMode([MODE.TEST])) {
-        setPageData(fakeData.slice((current - 1) * 12, current * 12))
+        setPageData(products.slice((current - 1) * 12, current * 12))
       }
       return
     }
