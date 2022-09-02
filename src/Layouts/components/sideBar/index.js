@@ -24,7 +24,7 @@ import images from '../../../assets/images'
 const { Sider } = Layout;
 
 const USMSideBar = () => {
-  const [theme, setTheme] = useState('light')
+  const [theme, setTheme] = useState(isRole([ROLE.ADMIN]) ? 'dark' : 'light')
 
   function getItem(label, key, icon, children) {
     return {
@@ -50,7 +50,7 @@ const USMSideBar = () => {
       getItem(<Link to={URL.CHARTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Biểu đồ</span><PieChartOutlined /></Link>, 'report-list'),
     ]), 
     getItem('Giao diện', 'inteface', <FundProjectionScreenOutlined />, [
-      getItem(<Switch checkedChildren="Chế độ sáng" unCheckedChildren="Chế độ tối" defaultChecked id="theme-check"
+      getItem(<Switch checkedChildren="Chế độ sáng" unCheckedChildren="Chế độ tối" defaultChecked={theme === 'light'} id="theme-check"
       onClick={() => {
         // eslint-disable-next-line
         if(theme == 'dark') {
@@ -75,7 +75,7 @@ const USMSideBar = () => {
         overflow: 'auto',
       }}
     >
-      <div className="logo" ><Image src={images.logolong}/></div>
+      <div className="logo" ><Image src={theme === 'dark' ? images.logolongwhite : images.logolong}/></div>
       <Menu theme={theme} defaultSelectedKeys={['home']} mode="inline" items={items} />
     </Sider>
   );

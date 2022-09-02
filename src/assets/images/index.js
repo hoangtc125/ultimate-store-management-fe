@@ -1,6 +1,7 @@
 const images = {
   logo:require('./logo.png'),
   logolong:require('./logolong.png'),
+  logolongwhite:require('./longlogowhite.png'),
   ipcamera:require('./ipcamera.png'),
   ipconnect:require('./ipconnect.png'),
   ipinput:require('./ipinput.png'),

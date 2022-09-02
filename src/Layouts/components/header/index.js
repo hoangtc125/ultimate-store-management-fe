@@ -112,8 +112,23 @@ const Header = () => {
               alignItems: "start",
             }}
           >
-            <span>Phần mềm chuyển đổi số cho cửa hàng</span>
-            <span>kinh doanh quy mô hộ gia đình {<TrademarkOutlined />}</span>
+            <div>Phần mềm chuyển đổi số cho cửa hàng</div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                alignContent: "center",
+              }}
+            >
+              <span>kinh doanh quy mô hộ gia đình</span>  
+              <TrademarkOutlined
+                style={{
+                  margin: "-10px 0 0 5px"
+                }}
+              />
+            </div>
           </div>
         }
         style={{

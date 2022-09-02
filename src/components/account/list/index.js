@@ -1,4 +1,4 @@
-import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table, Tooltip, Image, Card, DatePicker, Popconfirm, message } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import * as MODE from '../../../constants/mode'
@@ -19,6 +19,7 @@ const USMListAccount = () => {
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
+    position: ['bottomCenter'],
   });
   const [data, setData] = useState([])
   const [visibleCreate, setVisibleCreate] = useState(false);
@@ -292,7 +293,7 @@ const USMListAccount = () => {
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",
-          alignItems: "end"
+          alignItems: "end",
         }}
       >
         {
@@ -315,6 +316,15 @@ const USMListAccount = () => {
         <USMNote />
       </div>
       <Table
+        title={() => {
+          return (
+            <Space>
+              <UsergroupAddOutlined style={{fontSize: "2rem"}}/> 
+              <span>Danh sách nhân viên trong cửa hàng</span>
+            </Space>
+          )
+        }}
+        bordered
         columns={columns}
         dataSource={data}
         pagination={pagination}
@@ -324,7 +334,6 @@ const USMListAccount = () => {
           borderRadius: "10px",
           boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
           margin: "10px 0px",
-          padding: "0px 10px",
         }}
         expandable={{
           expandedRowRender: (record) => (

@@ -18,7 +18,7 @@ const USMFooter = () => {
     >
       <span><strong>Ultimate Store Management</strong> ©2022</span>
       <Image src={images.logo} preview={false} height={30}/>
-      <span>Phát triển bởi <strong>Trần Công Hoàng</strong></span> 
+      <span>Phát triển bởi <strong><a href='https://www.facebook.com/hoang2k1111' target='new' style={{color: "#333"}}>Trần Công Hoàng</a></strong></span> 
     </Footer>
   )
 }

@@ -99,7 +99,7 @@ const USMHome = () => {
           return <USMItemProduct key={id} item={item} />
         })}
       </div>
-      <Pagination current={current} onChange={onChange} total={data.length}/>
+      <Pagination current={current} onChange={onChange} total={data.length} position={['bottomCenter']}/>
     </div>
   )
 }
