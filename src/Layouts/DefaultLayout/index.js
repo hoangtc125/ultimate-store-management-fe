@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
   
 const { Content } = Layout;
 
-const DefaultLayout = ({ Component, Role }) => {
+const DefaultLayout = ({ Component, Role, Direction, ComponentSize }) => {
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const DefaultLayout = ({ Component, Role }) => {
         minHeight: '100vh',
       }}
     >
-      <USMSideBar />
+      <USMSideBar Direction={Direction} ComponentSize={ComponentSize}/>
       <Layout className="site-layout">
         <USMHeader />
         <Content

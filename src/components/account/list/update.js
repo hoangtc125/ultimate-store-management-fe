@@ -10,20 +10,21 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
   const [form] = Form.useForm();
   
   useEffect(() => {
+    const dataSelected = data.filter(element => element?.id === idSelected)[0]
     form.setFieldsValue({
-      username: data[idSelected]?.username,
-      fullname: data[idSelected]?.fullname,
-      role: data[idSelected]?.role,
-      phone: data[idSelected]?.phone,
-      email: data[idSelected]?.email,
-      ratio_salary: data[idSelected]?.ratio_salary,
-      created_at: data[idSelected]?.created_at,
-      birthday: data[idSelected]?.birthday,
-      profile: data[idSelected]?.profile,
-      hashed_password: data[idSelected]?.hashed_password,
-      is_disabled: data[idSelected]?.is_disabled,
+      username: dataSelected?.username,
+      fullname: dataSelected?.fullname,
+      role: dataSelected?.role,
+      phone: dataSelected?.phone,
+      email: dataSelected?.email,
+      ratio_salary: dataSelected?.ratio_salary,
+      created_at: dataSelected?.created_at,
+      birthday: dataSelected?.birthday,
+      profile: dataSelected?.profile,
+      hashed_password: dataSelected?.hashed_password,
+      is_disabled: dataSelected?.is_disabled,
     });
-    setUsmImages([data[idSelected]?.avatar])
+    setUsmImages([dataSelected?.avatar])
     // eslint-disable-next-line
   }, [idSelected])
 
@@ -35,8 +36,8 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
     }
     values.id = idSelected
     values.key = idSelected
-    setData(prev => prev.map((element, id) => {
-      if (id === idSelected) {
+    setData(prev => prev.map(element => {
+      if (element?.id === idSelected) {
         return values
       } else {
         return element

@@ -1,5 +1,5 @@
 import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined, GoldOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, Tooltip, Image, Card } from 'antd';
+import { Button, Input, Space, Table, Tooltip, Image, Card, Popconfirm } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import * as MODE from '../../../constants/mode'
 import * as ROLE from '../../../constants/role'
@@ -37,7 +37,9 @@ const USMListProduct = () => {
     // eslint-disable-next-line
     const newData = data.filter((e) => {
       if (e.id !== index) {
-        return e
+        return true
+      } else {
+        return false
       }
     })
     setData(newData)
@@ -62,9 +64,15 @@ const USMListProduct = () => {
           />
         </Tooltip>
         <Tooltip title="Xóa">
-          <Button shape="circle" danger ghost icon={<DeleteOutlined />} 
-            onClick={() => handleDelete(i)}
-          />
+          <Popconfirm
+            title="Xác nhận xóa?"
+            onConfirm={() => handleDelete(i)}
+            okText="Yes"
+            cancelText="No"
+            placement='bottom'
+          >
+            <Button shape="circle" danger ghost icon={<DeleteOutlined />} />
+          </Popconfirm>
         </Tooltip>
       </div>
     )
@@ -131,7 +139,6 @@ const USMListProduct = () => {
             type="primary"
             onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
-            size="small"
             style={{
               width: 120,
             }}
@@ -140,7 +147,6 @@ const USMListProduct = () => {
           </Button>
           <Button
             onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
             style={{
               width: 90,
             }}
@@ -149,7 +155,6 @@ const USMListProduct = () => {
           </Button>
           <Button
             type="link"
-            size="small"
             onClick={() => {
               confirm({
                 closeDropdown: false,
@@ -268,7 +273,7 @@ const USMListProduct = () => {
       key: 'action',
       width: '10%',
       render: (_, record) => (
-        <USMAction i={record.key}/>
+        <USMAction i={record.id}/>
       ),
     })
   }
@@ -322,7 +327,6 @@ const USMListProduct = () => {
         dataSource={data}
         pagination={pagination}
         onChange={handleTableChange}
-        size="large"
         style={{
           borderRadius: "10px",
           boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",

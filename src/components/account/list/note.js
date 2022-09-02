@@ -47,7 +47,7 @@ const USMNote = () => (
         }}
       >
         <Table
-          columns={columns} dataSource={data} size='small' pagination={false}
+          columns={columns} dataSource={data} pagination={false}
           style={{
             width: "100%",
             padding: "10px 10px",

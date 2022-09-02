@@ -110,7 +110,7 @@ const USMVideo = ({ipCamera, loadings, enterLoading}) => {
           width: "80%"
         }}
       >
-        <Button type="primary" icon={<ReloadOutlined />} shape="round" size="large" block loading={loadings[0]} 
+        <Button type="primary" icon={<ReloadOutlined />} shape="round" block loading={loadings[0]} 
           onClick={() => {
             handleReconect()
             enterLoading(0, 1000)
@@ -122,7 +122,7 @@ const USMVideo = ({ipCamera, loadings, enterLoading}) => {
         >
           Kết nối lại
         </Button>
-        <Button type="primary" shape="round" size="large" block loading={loadings[1]} 
+        <Button type="primary" shape="round" block loading={loadings[1]} 
           icon={<CameraOutlined />}
           onClick={() => {
             handleShotImage()

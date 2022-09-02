@@ -7,14 +7,14 @@
   
   const { Content } = Layout;
   
-  const ErrorLayout = ({ Component }) => {
+  const ErrorLayout = ({ Component, Role, Direction, ComponentSize }) => {
     return (
       <Layout
         style={{
           minHeight: '100vh',
         }}
       >
-        <USMSideBar />
+        <USMSideBar Direction={Direction} ComponentSize={ComponentSize}/>
         <Layout className="site-layout">
           <Content
             style={{

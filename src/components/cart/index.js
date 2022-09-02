@@ -6,14 +6,14 @@ import { isMode } from '../../utils/check';
 import Highlighter from 'react-highlight-words';
 import { ProductResponse } from '../../model/product'
 import images from '../../assets/images';
-import to_vietnamese from '../../utils/money';
+import moneyToText from '../../utils/money';
 
 const USMListProduct = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [pagination, setPagination] = useState({
     current: 1,
-    pageSize: 10,
+    pageSize: 7,
     position: ['bottomCenter'],
   });
   const [data, setData] = useState([])
@@ -52,7 +52,7 @@ const USMListProduct = () => {
   useEffect(() => {
     if (isMode([MODE.TEST])) {
       let vals = []
-      for (let i = 0; i < 16; i++) {
+      for (let i = 0; i < 10; i++) {
         const product = new ProductResponse(
           {
             name: "name " + i,
@@ -110,7 +110,6 @@ const USMListProduct = () => {
             type="primary"
             onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
-            size="small"
             style={{
               width: 120,
             }}
@@ -119,7 +118,6 @@ const USMListProduct = () => {
           </Button>
           <Button
             onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
             style={{
               width: 90,
             }}
@@ -128,7 +126,6 @@ const USMListProduct = () => {
           </Button>
           <Button
             type="link"
-            size="small"
             onClick={() => {
               confirm({
                 closeDropdown: false,
@@ -174,7 +171,7 @@ const USMListProduct = () => {
 
   let columns = [
     {
-      title: 'Mã số',
+      title: 'Mã số sản phẩm',
       dataIndex: 'id',
       key: 'id',
       width: '8%',
@@ -192,7 +189,7 @@ const USMListProduct = () => {
       sortDirections: ['descend', 'ascend'],
     },
     {
-      title: 'Hình ảnh',
+      title: 'Hình ảnh sản phẩm',
       dataIndex: 'images',
       key: 'images',
       width: '10%',
@@ -209,7 +206,7 @@ const USMListProduct = () => {
       ...getColumnSearchProps('priceOut'),
     },
     {
-      title: 'Số lượng',
+      title: 'Số lượng sản phẩm',
       dataIndex: 'itemQuantity',
       key: 'itemQuantity',
       ...getColumnSearchProps('itemQuantity'),
@@ -286,7 +283,7 @@ const USMListProduct = () => {
                 }}
               >
                 <span>Bằng chữ:</span>
-                <i>{to_vietnamese(123456)} VND</i>
+                <i>{moneyToText(123456)} VND</i>
               </Space>
             </Space>
           )
@@ -296,7 +293,6 @@ const USMListProduct = () => {
         dataSource={data}
         pagination={pagination}
         onChange={handleTableChange}
-        size="large"
         style={{
           borderRadius: "10px",
           boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",

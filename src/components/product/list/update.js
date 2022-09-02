@@ -9,17 +9,18 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
   const [form] = Form.useForm();
   
   useEffect(() => {
+    const dataSelected = data.filter(element => element?.id === idSelected)[0]
     form.setFieldsValue({
-      name: data[idSelected]?.name,
-      nickname: data[idSelected]?.nickname,
-      priceIn: data[idSelected]?.priceIn,
-      brand: data[idSelected]?.brand,
-      quantity: data[idSelected]?.quantity,
-      priceOut: data[idSelected]?.priceOut,
-      images: data[idSelected]?.images,
-      is_disabled: data[idSelected]?.is_disabled,
+      name: dataSelected?.name,
+      nickname: dataSelected?.nickname,
+      priceIn: dataSelected?.priceIn,
+      brand: dataSelected?.brand,
+      quantity: dataSelected?.quantity,
+      priceOut: dataSelected?.priceOut,
+      images: dataSelected?.images,
+      is_disabled: dataSelected?.is_disabled,
     });
-    setUsmImages(data[idSelected]?.images)
+    setUsmImages(dataSelected?.images)
     // eslint-disable-next-line
   }, [idSelected])
 
@@ -31,8 +32,8 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
     }
     values.id = idSelected
     values.key = idSelected
-    setData(prev => prev.map((element, id) => {
-      if (id === idSelected) {
+    setData(prev => prev.map(element => {
+      if (element?.id === idSelected) {
         return values
       } else {
         return element

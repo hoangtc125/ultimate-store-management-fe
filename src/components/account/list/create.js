@@ -14,8 +14,8 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData}) => {
     } else {
       values.avatar = usmImages[0]
     }
-    values.id = data.length
-    values.key = data.length
+    values.id = data[data.length - 1].id + 1
+    values.key = data[data.length - 1].id + 1
     values.hashed_password = values.password
     setData(prev => [...prev, values])
     onClose()

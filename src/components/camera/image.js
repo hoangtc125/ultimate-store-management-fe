@@ -79,7 +79,7 @@ const USMImage = ({loadings, enterLoading, setImages}) => {
           width: "80%"
         }}
       >
-        <Button type="danger" shape="round" size="large" icon={<VideoCameraAddOutlined />} 
+        <Button type="danger" shape="round" icon={<VideoCameraAddOutlined />} 
           block loading={loadings[2]} 
           onClick={() => {
             handleAdd()

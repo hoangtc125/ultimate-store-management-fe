@@ -13,8 +13,8 @@ const USMCreateProduct = ({visibleCreate, setVisibleCreate, data, setData}) => {
     } else {
       values.images = usmImages
     }
-    values.id = data.length
-    values.key = data.length
+    values.id = data[data.length - 1].id + 1
+    values.key = data[data.length - 1].id + 1
     setData(prev => [...prev, values])
     onClose()
   }

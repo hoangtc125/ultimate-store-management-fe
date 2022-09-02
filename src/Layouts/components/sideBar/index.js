@@ -12,8 +12,11 @@ import {
   CalendarOutlined,
   ShoppingCartOutlined,
   PieChartOutlined,
+  BulbOutlined,
+  SwapOutlined,
+  ZoomInOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, Image, Switch } from 'antd';
+import { Layout, Menu, Image, Switch, Select } from 'antd';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as URL from '../../../constants/url'
@@ -22,9 +25,12 @@ import { isRole } from '../../../utils/check';
 import images from '../../../assets/images'
 
 const { Sider } = Layout;
+const { Option } = Select;
 
-const USMSideBar = () => {
+const USMSideBar = ({Direction, ComponentSize}) => {
   const [theme, setTheme] = useState(isRole([ROLE.ADMIN]) ? 'dark' : 'light')
+  const [direction, setDirection] = Direction
+  const [componentSize, setComponentSize] = ComponentSize
 
   function getItem(label, key, icon, children) {
     return {
@@ -50,16 +56,54 @@ const USMSideBar = () => {
       getItem(<Link to={URL.CHARTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Biểu đồ</span><PieChartOutlined /></Link>, 'report-list'),
     ]), 
     getItem('Giao diện', 'inteface', <FundProjectionScreenOutlined />, [
-      getItem(<Switch checkedChildren="Chế độ sáng" unCheckedChildren="Chế độ tối" defaultChecked={theme === 'light'} id="theme-check"
-      onClick={() => {
-        // eslint-disable-next-line
-        if(theme == 'dark') {
-          setTheme('light')
-        } else {
-          setTheme('dark')
-        }
-      }}
-      />, 'theme')
+      getItem('Màu sắc', 'theme', <BulbOutlined />, [
+        getItem(<Switch checkedChildren="Chế độ sáng" unCheckedChildren="Chế độ tối" defaultChecked={theme === 'light'} id="theme-check"
+          onClick={() => {
+            // eslint-disable-next-line
+            if(theme == 'dark') {
+              setTheme('light')
+            } else {
+              setTheme('dark')
+            }
+          }}
+          style={{
+            width: "100%",
+          }}
+        />, 'theme-switch'),
+      ]),
+      getItem('Hướng', 'direction', <SwapOutlined />, [
+        getItem(<Switch checkedChildren="Trái sang phải" unCheckedChildren="Phải sang trái" defaultChecked id="direction-check"
+          onClick={() => {
+            // eslint-disable-next-line
+            if(direction == 'rtl') {
+              setDirection('ltr')
+            } else {
+              setDirection('rtl')
+            }
+          }}
+          style={{
+            width: "100%",
+          }}
+        />, 'direction-switch'),
+      ]),
+      getItem('Độ lớn', 'size', <ZoomInOutlined />, [
+        getItem(
+          <Select
+            labelInValue
+            defaultValue={{
+              value: componentSize,
+            }}
+            style={{
+              width: "100%",
+            }}
+            onChange={(value) => setComponentSize(value.value)}
+          >
+            <Option value="small">Nhỏ</Option>
+            <Option value="middle">Vừa</Option>
+            <Option value="large">Lớn</Option>
+          </Select>
+        , 'size-options'),
+      ]),
     ]),
     getItem('Tài khoản', 'me', <UserOutlined />, [
       getItem(<Link to={URL.ERROR_404} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Trang cá nhân</span><UserOutlined /></Link>, 'me-profile'),

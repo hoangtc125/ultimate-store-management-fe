@@ -10,6 +10,8 @@ moment.locale('vi');
 
 function App() {
   const [isLoading, setLoading] = useState(true);
+  const [direction, setDirection] = useState('ltr');
+  const [componentSize, setComponentSize] = useState('large');
 
   function fakeRequest() {
     return new Promise(resolve => setTimeout(() => resolve(), 100));
@@ -37,8 +39,17 @@ function App() {
           const Body = page?.element?.component
           const Role = page?.element?.role
           return <Route path={page.url} key={key} element={
-            <ConfigProvider locale={viVN}>
-              <Layout Component={<Body />} Role={Role}/>
+            <ConfigProvider 
+              locale={viVN}
+              direction={direction}
+              componentSize={componentSize}
+            >
+              <Layout 
+                Component={<Body />} 
+                Role={Role} 
+                Direction={[direction, setDirection]}
+                ComponentSize={[componentSize, setComponentSize]}
+              />
             </ConfigProvider>
           }/> 
         })

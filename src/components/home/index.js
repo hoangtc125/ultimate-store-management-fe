@@ -78,7 +78,6 @@ const USMHome = () => {
         placeholder="Nhập sản phẩm muốn tìm kiếm"
         allowClear
         enterButton="Tìm kiếm"
-        size="large"
         onSearch={(value) => handleSearch(value)}
         style={{
           width: "80%",

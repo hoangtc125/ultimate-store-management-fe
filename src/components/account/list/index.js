@@ -8,9 +8,7 @@ import Highlighter from 'react-highlight-words';
 import USMCreateAccount from './create';
 import USMUpdateAccount from './update';
 import USMNote from './note';
-import { AccountResponse } from '../../../model/account'
-import images from '../../../assets/images';
-import moment from 'moment';
+import accounts from '../../../data/account';
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
 const USMListAccount = () => {
@@ -41,7 +39,9 @@ const USMListAccount = () => {
       // eslint-disable-next-line
       const newData = data.filter((e) => {
         if (e.id !== index) {
-          return e
+          return true
+        } else {
+          return false
         }
       })
       setData(newData)
@@ -82,30 +82,12 @@ const USMListAccount = () => {
   
   useEffect(() => {
     if (isMode([MODE.TEST])) {
-      let vals = []
-      for (let i = 0; i < 16; i++) {
-        const account = new AccountResponse(
-          {
-            username : "string " + i,
-            fullname : "string " + i,
-            role : "staff",
-            phone : "string " + i,
-            email : "string " + i,
-            ratio_salary : "string " + i,
-            created_at : "string " + i,
-            avatar : images.default,
-            birthday : moment('11/2/2022', dateFormatList),
-            profile : "string " + i,
-            hashed_password : "string " + i,
-            is_disabled : "enable",
-            id : i,
-          }
-        )
-        vals.push({
-          key: i,
-          ...account, 
-        });
-      }
+      const vals = accounts.map((account, id) => {
+        return {
+          key: id,
+          ...account,
+        }
+      })
       setData(vals)
     }
   }, [])
@@ -145,7 +127,6 @@ const USMListAccount = () => {
             type="primary"
             onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
-            size="small"
             style={{
               width: 120,
             }}
@@ -154,7 +135,6 @@ const USMListAccount = () => {
           </Button>
           <Button
             onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
             style={{
               width: 90,
             }}
@@ -163,7 +143,6 @@ const USMListAccount = () => {
           </Button>
           <Button
             type="link"
-            size="small"
             onClick={() => {
               confirm({
                 closeDropdown: false,
@@ -275,7 +254,7 @@ const USMListAccount = () => {
       key: 'action',
       width: '10%',
       render: (_, record) => (
-        <USMAction i={record.key}/>
+        <USMAction i={record.id}/>
       ),
     })
   }
@@ -329,7 +308,6 @@ const USMListAccount = () => {
         dataSource={data}
         pagination={pagination}
         onChange={handleTableChange}
-        size="large"
         style={{
           borderRadius: "10px",
           boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",

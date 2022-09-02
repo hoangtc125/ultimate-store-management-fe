@@ -6,7 +6,7 @@ import USMFooter from '../components/footer'
 
 const { Content } = Layout;
 
-const LoginLayout = ({ Component}) => {
+const LoginLayout = ({ Component, Role, Direction, ComponentSize }) => {
   return (
     <Layout
       style={{

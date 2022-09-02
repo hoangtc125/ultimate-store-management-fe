@@ -62,10 +62,10 @@ const USMProduct = ({item}) => {
               >
                 <strong>Thông tin sản phẩm</strong>
                 <div>
-                  <Button type="primary" size="large" >
+                  <Button type="primary" >
                     Thêm vào giỏ hàng 
                   </Button>
-                  <InputNumber size="large" min={1} max={100} value={value} onChange={setValue}
+                  <InputNumber min={1} max={100} value={value} onChange={setValue}
                     formatter={(value) => `${value} sản phẩm`}
                     style={{
                       width: "160px",

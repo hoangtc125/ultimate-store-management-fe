@@ -61,7 +61,6 @@ const USMAccountCalendar = () => {
               <Row gutter={8}>
                 <Col>
                   <Radio.Group
-                    size="medium"
                     onChange={(e) => onTypeChange(e.target.value)}
                     value={type}
                   >
@@ -71,7 +70,6 @@ const USMAccountCalendar = () => {
                 </Col>
                 <Col>
                   <Select
-                    size="medium"
                     dropdownMatchSelectWidth={false}
                     className="my-year-select"
                     value={year}
@@ -85,7 +83,6 @@ const USMAccountCalendar = () => {
                 </Col>
                 <Col>
                   <Select
-                    size="medium"
                     dropdownMatchSelectWidth={false}
                     value={month}
                     onChange={(newMonth) => {
