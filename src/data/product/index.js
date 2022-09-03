@@ -7,12 +7,12 @@ for (let i = 0; i < 16; i++) {
   const product = new ProductResponse(
     {
       name: "product " + i,
-      nickname: ["name " + i, "name " + i, "name " + i,],
+      nickname: ["name 0", "name 1", "name 2",],
       priceIn: i * 10000,
       brand: "brand " + i,
       quantity: i,
       priceOut: i * 10000,
-      images: [images.default, images.logo, images.logolong, images.ipstart, images.ipcamera, images.ipconnect],
+      images: [images.default, images.default, images.default, images.default, images.default, images.default],
       is_disabled: "enable",
       id: i,
     }

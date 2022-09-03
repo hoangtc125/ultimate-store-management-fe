@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import * as MODE from '../../constants/mode'
 import { isMode } from "../../utils/check"
 import USMItemProduct from "./item"
-import { Input, Pagination } from 'antd';
+import { Input, Pagination, Card } from 'antd';
 import products from "../../data/product";
 const { Search } = Input;
 
-const USMHome = () => {
+const USMHome = ({CartData}) => {
   const [data, setData] = useState([])
   const [pageData, setPageData] = useState([])
   const [current, setCurrent] = useState(1);
+  const searchElement = useRef(null)
 
   const onChange = (page) => {
     setCurrent(page);
@@ -54,16 +55,31 @@ const USMHome = () => {
         alignItems: "center",
       }}
     >
-      <Search
-        placeholder="Nhập sản phẩm muốn tìm kiếm"
-        allowClear
-        enterButton="Tìm kiếm"
-        onSearch={(value) => handleSearch(value)}
+      <Card
+        hoverable
         style={{
           width: "80%",
           marginBottom: "10px",
+          borderRadius: "100px",
+          padding: "-10px",
         }}
-      />
+        onClick={(e) => {
+          searchElement?.current.focus()
+        }}
+      >
+        <Search
+          ref={searchElement}
+          placeholder="Nhập sản phẩm muốn tìm kiếm"
+          allowClear
+          bordered={false}
+          enterButton="Tìm kiếm"
+          onSearch={(value) => handleSearch(value)}
+          style={{
+            width: "100%",
+            height: "100%",
+          }}
+        />
+      </Card>
       <div
         style={{
           width: "100%",
@@ -75,7 +91,7 @@ const USMHome = () => {
         }}
       >
         {pageData.map((item, id) => {
-          return <USMItemProduct key={id} item={item} />
+          return <USMItemProduct key={id} item={item} CartData={CartData}/>
         })}
       </div>
       <Pagination current={current} onChange={onChange} total={data.length} position={['bottomCenter']}/>

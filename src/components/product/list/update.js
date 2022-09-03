@@ -1,11 +1,13 @@
 import { Button, Col, Drawer, Form, Input, Row, Select, Space, message, Popconfirm } from 'antd';
 import React, { useEffect, useState } from 'react';
 import images from '../../../assets/images';
+import USMTag from '../../utils/tag';
 import USMUpload from '../../utils/upload';
 const { Option } = Select;
 
 const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSelected}) => {
   const [usmImages, setUsmImages] = useState([])
+  const [tags, setTags] = useState([]);
   const [form] = Form.useForm();
   
   useEffect(() => {
@@ -21,6 +23,7 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
       is_disabled: dataSelected?.is_disabled,
     });
     setUsmImages(dataSelected?.images)
+    setTags(dataSelected?.nickname || [])
     // eslint-disable-next-line
   }, [idSelected])
 
@@ -30,6 +33,7 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
     } else {
       values.images = usmImages
     }
+    values.nickname = tags
     values.id = idSelected
     values.key = idSelected
     setData(prev => prev.map(element => {
@@ -174,7 +178,7 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
                 name="nickname"
                 label="Tên gọi khác"
               >
-                <Input placeholder="Nhập tên gọi khác" />
+                <USMTag Tags={[tags, setTags]}/>
               </Form.Item>
             </Col>
             <Col span={12}>

@@ -1,11 +1,13 @@
 import { Button, Col, Drawer, Form, Input, Row, Select, Space, message, Popconfirm } from 'antd';
 import React, { useState } from 'react';
 import images from '../../../assets/images';
+import USMTag from '../../utils/tag';
 import USMUpload from '../../utils/upload';
 const { Option } = Select;
 
 const USMCreateProduct = ({visibleCreate, setVisibleCreate, data, setData}) => {
   const [usmImages, setUsmImages] = useState([])
+  const [tags, setTags] = useState([]);
 
   const onFinish = (values) => {
     if  (usmImages.length === 0) {
@@ -13,6 +15,7 @@ const USMCreateProduct = ({visibleCreate, setVisibleCreate, data, setData}) => {
     } else {
       values.images = usmImages
     }
+    values.nickname = tags
     values.id = data[data.length - 1].id + 1
     values.key = data[data.length - 1].id + 1
     setData(prev => [...prev, values])
@@ -150,7 +153,7 @@ const USMCreateProduct = ({visibleCreate, setVisibleCreate, data, setData}) => {
                 name="nickname"
                 label="Tên gọi khác"
               >
-                <Input placeholder="Nhập tên gọi khác" />
+                <USMTag Tags={[tags, setTags]}/>
               </Form.Item>
             </Col>
             <Col span={12}>

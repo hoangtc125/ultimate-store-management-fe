@@ -1,11 +1,12 @@
-import { Image, Space, Badge, Descriptions, InputNumber, Button } from "antd"
-import { useState } from "react"
+import { Image, Space, Badge, Descriptions, InputNumber, Button, message } from "antd"
+import { useRef, useState } from "react"
 
-const USMProduct = ({item}) => {
+const USMProduct = ({item, CartData}) => {
   // eslint-disable-next-line
   const [data, setData] = useState(item)
   const [idImage, setIdImage] = useState(0)
-  const [value, setValue] = useState('1');
+  const [cartData, setCartData] = CartData
+  const inputNumberElement = useRef(null)
 
   return (
     <div
@@ -62,11 +63,19 @@ const USMProduct = ({item}) => {
               >
                 <strong>Thông tin sản phẩm</strong>
                 <div>
-                  <Button type="primary" >
+                  <Button type="primary" 
+                    onClick={() => {
+                      let newCart = {...cartData}
+                      newCart.products[data?.id] = (newCart.products[data?.id] || 0) + inputNumberElement?.current.value
+                      setCartData(newCart)
+                      message.success("Thêm thành công")
+                    }}
+                  >
                     Thêm vào giỏ hàng 
                   </Button>
-                  <InputNumber min={1} max={100} value={value} onChange={setValue}
-                    formatter={(value) => `${value} sản phẩm`}
+                  <InputNumber min={1} max={100} defaultValue={1} ref={inputNumberElement} onChange={(value) => {
+                    console.log(value)
+                  }}
                     style={{
                       width: "160px",
                     }}
@@ -81,8 +90,11 @@ const USMProduct = ({item}) => {
             <Descriptions.Item label="Tên sản phẩm">{data?.name}</Descriptions.Item>
             <Descriptions.Item label="Thương hiệu">{data?.brand}</Descriptions.Item>
             <Descriptions.Item label="Số lượng">{data?.quantity}</Descriptions.Item>
-            <Descriptions.Item label="Trạng thái" span={3}>
+            <Descriptions.Item label="Trạng thái">
               <Badge status="processing" text={data?.is_disabled} />
+            </Descriptions.Item>
+            <Descriptions.Item label="Tên gọi khác" span={2}>
+              {data?.nickname.join(", ")}
             </Descriptions.Item>
             <Descriptions.Item label="Giá nhập">{data?.priceIn}</Descriptions.Item>
             <Descriptions.Item label="Giá bán">{data?.priceOut}</Descriptions.Item>

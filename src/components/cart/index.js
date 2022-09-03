@@ -281,7 +281,7 @@ const USMListProduct = ({CartData}) => {
             >
               <Space>
                 <ShoppingCartOutlined style={{fontSize: "2rem"}}/> 
-                <span>Giỏ hàng</span>
+                <span>Giỏ hàng ({Object.keys(cartData?.products || []).length})</span>
               </Space>
               <Search
                 placeholder="Nhập sản phẩm"

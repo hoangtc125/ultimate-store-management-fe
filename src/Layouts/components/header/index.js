@@ -47,7 +47,7 @@ const Header = ({ CartData, CurrentUser }) => {
 
   const renderContent = () => (
     <div>
-      <Link to={URL.CART}><Tag color="error" icon={<ShoppingCartOutlined style={{fontSize: "2rem"}}/>}><strong>Giỏ hàng hiện tại</strong></Tag></Link>
+      <Link to={URL.CART}><Tag color="error" icon={<ShoppingCartOutlined style={{fontSize: "2rem"}}/>}><strong>Giỏ hàng hiện tại ({Object.keys(cartData?.products || []).length})</strong></Tag></Link>
       <div
         style={{
           width: "100%",

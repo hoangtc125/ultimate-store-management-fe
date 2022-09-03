@@ -1,5 +1,5 @@
 import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined, GoldOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, Tooltip, Image, Card, Popconfirm } from 'antd';
+import { Button, Input, Space, Table, Tooltip, Image, Card, Popconfirm, message } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import * as MODE from '../../../constants/mode'
 import * as ROLE from '../../../constants/role'
@@ -42,6 +42,7 @@ const USMListProduct = () => {
       }
     })
     setData(newData)
+    message.success('Xóa thành công');
   }
 
   const USMAction = ({i}) => {
