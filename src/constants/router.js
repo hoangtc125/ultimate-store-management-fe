@@ -12,6 +12,8 @@ import USMListProduct from '../components/product/list'
 import USMChart from '../components/report/chart'
 import USMAccountCalendar from '../components/account/calendar'
 import USMCart from '../components/cart'
+import USMHeaderLogin from '../Layouts/components/header/login'
+import USMHeader from '../Layouts/components/header'
 
 function Mapping (
     {
@@ -28,6 +30,7 @@ export const Page = [
         url: URL.LOGIN,
         element: {
             layout: LoginLayout,
+            header: USMHeaderLogin,
             component: USMLogin,
         },
     }),
@@ -35,6 +38,7 @@ export const Page = [
         url: URL.HOME,
         element: {
             layout: DefaultLayout,
+            header: USMHeader,
             component: USMHome,
         },
     }),
@@ -42,6 +46,7 @@ export const Page = [
         url: URL.CART,
         element: {
             layout: DefaultLayout,
+            header: USMHeader,
             component: USMCart,
         },
     }),
@@ -49,6 +54,7 @@ export const Page = [
         url: URL.CAMERA,
         element: {
             layout: DefaultLayout,
+            header: USMHeader,
             component: USMCamera,
             role: [ROLE.ADMIN],
         },
@@ -57,6 +63,7 @@ export const Page = [
         url: URL.ACCOUNTS,
         element: {
             layout: DefaultLayout,
+            header: USMHeader,
             component: USMListAccount,
         },
     }),
@@ -64,6 +71,7 @@ export const Page = [
         url: URL.PRODUCTS,
         element: {
             layout: DefaultLayout,
+            header: USMHeader,
             component: USMListProduct,
         },
     }),
@@ -71,6 +79,7 @@ export const Page = [
         url: URL.CHARTS,
         element: {
             layout: DefaultLayout,
+            header: USMHeader,
             component: USMChart,
             role: [ROLE.ADMIN],
         },
@@ -79,6 +88,7 @@ export const Page = [
         url: URL.ACCOUNTS_CALENDAR,
         element: {
             layout: DefaultLayout,
+            header: USMHeader,
             component: USMAccountCalendar,
             role: [ROLE.ADMIN],
         },
@@ -91,22 +101,3 @@ export const Page = [
         },
     }),
 ]
-
-// function Mapping(url, element) {
-//     return {
-//         url,
-//         element,
-//     }
-// }
-
-// export const Page = [
-//     Mapping(URL.LOGIN, <LoginLayout Component={<USMLogin />}/> ),
-//     Mapping(URL.HOME, <DefaultLayout Component={<USMHome />}/> ),
-//     Mapping(URL.CAMERA, <DefaultLayout Component={<USMCamera />} Role={[ROLE.ADMIN]}/> ),
-//     Mapping(URL.ACCOUNTS, <DefaultLayout Component={<USMListAccount />}/> ),
-//     Mapping(URL.PRODUCTS, <DefaultLayout Component={<USMListProduct />}/> ),
-//     Mapping(URL.PRODUCT, <DefaultLayout Component={<USMProduct />} Role={[ROLE.ADMIN]}/> ), 
-//     Mapping(URL.CHARTS, <DefaultLayout Component={<USMChart />} Role={[ROLE.ADMIN]}/> ), 
-//     Mapping(URL.ACCOUNTS_CALENDAR, <DefaultLayout Component={<USMAccountCalendar />} Role={[ROLE.ADMIN]}/> ), 
-//     Mapping(URL.ERROR_404, <ErrorLayout Component={<USMError />}/> ),
-// ]

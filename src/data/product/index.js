@@ -6,8 +6,8 @@ let products = []
 for (let i = 0; i < 16; i++) {
   const product = new ProductResponse(
     {
-      name: "name " + i,
-      nickname: "nickname " + i,
+      name: "product " + i,
+      nickname: ["name " + i, "name " + i, "name " + i,],
       priceIn: i * 10000,
       brand: "brand " + i,
       quantity: i,

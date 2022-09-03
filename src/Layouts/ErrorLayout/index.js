@@ -7,7 +7,7 @@
   
   const { Content } = Layout;
   
-  const ErrorLayout = ({ Component, Role, Direction, ComponentSize }) => {
+  const ErrorLayout = ({ Header, Component, Role, Direction, ComponentSize }) => {
     return (
       <Layout
         style={{

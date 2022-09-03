@@ -4,9 +4,10 @@ import moment from 'moment'
 const cart = new Cart({
   created_at: moment(),
   products: {
-    0: 4,
-    2: 3,
-    4: 1,
+    2: 13,
+    4: 21,
+    7: 5,
+    8: 36,
   }
 })
 

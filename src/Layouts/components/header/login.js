@@ -56,7 +56,7 @@ const Content = ({ children, extraContent }) => (
   </Row>
 );
 
-const USMHeader = () => (
+const USMHeader = ({ CartData, CurrentUser }) => (
   <PageHeader
     title="Ultimate Store Management"
     className="site-page-header"

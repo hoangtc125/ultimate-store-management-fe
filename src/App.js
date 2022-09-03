@@ -12,6 +12,13 @@ function App() {
   const [isLoading, setLoading] = useState(true);
   const [direction, setDirection] = useState('ltr');
   const [componentSize, setComponentSize] = useState('large');
+  const [cartData, setCartData] = useState()
+  const [currentUser, setCurrentUSer] = useState()
+
+  useEffect(() => {
+    setCurrentUSer(JSON.parse(window.localStorage.getItem("USM_USER")))
+    setCartData(JSON.parse(window.localStorage.getItem("USM_CART")))
+  }, [])
 
   function fakeRequest() {
     return new Promise(resolve => setTimeout(() => resolve(), 100));
@@ -36,6 +43,7 @@ function App() {
       {
         Page.map((page, key) => {
           const Layout = page?.element?.layout
+          const Header = page?.element?.header
           const Body = page?.element?.component
           const Role = page?.element?.role
           return <Route path={page.url} key={key} element={
@@ -45,10 +53,13 @@ function App() {
               componentSize={componentSize}
             >
               <Layout 
-                Component={<Body />} 
+                Header={<Header CartData={[cartData, setCartData]} CurrentUser={[currentUser, setCurrentUSer]}/>}
+                Component={<Body CartData={[cartData, setCartData]} CurrentUser={[currentUser, setCurrentUSer]}/>} 
                 Role={Role} 
                 Direction={[direction, setDirection]}
                 ComponentSize={[componentSize, setComponentSize]}
+                CartData={[cartData, setCartData]}
+                CurrentUser={[currentUser, setCurrentUSer]}
               />
             </ConfigProvider>
           }/> 

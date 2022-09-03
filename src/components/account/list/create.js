@@ -17,6 +17,7 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData}) => {
     values.id = data[data.length - 1].id + 1
     values.key = data[data.length - 1].id + 1
     values.hashed_password = values.password
+    values.birthday = values.birthday._d.toLocaleDateString('en-GB')
     setData(prev => [...prev, values])
     onClose()
   }

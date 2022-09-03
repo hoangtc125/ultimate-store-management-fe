@@ -1,12 +1,11 @@
 import { Layout } from 'antd';
 import React from 'react';
-import USMHeader from '../components/header/login';
 import USMBody from '../components/body'
 import USMFooter from '../components/footer'
 
 const { Content } = Layout;
 
-const LoginLayout = ({ Component, Role, Direction, ComponentSize }) => {
+const LoginLayout = ({ Header, Component}) => {
   return (
     <Layout
       style={{
@@ -14,7 +13,7 @@ const LoginLayout = ({ Component, Role, Direction, ComponentSize }) => {
       }}
     >
       <Layout className="site-layout">
-        <USMHeader />
+        {Header}
         <Content
           style={{
             margin: '0 16px',

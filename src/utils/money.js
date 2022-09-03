@@ -103,9 +103,10 @@ const moneyToText = (number) => {
     }
     words[i] = words[i][0].toUpperCase() + words[i].slice(1) + " ";
   }
+  words.push(" Đồng")
   return words
 }
 
-const splitMoney = (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+const splitMoney = (value) => `${value} VNĐ`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
 export { moneyToText, splitMoney}

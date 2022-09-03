@@ -1,4 +1,4 @@
-import { Statistic, Descriptions, PageHeader, Tag, Image, Space } from 'antd';
+import { Statistic, Descriptions, PageHeader, Tag, Image, InputNumber, DatePicker } from 'antd';
 import {
   ShoppingCartOutlined,
   TrademarkOutlined,
@@ -7,92 +7,140 @@ import React, { useEffect, useState } from 'react';
 import * as MODE from '../../../constants/mode'
 import images from '../../../assets/images'
 import { isMode } from '../../../utils/check';
+import { getProducts } from '../../../utils/cart';
+import { moneyToText, splitMoney,  } from '../../../utils/money';
+import { Link } from 'react-router-dom';
+import * as URL from '../../../constants/url'
+import moment from 'moment'
+const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const fakeData = {
-  staff: {
-    name: "Trần Công Hoàng",
-    id: "20194060",
-    start: "28-08-2022",
-    end: "02-09-2022",
-    avatar: images.default,
-  },
-  bill: {
-    guest: "Tran Cong Hoang",
-    id: "421421",
-    created_at: "2017-01-10",
-    products: "T21, T27, T34",
-    status: "Đã thanh toán",
-    price: 100000,
-    images: [images.default, images.default, images.default],
+const Header = ({ CartData, CurrentUser }) => {
+  const [data, setData] = useState([])
+  const [cartData, setCartData] = CartData
+  // eslint-disable-next-line
+  const [currentUser, setCurrentUSer] = CurrentUser
+  const [totalPrice, setTotalPrice] = useState(0)
+
+  const updateData = (c) => {
+    const newProducts = getProducts(c) || []
+    let vals = newProducts.map(product => {
+      return {
+        key: product?.id,
+        itemQuantity: c.products[product?.id],
+        itemSubPrice: c.products[product?.id] * product?.priceOut,
+        ...product,
+      }
+    })
+    setData(vals)
+    setTotalPrice(
+      vals.reduce((total, product) => {
+        return total + product?.itemSubPrice
+      }, 0)
+    )
   }
-}
-
-const renderContent = (bill) => (
-  <div>
-    <Tag color="error" icon={<ShoppingCartOutlined style={{fontSize: "2rem"}}/>}><strong>Giỏ hàng hiện tại</strong></Tag>
-    <Descriptions size="small" column={3}>
-      <Descriptions.Item label="Khách hàng">{bill?.guest}</Descriptions.Item>
-      <Descriptions.Item label="Mã hóa đơn">
-        <p>{bill?.id}</p>
-      </Descriptions.Item>
-      <Descriptions.Item label="Ngày tạo">{bill?.created_at}</Descriptions.Item>
-      <Descriptions.Item label="Sản phẩm">
-        {bill?.products}
-      </Descriptions.Item>
-    </Descriptions>
-  </div>
-);
-
-const extraContent = (bill) => {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'flex-start',
-        width: "100%",
-      }}
-    >
-      <Statistic
-        title="Trạng thái"
-        value={bill?.status}
-        style={{
-          marginRight: 32,
-        }}
-      />
-      <Statistic title="Thành tiền" suffix="VNĐ" value={bill?.price} 
-        style={{
-          marginRight: 32,
-        }}
-      />
-      <Space>
-        {bill?.images.map((image, id) => {
-          return <Image src={image} key={id} width={70} />
-        })}
-      </Space>
-    </div>
-  )
-}
-
-const Content = ({ children, extra }) => (
-  <div className="content"
-    style={{
-      width: "55%",
-      marginTop: "-50px",
-    }}
-  >
-    <div className="main">{children}</div>
-    <div className="extra">{extra}</div>
-  </div>
-);
-
-const Header = () => {
-  const [data, setData] = useState()
 
   useEffect(() => {
-    if(isMode([MODE.TEST])) {
-      setData(fakeData)
+    if (isMode([MODE.TEST])) {
+      updateData(cartData)
     }
-  }, [])
+  }, [cartData])
+
+  const renderContent = () => (
+    <div>
+      <Link to={URL.CART}><Tag color="error" icon={<ShoppingCartOutlined style={{fontSize: "2rem"}}/>}><strong>Giỏ hàng hiện tại</strong></Tag></Link>
+      <div
+        style={{
+          width: "100%",
+          overflowX: "auto",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          margin: "10px 0px",
+        }}
+      >
+        {data.map(product => {
+          return (
+            <Tag
+              key={product.id} 
+              checked
+              style={{
+                width: "fit-content",
+                padding: "2px 10px",
+                fontSize: "1rem",
+                background: "#fff"
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <span>Tên: {product.name}</span>
+                <span>Số lượng: {
+                  <InputNumber min={0} max={100} value={product.itemQuantity} 
+                    bordered={true}
+                    onChange={(value) => {
+                      let newCart = {...cartData}
+                      if (!value) {
+                        delete newCart.products[product.id]
+                      } else {
+                        newCart.products[product.id] = value
+                      }
+                      setCartData(newCart)
+                      updateData(newCart)
+                    }} 
+                    style={{
+                      width: "70px",
+                    }}
+                  />  
+                }</span>
+                <span>Giá: {splitMoney(product.itemSubPrice)}</span>
+              </div>
+            </Tag>
+          )
+        })}
+      </div>
+    </div>
+  );
+  
+  const extraContent = () => {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-start',
+          width: "100%",
+        }}
+      >
+        <Statistic title="Thành tiền" value={splitMoney(totalPrice)} 
+          style={{
+            marginRight: 32,
+          }}
+        />
+        <Statistic title="Bằng chữ"
+          formatter={() => {
+            return moneyToText(totalPrice)
+          }}
+          style={{
+            marginRight: 32,
+          }}
+        />
+      </div>
+    )
+  }
+  
+  const Content = ({ children, extra }) => (
+    <div className="content"
+      style={{
+        width: "55%",
+        marginTop: "-60px",
+      }}
+    >
+      <div className="main">{children}</div>
+      <div className="extra">{extra}</div>
+    </div>
+  );
 
   return (
     <div className="site-page-header-ghost-wrapper"
@@ -159,22 +207,23 @@ const Header = () => {
               alignItems: "center",
             }}
           >
+            <Image src={currentUser?.avatar} fallback={images.default} width={80}/>
             <Descriptions size="small" column={2}
               style={{
                 width: "80%",
+                marginLeft: "10px",
               }}
             >
-              <Descriptions.Item label="Nhân viên ">{data?.staff?.name}</Descriptions.Item>
+              <Descriptions.Item label="Nhân viên ">{currentUser?.fullname}</Descriptions.Item>
               <Descriptions.Item label="Mã nhân viên">
-                <p>{data?.staff?.id}</p>
+                <p>{currentUser?.id}</p>
               </Descriptions.Item>
-              <Descriptions.Item label="Bắt đầu ca làm">{data?.staff?.start}</Descriptions.Item>
-              <Descriptions.Item label="Kết thúc ca làm">{data?.staff?.end}</Descriptions.Item>
+              <Descriptions.Item label="Bắt đầu ca làm">{<DatePicker format={dateFormatList} value={moment(currentUser?.birthday, dateFormatList)} disabled />}</Descriptions.Item>
+              <Descriptions.Item label="Kết thúc ca làm">{<DatePicker format={dateFormatList} value={moment(currentUser?.birthday, dateFormatList)} disabled />}</Descriptions.Item>
             </Descriptions>
-            <Image src={data?.staff?.avatar} fallback={images.default} width={80}/>
           </div>
-          <Content extra={extraContent(data?.bill)}>
-            {renderContent(data?.bill)}
+          <Content extra={extraContent()}>
+            {renderContent()}
           </Content>
         </div>
       </PageHeader>

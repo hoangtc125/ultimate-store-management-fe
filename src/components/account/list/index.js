@@ -9,6 +9,7 @@ import USMCreateAccount from './create';
 import USMUpdateAccount from './update';
 import USMNote from './note';
 import accounts from '../../../data/account';
+import moment from 'moment'
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
 const USMListAccount = () => {
@@ -333,7 +334,7 @@ const USMListAccount = () => {
                   <Card title="Mật khẩu">{record.hashed_password}</Card>
                 </>
               }
-              <Card title="Ngày sinh"><DatePicker format={dateFormatList} value={record.birthday} disabled /></Card>
+              <Card title="Ngày sinh"><DatePicker format={dateFormatList} value={moment(record?.birthday, dateFormatList)} disabled /></Card>
               <Card title="Thông tin khác">{record.profile}</Card>
             </div>
           ),

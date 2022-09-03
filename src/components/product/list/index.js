@@ -197,7 +197,7 @@ const USMListProduct = () => {
       title: 'Tên sản phẩm',
       dataIndex: 'name',
       key: 'name',
-      width: '20%',
+      width: '15%',
       ...getColumnSearchProps('name'),
       sorter: (a, b) => a.role - b.role,
       sortDirections: ['descend', 'ascend'],
@@ -206,8 +206,11 @@ const USMListProduct = () => {
       title: 'Tên gọi khác',
       dataIndex: 'nickname',
       key: 'nickname',
-      width: '15%',
+      width: '20%',
       ...getColumnSearchProps('nickname'),
+      render: (_, record) => {
+        return record.nickname.join(", ")
+      }
     },
     {
       title: 'Thương hiệu',

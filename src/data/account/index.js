@@ -1,7 +1,5 @@
 import { AccountResponse } from "../../model/account";
 import images from '../../assets/images'
-import moment from 'moment';
-const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
 let accounts = []
 
@@ -16,7 +14,7 @@ for (let i = 0; i < 16; i++) {
       ratio_salary : "string " + i,
       created_at : "string " + i,
       avatar : images.default,
-      birthday : moment(moment(), dateFormatList),
+      birthday : '12/05/2001',
       profile : "string " + i,
       hashed_password : "string " + i,
       is_disabled : "enable",

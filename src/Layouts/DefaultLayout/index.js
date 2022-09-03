@@ -1,7 +1,6 @@
 import { Layout } from 'antd';
 import React, { useEffect } from 'react';
 import USMSideBar from '../components/sideBar'
-import USMHeader from '../components/header'
 import USMBody from '../components/body'
 import USMFooter from '../components/footer'
 import USMBreadcrumb from '../components/breadcrumb';
@@ -10,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
   
 const { Content } = Layout;
 
-const DefaultLayout = ({ Component, Role, Direction, ComponentSize }) => {
+const DefaultLayout = ({ Header, Component, Role, Direction, ComponentSize }) => {
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -33,7 +32,7 @@ const DefaultLayout = ({ Component, Role, Direction, ComponentSize }) => {
     >
       <USMSideBar Direction={Direction} ComponentSize={ComponentSize}/>
       <Layout className="site-layout">
-        <USMHeader />
+        {Header}
         <Content
           style={{
             margin: '0 16px',
@@ -49,7 +48,7 @@ const DefaultLayout = ({ Component, Role, Direction, ComponentSize }) => {
               boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
             }}
           >
-              <USMBody Component={Component}/>
+            <USMBody Component={Component}/>
           </div>
         </Content>
         <USMFooter />

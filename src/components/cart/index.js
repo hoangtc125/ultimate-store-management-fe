@@ -5,11 +5,11 @@ import * as MODE from '../../constants/mode'
 import { isMode } from '../../utils/check';
 import Highlighter from 'react-highlight-words';
 import { moneyToText, splitMoney } from '../../utils/money';
-import cart from '../../data/cart';
 import { getProducts } from '../../utils/cart';
 const { Search } = Input;
 
-const USMListProduct = () => {
+const USMListProduct = ({CartData}) => {
+  // const [idSelected, setIdSelected] = useState()
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [pagination, setPagination] = useState({
@@ -18,9 +18,8 @@ const USMListProduct = () => {
     position: ['bottomCenter'],
   });
   const [data, setData] = useState([])
-  const [cartData, setCartData] = useState()
   const [totalPrice, setTotalPrice] = useState(0)
-  // const [idSelected, setIdSelected] = useState()
+  const [cartData, setCartData] = CartData
   const searchInput = useRef(null);
 
   const handleDelete = (index) => {
@@ -75,10 +74,9 @@ const USMListProduct = () => {
   
   useEffect(() => {
     if (isMode([MODE.TEST])) {
-      setCartData(cart)
-      updateData(cart)
+      updateData(cartData)
     }
-  }, [])
+  }, [cartData])
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -220,7 +218,7 @@ const USMListProduct = () => {
       ...getColumnSearchProps('itemQuantity'),
       width: '15%',
       render: (_, record) => {
-        return <InputNumber min={1} max={100} defaultValue={record.itemQuantity} onChange={(value) => {
+        return <InputNumber min={1} max={100} value={record.itemQuantity} onChange={(value) => {
           let newCart = {...cartData}
           newCart.products[record.id] = value
           setCartData(newCart)
@@ -313,7 +311,7 @@ const USMListProduct = () => {
                 }}
               >
                 <span>Tổng tiền:</span>
-                <strong>{splitMoney(totalPrice)} VND</strong>
+                <strong>{splitMoney(totalPrice)}</strong>
               </Space>
               <Space
                 style={{
@@ -321,7 +319,7 @@ const USMListProduct = () => {
                 }}
               >
                 <span>Bằng chữ:</span>
-                <i>{moneyToText(totalPrice)} VND</i>
+                <i>{moneyToText(totalPrice)}</i>
               </Space>
             </Space>
           )

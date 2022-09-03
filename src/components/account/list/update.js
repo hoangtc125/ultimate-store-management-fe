@@ -2,6 +2,7 @@ import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, messa
 import React, { useEffect, useState } from 'react';
 import images from '../../../assets/images';
 import USMUpload from '../../utils/upload';
+import moment from 'moment'
 const { Option } = Select;
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
@@ -19,7 +20,7 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
       email: dataSelected?.email,
       ratio_salary: dataSelected?.ratio_salary,
       created_at: dataSelected?.created_at,
-      birthday: dataSelected?.birthday,
+      birthday: moment(dataSelected?.birthday, dateFormatList),
       profile: dataSelected?.profile,
       hashed_password: dataSelected?.hashed_password,
       is_disabled: dataSelected?.is_disabled,
@@ -36,6 +37,7 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
     }
     values.id = idSelected
     values.key = idSelected
+    values.birthday = values.birthday._d.toLocaleDateString('en-GB')
     setData(prev => prev.map(element => {
       if (element?.id === idSelected) {
         return values

@@ -4,6 +4,9 @@ import React, { useEffect, useState }from 'react';
 import images from '../../../assets/images';
 import * as MODE from '../../../constants/mode'
 import * as ROLE from '../../../constants/role'
+import cart from '../../../data/cart'
+import admin from '../../../data/account/admin'
+import staff from '../../../data/account/staff'
 import { useNavigate } from 'react-router-dom';
 
 const Advertise = () => {
@@ -23,15 +26,21 @@ const Advertise = () => {
   );
 };
 
-const Login = () => {
+const Login = ({ CartData, CurrentUser }) => {
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [role, setRoles] = useState("admin");
+  // eslint-disable-next-line
+  const [cartData, setCartData] = CartData
+  // eslint-disable-next-line
+  const [currentUser, setCurrentUSer] = CurrentUser
   const navigate = useNavigate()
 
   useEffect(() => {
     window.localStorage.removeItem("USM_MODE")
     window.localStorage.removeItem("USM_ROLE")
+    window.localStorage.removeItem("USM_USER")
+    window.localStorage.removeItem("USM_CART")
     window.localStorage.removeItem("USM_TEMP_IMAGE")
     window.localStorage.removeItem("USM_IP_CAMERA")
   }, [])
@@ -58,6 +67,10 @@ const Login = () => {
     setLoading(true)
     window.localStorage.setItem("USM_MODE", MODE.TEST)
     window.localStorage.setItem("USM_ROLE", role)
+    window.localStorage.setItem("USM_USER", role === ROLE.ADMIN ? JSON.stringify(admin) : JSON.stringify(staff))
+    window.localStorage.setItem("USM_CART", JSON.stringify(cart))
+    setCartData(cart)
+    setCurrentUSer(role === ROLE.ADMIN ? admin : staff)
     setTimeout(() => {
       navigate('/home')
     }, 500);
