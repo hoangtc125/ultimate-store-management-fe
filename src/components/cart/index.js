@@ -1,4 +1,4 @@
-import { SearchOutlined, DeleteOutlined, ShoppingCartOutlined, DollarOutlined } from '@ant-design/icons';
+import { SearchOutlined, DeleteOutlined, ShoppingCartOutlined, DollarOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table, Tooltip, Image, Card, Popconfirm, InputNumber } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import * as MODE from '../../constants/mode'
@@ -6,9 +6,14 @@ import { isMode } from '../../utils/check';
 import Highlighter from 'react-highlight-words';
 import { moneyToText, splitMoney } from '../../utils/money';
 import { getProducts } from '../../utils/cart';
+import Bill from '../../model/bill'
+import Store from '../../model/store';
+import Customer from '../../model/customer';
+import USMCheckout from './checkout';
+import openNotificationWithIcon from '../../utils/notification';
 const { Search } = Input;
 
-const USMCart = ({CartData}) => {
+const USMCart = ({CartData, BillData}) => {
   // const [idSelected, setIdSelected] = useState()
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -20,7 +25,15 @@ const USMCart = ({CartData}) => {
   const [data, setData] = useState([])
   const [totalPrice, setTotalPrice] = useState(0)
   const [cartData, setCartData] = CartData
+  // eslint-disable-next-line 
+  const [billData, setBillData] = BillData
+  const [bill, setBill] = useState()
+  const [visible, setVisible] = useState(false);
   const searchInput = useRef(null);
+
+  const showDrawer = () => {
+    setVisible(true);
+  };
 
   const handleDelete = (index) => {
     let newCart = {...cartData}
@@ -297,31 +310,70 @@ const USMCart = ({CartData}) => {
         }}
         footer={() => {
           return (
-            <Space
+            <div
               style={{
-                fontSize: "1.5rem",
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+                justifuContent: "space-between",
+                alignItems: "center",
               }}
             >
-              <DollarOutlined style={{
-                fontSize: "3rem",
-              }}/> 
               <Space
                 style={{
-                  margin: "0px 10px",
+                  fontSize: "1.5rem",
+                  flexGrow: 1,
                 }}
               >
-                <span>Tổng tiền:</span>
-                <strong>{splitMoney(totalPrice)}</strong>
+                <DollarOutlined style={{
+                  fontSize: "3rem",
+                }}/> 
+                <Space
+                  style={{
+                    margin: "0px 10px",
+                  }}
+                >
+                  <span>Tổng tiền:</span>
+                  <strong>{splitMoney(totalPrice)}</strong>
+                </Space>
+                <Space
+                  style={{
+                    margin: "0px 10px",
+                  }}
+                >
+                  <span>Bằng chữ:</span>
+                  <i>{moneyToText(totalPrice)}</i>
+                </Space>
               </Space>
-              <Space
-                style={{
-                  margin: "0px 10px",
+              <Button type='primary' danger 
+                icon={<SafetyCertificateOutlined 
+                style={{fontSize: "1.5rem"}}/>}
+                onClick={() => {
+                  const newBill = new Bill({
+                    id: billData.length + 1,
+                    products: cartData.products,
+                    productsDetail: data,
+                    totalPrice: totalPrice,
+                    textPrice: moneyToText(totalPrice),
+                    store: new Store({}),
+                    customer: new Customer({}),
+                    created_at: new Date().toLocaleDateString('en-GB'),
+                  })
+                  setBill(newBill)
+                  if(data.length === 0) {
+                    openNotificationWithIcon(
+                      'error',
+                      'Không thể thanh toán',
+                      'Không có sản phẩm nào trong giỏ hàng!'
+                    )
+                  } else {
+                    showDrawer()
+                  }
                 }}
-              >
-                <span>Bằng chữ:</span>
-                <i>{moneyToText(totalPrice)}</i>
-              </Space>
-            </Space>
+              > 
+                Thanh toán
+              </Button>
+            </div>
           )
         }}
         bordered
@@ -371,6 +423,7 @@ const USMCart = ({CartData}) => {
           rowExpandable: record => true,
         }}
       />
+      <USMCheckout BillData={BillData} Data={[bill, setBill]} Visible={[visible, setVisible]} CartData={CartData}/>
     </div>
   );
 };

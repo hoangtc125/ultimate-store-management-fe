@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 const { Content } = Layout;
 
 const DefaultLayout = ({ Header, Component, Role, Direction, ComponentSize }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate(null)
 
   useEffect(() => {
     if (!isVisit(Role)) {

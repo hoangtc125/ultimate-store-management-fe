@@ -33,7 +33,7 @@ const USMItemProduct = ({item, CartData}) => {
         <Meta title={item?.name} description={item?.nickname.join(", ")} />
       </Card>
       <Modal title="Thông tin sản phẩm" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}
-        width={"90%"}
+        width={"90%"} 
       >
         <USMProduct item={item} CartData={CartData}/>
       </Modal>

@@ -121,6 +121,9 @@ const USMBillDetail = ({Data}) => {
         <Descriptions.Item>
             <span>Bằng chữ: <i>{moneyToText(parseFloat(itemSelected?.customer?.pricePay) - parseFloat(itemSelected?.totalPrice))}</i></span>
         </Descriptions.Item>
+        <Descriptions.Item span={2}>
+            <span>Ghi chú: <i>{itemSelected?.note}</i></span>
+        </Descriptions.Item>
       </Descriptions>
     </div>
   )

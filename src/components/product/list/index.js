@@ -307,7 +307,7 @@ const USMListProduct = () => {
           return (
             <Space>
               <GoldOutlined style={{fontSize: "2rem"}}/> 
-              <span>Danh sách sản phẩm trong cửa hàng</span>
+              <span>Danh sách sản phẩm trong cửa hàng ({data.length})</span>
             </Space>
           )
         }}

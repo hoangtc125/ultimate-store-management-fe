@@ -1,7 +1,8 @@
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Popconfirm } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, Popconfirm } from 'antd';
 import React, { useState } from 'react';
 import images from '../../../assets/images';
 import USMUpload from '../../utils/upload';
+import openNotificationWithIcon from '../../../utils/notification';
 const { Option } = Select;
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
@@ -23,12 +24,20 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData}) => {
   }
 
   const confirm = (e) => {
-    message.success('Click on Yes');
+    openNotificationWithIcon(
+      'success',
+      'Thêm thành công',
+      'Nhân viên mới sẽ xuất hiện cuối danh sách!'
+    )
     document.getElementById("usm-button-create").click()
   };
   
   const cancel = (e) => {
-    message.error('Click on No');
+    openNotificationWithIcon(
+      'warning',
+      'Hủy thêm nhân viên',
+      'Đã hủy thêm nhân viên mới!'
+    )
   };
 
   const onClose = () => {

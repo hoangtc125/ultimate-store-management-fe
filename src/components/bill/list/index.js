@@ -295,7 +295,7 @@ const USMBill = ({BillData}) => {
           margin: "10px 0px",
         }}
       />
-      <Modal title="Chi tiết hóa đơn" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={"70%"}>
+      <Modal title="Chi tiết hóa đơn" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={"70%"} destroyOnClose={true}>
         <USMBillDetail Data={[itemSelected, setItemSelected]}/>
       </Modal>
     </div>

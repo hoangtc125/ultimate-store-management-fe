@@ -9,6 +9,7 @@ import bills from '../../../data/bill'
 import admin from '../../../data/account/admin'
 import staff from '../../../data/account/staff'
 import { useNavigate } from 'react-router-dom';
+import openNotificationWithIcon from '../../../utils/notification';
 
 const Advertise = () => {
   return (
@@ -54,7 +55,13 @@ const Login = ({ CartData, CurrentUser, BillData }) => {
     window.localStorage.setItem("USM_ROLE", role)
     setLoading(true)
     setTimeout(() => {
-      navigate('/home')
+      // navigate('/home')
+      openNotificationWithIcon(
+        'error',
+        'Đăng nhập thất bại',
+        'Hãy chọn dùng thử sản phẩm để trải nghiệm!'
+      )
+      setLoading(false)
     }, 500);
   };
 

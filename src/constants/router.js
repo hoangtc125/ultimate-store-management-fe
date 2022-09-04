@@ -41,6 +41,7 @@ export const Page = [
             layout: DefaultLayout,
             header: USMHeader,
             component: USMHome,
+            role: [ROLE.ADMIN, ROLE.STAFF],
         },
     }),
     new Mapping({
@@ -49,6 +50,7 @@ export const Page = [
             layout: DefaultLayout,
             header: USMHeader,
             component: USMCart,
+            role: [ROLE.ADMIN, ROLE.STAFF],
         },
     }),
     new Mapping({
@@ -57,7 +59,7 @@ export const Page = [
             layout: DefaultLayout,
             header: USMHeader,
             component: USMCamera,
-            role: [ROLE.ADMIN],
+            role: [ROLE.ADMIN, ROLE.STAFF],
         },
     }),
     new Mapping({
@@ -66,6 +68,7 @@ export const Page = [
             layout: DefaultLayout,
             header: USMHeader,
             component: USMListAccount,
+            role: [ROLE.ADMIN, ROLE.STAFF],
         },
     }),
     new Mapping({
@@ -74,6 +77,7 @@ export const Page = [
             layout: DefaultLayout,
             header: USMHeader,
             component: USMListProduct,
+            role: [ROLE.ADMIN, ROLE.STAFF],
         },
     }),
     new Mapping({
@@ -82,6 +86,7 @@ export const Page = [
             layout: DefaultLayout,
             header: USMHeader,
             component: USMBill,
+            role: [ROLE.ADMIN, ROLE.STAFF],
         },
     }),
     new Mapping({
@@ -99,7 +104,7 @@ export const Page = [
             layout: DefaultLayout,
             header: USMHeader,
             component: USMAccountCalendar,
-            role: [ROLE.ADMIN],
+            role: [ROLE.ADMIN, ROLE.STAFF],
         },
     }),
     new Mapping({

@@ -1,4 +1,4 @@
-import { Image, Button, Space, message } from 'antd';
+import { Image, Button, Space } from 'antd';
 import { ReloadOutlined, CameraOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import React, { useEffect } from 'react';
 import openNotificationWithIcon from '../../utils/notification';
@@ -17,7 +17,11 @@ const USMVideo = ({ipCamera, loadings, enterLoading}) => {
 
   const handleErrorVideo = () => {
     document.getElementById("browser-video").firstChild.src = listImages.default
-    message.error('Không thể kết nối Camera')
+    openNotificationWithIcon(
+      'error',
+      'Không thể kết nối Camera!',
+      'Kiểm tra các bước kết nối Camera trong phần hướng dẫn để kết nối lại!'
+    )
   }
 
   const getBase64FromUrl = async (url) => {

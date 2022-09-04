@@ -43,6 +43,7 @@ let bills = [
       store: new Store({}),
       created_at: "02/09/2022",
       status: "Nợ",
+      note: "Tuần sau trả",
     }
   ),
 ]

@@ -300,7 +300,7 @@ const USMListAccount = () => {
           return (
             <Space>
               <UsergroupAddOutlined style={{fontSize: "2rem"}}/> 
-              <span>Danh sách nhân viên trong cửa hàng</span>
+              <span>Danh sách nhân viên trong cửa hàng ({data.length})</span>
             </Space>
           )
         }}

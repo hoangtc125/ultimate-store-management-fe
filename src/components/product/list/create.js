@@ -1,8 +1,9 @@
-import { Button, Col, Drawer, Form, Input, Row, Select, Space, message, Popconfirm } from 'antd';
+import { Button, Col, Drawer, Form, Input, Row, Select, Space, Popconfirm } from 'antd';
 import React, { useState } from 'react';
 import images from '../../../assets/images';
 import USMTag from '../../utils/tag';
 import USMUpload from '../../utils/upload';
+import openNotificationWithIcon from '../../../utils/notification';
 const { Option } = Select;
 
 const USMCreateProduct = ({visibleCreate, setVisibleCreate, data, setData}) => {
@@ -23,12 +24,20 @@ const USMCreateProduct = ({visibleCreate, setVisibleCreate, data, setData}) => {
   }
 
   const confirm = (e) => {
-    message.success('Click on Yes');
+    openNotificationWithIcon(
+      'success',
+      'Thêm thành công',
+      'Sản phẩm được thêm vào cuối danh sách!'
+    )
     document.getElementById("usm-button-create").click()
   };
   
   const cancel = (e) => {
-    message.error('Click on No');
+    openNotificationWithIcon(
+      'warning',
+      'Hủy thêm sản phẩm',
+      'Đã hủy thêm mới sản phẩm!'
+    )
   };
 
   const onClose = () => {

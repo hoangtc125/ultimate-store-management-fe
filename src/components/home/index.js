@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react"
 import * as MODE from '../../constants/mode'
 import { isMode } from "../../utils/check"
 import USMItemProduct from "./item"
-import { Input, Pagination, Card } from 'antd';
+import { Input, Pagination, Card, Image } from 'antd';
 import products from "../../data/product";
+import images from "../../assets/images";
 const { Search } = Input;
 
 const USMHome = ({CartData}) => {
@@ -74,9 +75,16 @@ const USMHome = ({CartData}) => {
           bordered={false}
           enterButton="Tìm kiếm"
           onSearch={(value) => handleSearch(value)}
+          prefix={
+            <Image src={images.logo} width={50} preview={false} 
+              style={{
+                margin: "-10px 20px -10px -10px"
+              }}
+            />
+          }
           style={{
+            flexGrow: 1,
             width: "100%",
-            height: "100%",
           }}
         />
       </Card>

@@ -13,9 +13,6 @@ const isMode = (modes) => {
 }
 
 const isVisit = (roles) => {
-  if (!roles) {
-    return true
-  }
   const role = window.localStorage.getItem("USM_ROLE")
   const mode = window.localStorage.getItem("USM_MODE")
   if (!mode) {

@@ -1,8 +1,9 @@
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message, Popconfirm } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, Popconfirm } from 'antd';
 import React, { useEffect, useState } from 'react';
 import images from '../../../assets/images';
 import USMUpload from '../../utils/upload';
 import moment from 'moment'
+import openNotificationWithIcon from '../../../utils/notification';
 const { Option } = Select;
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
@@ -49,12 +50,20 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
   }
 
   const confirm = (e) => {
-    message.success('Click on Yes');
+    openNotificationWithIcon(
+      'success',
+      'Chỉnh sửa thành công',
+      'Hãy kiểm tra lại thông tin vừa chỉnh sửa!'
+    )
     document.getElementById("usm-button-update").click()
   };
   
   const cancel = (e) => {
-    message.error('Click on No');
+    openNotificationWithIcon(
+      'warning',
+      'Hủy chỉnh sửa',
+      'Đã hủy chỉnh sửa thông tin nhân viên!'
+    )
   };
 
   const onClose = () => {

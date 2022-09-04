@@ -1,4 +1,5 @@
-import { Image, Space, Badge, Descriptions, InputNumber, Button, message } from "antd"
+import { Image, Space, Badge, Descriptions, InputNumber, Button } from "antd"
+import openNotificationWithIcon from "../../../utils/notification"
 import { useRef, useState } from "react"
 
 const USMProduct = ({item, CartData}) => {
@@ -68,7 +69,11 @@ const USMProduct = ({item, CartData}) => {
                       let newCart = {...cartData}
                       newCart.products[data?.id] = (newCart.products[data?.id] || 0) + inputNumberElement?.current.value
                       setCartData(newCart)
-                      message.success("Thêm thành công")
+                      openNotificationWithIcon(
+                        'success',
+                        'Thêm thành công',
+                        'Sản phẩm đã được thêm vào giỏ hàng!'
+                      )
                     }}
                   >
                     Thêm vào giỏ hàng 
