@@ -97,6 +97,9 @@ const moneyToText = (number) => {
   }
   const mySentence = to_vietnamese(number);
   let words = mySentence.split(" ");
+  if (words[0].includes("undefined")) {
+    words[0] = "Âm "
+  }
   for (let i = 0; i < words.length; i++) {
     if (!words[i]) {
       continue
@@ -109,4 +112,4 @@ const moneyToText = (number) => {
 
 const splitMoney = (value) => `${value} VNĐ`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
-export { moneyToText, splitMoney}
+export { moneyToText, splitMoney }

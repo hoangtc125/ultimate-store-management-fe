@@ -1,15 +1,18 @@
-import { SearchOutlined, DeleteOutlined, ShoppingCartOutlined, DollarOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, Tooltip, Image, Card, Popconfirm, InputNumber } from 'antd';
+import { SearchOutlined, SnippetsOutlined } from '@ant-design/icons';
+import { Button, Input, Space, Table, DatePicker, Modal } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
-import * as MODE from '../../constants/mode'
-import { isMode } from '../../utils/check';
+import * as MODE from '../../../constants/mode'
+import { isMode } from '../../../utils/check';
 import Highlighter from 'react-highlight-words';
-import { moneyToText, splitMoney } from '../../utils/money';
-import { getProducts } from '../../utils/cart';
+import { getProducts } from '../../../utils/cart';
+import moment from 'moment'
+import USMBillDetail from '../detail';
+import { splitMoney } from '../../../utils/money';
+const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 const { Search } = Input;
 
-const USMCart = ({CartData}) => {
-  // const [idSelected, setIdSelected] = useState()
+const USMBill = ({BillData}) => {
+  const [itemSelected, setItemSelected] = useState()
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [pagination, setPagination] = useState({
@@ -18,15 +21,26 @@ const USMCart = ({CartData}) => {
     position: ['bottomCenter'],
   });
   const [data, setData] = useState([])
-  const [totalPrice, setTotalPrice] = useState(0)
-  const [cartData, setCartData] = CartData
+  // eslint-disable-next-line
+  const [billData, setBillData] = isMode([MODE.TEST]) ? BillData : useState()
   const searchInput = useRef(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const handleDelete = (index) => {
-    let newCart = {...cartData}
-    delete newCart.products[index]
-    setCartData(newCart)
-    updateData(newCart)
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleView = (index) => {
+    setItemSelected(data.find(bill => index === bill.id))
+    showModal()
   }
 
   const USMAction = ({i}) => {
@@ -39,44 +53,37 @@ const USMCart = ({CartData}) => {
           alignItems: "center",
         }}
       >
-        <Tooltip title="Xóa">
-          <Popconfirm
-            title="Xác nhận xóa?"
-            onConfirm={() => handleDelete(i)}
-            okText="Yes"
-            cancelText="No"
-            placement='bottom'
-          >
-            <Button shape="circle" danger ghost icon={<DeleteOutlined />} />
-          </Popconfirm>
-        </Tooltip>
+        <Button
+          type='primary'
+          onClick={() => handleView(i)}
+        >
+          Xem chi tiết
+        </Button>
       </div>
     )
   }
 
-  const updateData = (c) => {
-    const newProducts = getProducts(c) || []
-    let vals = newProducts.map(product => {
-      return {
-        key: product?.id,
-        itemQuantity: c.products[product?.id],
-        itemSubPrice: c.products[product?.id] * product?.priceOut,
-        ...product,
-      }
+  const updateData = (b) => {
+    const newBillData = b.map(bill => {
+      const newProducts = getProducts(bill) || []
+      let vals = newProducts.map(product => {
+        return {
+          key: product?.id,
+          itemQuantity: bill.products[product?.id],
+          itemSubPrice: bill.products[product?.id] * product?.priceOut,
+          ...product,
+        }
+      })
+      return {key: bill.id ,...bill, productsDetail: vals}
     })
-    setData(vals)
-    setTotalPrice(
-      vals.reduce((total, product) => {
-        return total + product?.itemSubPrice
-      }, 0)
-    )
+    setData(newBillData)
   }
   
   useEffect(() => {
     if (isMode([MODE.TEST])) {
-      updateData(cartData)
+      updateData(billData)
     }
-  }, [cartData])
+  }, [billData])
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -174,7 +181,7 @@ const USMCart = ({CartData}) => {
 
   let columns = [
     {
-      title: 'Mã số sản phẩm',
+      title: 'Mã hóa đơn',
       dataIndex: 'id',
       key: 'id',
       width: '8%',
@@ -183,61 +190,54 @@ const USMCart = ({CartData}) => {
       sortDirections: ['descend', 'ascend'],
     },
     {
-      title: 'Tên sản phẩm',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'Khách hàng',
+      dataIndex: 'customer',
+      key: 'customer',
       width: '20%',
-      ...getColumnSearchProps('name'),
-      sorter: (a, b) => a.role - b.role,
+      ...getColumnSearchProps('customer'),
+      sorter: (a, b) => a.id - b.id,
       sortDirections: ['descend', 'ascend'],
+      render: (_, record) => {
+        return record.customer.name
+      }
     },
     {
-      title: 'Hình ảnh sản phẩm',
-      dataIndex: 'images',
-      key: 'images',
+      title: 'Thời gian tạo',
+      dataIndex: 'created_at',
+      key: 'created_at',
       width: '10%',
-      ...getColumnSearchProps('images'),
+      ...getColumnSearchProps('created_at'),
       render: (_, record) => {
-        return <Image src={record.images[0]} width={50}/>
+        return <DatePicker format={dateFormatList} value={moment(record?.created_at, dateFormatList)} disabled />
       }
     },
     {
-      title: 'Giá bán 1 sản phẩm',
-      dataIndex: 'priceOut',
-      key: 'priceOut',
-      width: '15%',
-      ...getColumnSearchProps('priceOut'),
+      title: 'Sản phẩm đã mua',
+      dataIndex: 'productsDetail',
+      key: 'productsDetail',
+      width: '20%',
+      ...getColumnSearchProps('productsDetail'),
       render: (_, record) => {
-        return splitMoney(record.priceOut)
-      }
-    },
-    {
-      title: 'Số lượng sản phẩm',
-      dataIndex: 'itemQuantity',
-      key: 'itemQuantity',
-      ...getColumnSearchProps('itemQuantity'),
-      width: '15%',
-      render: (_, record) => {
-        return <InputNumber min={1} max={100} value={record.itemQuantity} onChange={(value) => {
-          let newCart = {...cartData}
-          newCart.products[record.id] = value
-          setCartData(newCart)
-          updateData(newCart)
-        }} />
+        return (
+          record.productsDetail.map(product => {
+            return product.name
+          }).join(", ")
+        )
       }
     },
     {
       title: 'Thành tiền',
-      dataIndex: 'itemSubPrice',
-      key: 'itemSubPrice',
-      ...getColumnSearchProps('itemSubPrice'),
+      dataIndex: 'totalPrice',
+      key: 'totalPrice',
+      ...getColumnSearchProps('totalPrice'),
       sorter: (a, b) => a.id - b.id,
       sortDirections: ['descend', 'ascend'],
       width: '15%',
       render: (_, record) => {
-        return splitMoney(record.itemSubPrice)
+        return splitMoney(record.totalPrice)
       }
-    },{
+    },
+    {
       title: 'Thao tác',
       dataIndex: 'action',
       key: 'action',
@@ -252,17 +252,6 @@ const USMCart = ({CartData}) => {
     setPagination({
       ...newPagination,
     });
-  };
-
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-    },
-    getCheckboxProps: (record) => ({
-      disabled: record.name === 'Disabled User',
-      // Column configuration not to be checked
-      name: record.name,
-    }),
   };
 
   return (
@@ -280,8 +269,8 @@ const USMCart = ({CartData}) => {
               }}
             >
               <Space>
-                <ShoppingCartOutlined style={{fontSize: "2rem"}}/> 
-                <span>Giỏ hàng ({Object.keys(cartData?.products || []).length})</span>
+                <SnippetsOutlined style={{fontSize: "2rem"}}/> 
+                <span>Danh sách hóa đơn ({Object.keys(billData).length})</span>
               </Space>
               <Search
                 placeholder="Nhập sản phẩm"
@@ -295,35 +284,6 @@ const USMCart = ({CartData}) => {
             </Space>
           )
         }}
-        footer={() => {
-          return (
-            <Space
-              style={{
-                fontSize: "1.5rem",
-              }}
-            >
-              <DollarOutlined style={{
-                fontSize: "3rem",
-              }}/> 
-              <Space
-                style={{
-                  margin: "0px 10px",
-                }}
-              >
-                <span>Tổng tiền:</span>
-                <strong>{splitMoney(totalPrice)}</strong>
-              </Space>
-              <Space
-                style={{
-                  margin: "0px 10px",
-                }}
-              >
-                <span>Bằng chữ:</span>
-                <i>{moneyToText(totalPrice)}</i>
-              </Space>
-            </Space>
-          )
-        }}
         bordered
         columns={columns}
         dataSource={data}
@@ -334,45 +294,12 @@ const USMCart = ({CartData}) => {
           boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
           margin: "10px 0px",
         }}
-        rowSelection={{
-          type: 'checkbox',
-          ...rowSelection,
-        }}
-        expandable={{
-          expandedRowRender: (record) => (
-            <div
-              style={{
-                margin: 0,
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                justifyContent: "flex-start",
-              }}
-            >
-              <Card title="Tên gọi khác">
-                <Space>
-                  {record.nickname.join(", ")}  
-                </Space>  
-              </Card>
-              <Card title="Thương hiệu">
-                <Space>
-                  {record.brand}  
-                </Space>  
-              </Card>
-              <Card title="Ảnh chi tiết">
-                <Space>
-                  {record.images.map((image, id) => {
-                    return <Image key={id} src={image} width={75}/>
-                  })}  
-                </Space>  
-              </Card>
-            </div>
-          ),
-          rowExpandable: record => true,
-        }}
       />
+      <Modal title="Chi tiết hóa đơn" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={"70%"}>
+        <USMBillDetail Data={[itemSelected, setItemSelected]}/>
+      </Modal>
     </div>
   );
 };
 
-export default USMCart;
+export default USMBill;

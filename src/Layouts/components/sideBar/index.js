@@ -15,6 +15,9 @@ import {
   BulbOutlined,
   SwapOutlined,
   ZoomInOutlined,
+  ShopOutlined,
+  IdcardOutlined,
+  FileDoneOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Image, Switch, Select } from 'antd';
 import React, { useState } from 'react';
@@ -42,9 +45,12 @@ const USMSideBar = ({Direction, ComponentSize}) => {
   }
   
   const items = [
-    getItem(<Link to={URL.HOME}>Cửa hàng</Link>, 'home', <HomeOutlined />),
+    getItem(<Link to={URL.HOME}>Trang chủ</Link>, 'home', <HomeOutlined />),
     getItem(<Link to={URL.CART}>Giỏ hàng</Link>, 'cart', <ShoppingCartOutlined />),
     getItem(<Link to={URL.CAMERA}>Kết nối Camera</Link>, 'camera', <VideoCameraOutlined />),
+    getItem('Hóa đơn', 'bill', <FileDoneOutlined />, [
+      getItem(<Link to={URL.BILL} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Danh sách</span><UnorderedListOutlined /></Link>, 'bill-list'),
+    ]),
     getItem('Nhân viên', 'accounts', <UsergroupAddOutlined />, [
       getItem(<Link to={URL.ACCOUNTS} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Danh sách</span><UnorderedListOutlined /></Link>, 'account-list'),
       getItem(<Link to={URL.ACCOUNTS_CALENDAR} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Lịch làm việc</span><CalendarOutlined /></Link>, 'account-calendar'),
@@ -106,9 +112,11 @@ const USMSideBar = ({Direction, ComponentSize}) => {
         , 'size-options'),
       ]),
     ]),
+    isRole([ROLE.ADMIN]) && getItem('Cài đặt', 'setting', <SettingOutlined />, [
+      getItem(<Link to={URL.ERROR_404} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Cửa hàng</span><ShopOutlined /></Link>, 'me-setting'),
+    ]),
     getItem('Tài khoản', 'me', <UserOutlined />, [
-      getItem(<Link to={URL.ERROR_404} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Trang cá nhân</span><UserOutlined /></Link>, 'me-profile'),
-      getItem(<Link to={URL.ERROR_404} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Cài đặt</span><SettingOutlined /></Link>, 'me-setting'),
+      getItem(<Link to={URL.ERROR_404} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Trang cá nhân</span><IdcardOutlined /></Link>, 'me-profile'),
       getItem(<a href={URL.LOGIN} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Đăng xuất</span><LogoutOutlined /></a>, 'me-logout'),
     ]),
   ];

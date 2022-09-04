@@ -13,7 +13,7 @@ const USMTag = ({Tags}) => {
       inputRef.current?.focus();
     }
     // eslint-disable-next-line
-  }, []);
+  }, [inputVisible]);
 
   const handleClose = (removedTag) => {
     const newTags = tags.filter((tag) => tag !== removedTag);

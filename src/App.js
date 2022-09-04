@@ -6,6 +6,8 @@ import moment from 'moment';
 import viVN from 'antd/es/locale/vi_VN';
 import 'moment/locale/vi';
 import './App.css';
+import * as MODE from './constants/mode'
+import { isMode } from './utils/check';
 moment.locale('vi');
 
 function App() {
@@ -13,11 +15,15 @@ function App() {
   const [direction, setDirection] = useState('ltr');
   const [componentSize, setComponentSize] = useState('large');
   const [cartData, setCartData] = useState()
+  const [billData, setBillData] = useState()
   const [currentUser, setCurrentUSer] = useState()
 
   useEffect(() => {
     setCurrentUSer(JSON.parse(window.localStorage.getItem("USM_USER")))
     setCartData(JSON.parse(window.localStorage.getItem("USM_CART")))
+    if(isMode([MODE.TEST])) {
+      setBillData(JSON.parse(window.localStorage.getItem("USM_BILL")))
+    }
   }, [])
 
   function fakeRequest() {
@@ -54,7 +60,7 @@ function App() {
             >
               <Layout 
                 Header={<Header CartData={[cartData, setCartData]} CurrentUser={[currentUser, setCurrentUSer]}/>}
-                Component={<Body CartData={[cartData, setCartData]} CurrentUser={[currentUser, setCurrentUSer]}/>} 
+                Component={<Body CartData={[cartData, setCartData]} CurrentUser={[currentUser, setCurrentUSer]} BillData={[billData, setBillData]}/>} 
                 Role={Role} 
                 Direction={[direction, setDirection]}
                 ComponentSize={[componentSize, setComponentSize]}

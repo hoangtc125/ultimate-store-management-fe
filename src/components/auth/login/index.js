@@ -5,6 +5,7 @@ import images from '../../../assets/images';
 import * as MODE from '../../../constants/mode'
 import * as ROLE from '../../../constants/role'
 import cart from '../../../data/cart'
+import bills from '../../../data/bill'
 import admin from '../../../data/account/admin'
 import staff from '../../../data/account/staff'
 import { useNavigate } from 'react-router-dom';
@@ -26,12 +27,14 @@ const Advertise = () => {
   );
 };
 
-const Login = ({ CartData, CurrentUser }) => {
+const Login = ({ CartData, CurrentUser, BillData }) => {
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [role, setRoles] = useState("admin");
   // eslint-disable-next-line
   const [cartData, setCartData] = CartData
+  // eslint-disable-next-line
+  const [billData, setBillData] = BillData
   // eslint-disable-next-line
   const [currentUser, setCurrentUSer] = CurrentUser
   const navigate = useNavigate()
@@ -41,6 +44,7 @@ const Login = ({ CartData, CurrentUser }) => {
     window.localStorage.removeItem("USM_ROLE")
     window.localStorage.removeItem("USM_USER")
     window.localStorage.removeItem("USM_CART")
+    window.localStorage.removeItem("USM_BILL")
     window.localStorage.removeItem("USM_TEMP_IMAGE")
     window.localStorage.removeItem("USM_IP_CAMERA")
   }, [])
@@ -69,7 +73,9 @@ const Login = ({ CartData, CurrentUser }) => {
     window.localStorage.setItem("USM_ROLE", role)
     window.localStorage.setItem("USM_USER", role === ROLE.ADMIN ? JSON.stringify(admin) : JSON.stringify(staff))
     window.localStorage.setItem("USM_CART", JSON.stringify(cart))
+    window.localStorage.setItem("USM_BILL", JSON.stringify(bills))
     setCartData(cart)
+    setBillData(bills)
     setCurrentUSer(role === ROLE.ADMIN ? admin : staff)
     setTimeout(() => {
       navigate('/home')

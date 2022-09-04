@@ -14,6 +14,7 @@ import USMAccountCalendar from '../components/account/calendar'
 import USMCart from '../components/cart'
 import USMHeaderLogin from '../Layouts/components/header/login'
 import USMHeader from '../Layouts/components/header'
+import USMBill from '../components/bill/list'
 
 function Mapping (
     {
@@ -73,6 +74,14 @@ export const Page = [
             layout: DefaultLayout,
             header: USMHeader,
             component: USMListProduct,
+        },
+    }),
+    new Mapping({
+        url: URL.BILL,
+        element: {
+            layout: DefaultLayout,
+            header: USMHeader,
+            component: USMBill,
         },
     }),
     new Mapping({
