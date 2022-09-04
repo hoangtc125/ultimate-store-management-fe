@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/static/css/main.120ec24a.css",
-    "main.js": "/static/js/main.693bd4af.js",
-    "static/js/787.bf30905a.chunk.js": "/static/js/787.bf30905a.chunk.js",
-    "static/media/avatar.jpg": "/static/media/avatar.0dc0ec31f1514a15e503.jpg",
-    "static/media/logo.png": "/static/media/logo.76b8d48796cf4aed0e3d.png",
-    "static/media/logolong.png": "/static/media/logolong.efc30a570f1a82e4f4e2.png",
-    "static/media/longlogowhite.png": "/static/media/longlogowhite.b41483446aa107f56edd.png",
-    "static/media/ipv4.jpg": "/static/media/ipv4.d586ce409fa38176659d.jpg",
-    "static/media/ipcamera.png": "/static/media/ipcamera.d04229b23e1374ed9416.png",
-    "static/media/ipchoose.png": "/static/media/ipchoose.8ccb27d82a29b867721a.png",
-    "static/media/ipstart.jpg": "/static/media/ipstart.322b3ce0a0794804b8c6.jpg",
-    "static/media/ipinput.png": "/static/media/ipinput.bdc2370dc4b87012b1f1.png",
-    "static/media/ipconnect.png": "/static/media/ipconnect.a6de48d3fbbd5c624eda.png",
-    "index.html": "/index.html",
-    "main.120ec24a.css.map": "/static/css/main.120ec24a.css.map",
-    "main.693bd4af.js.map": "/static/js/main.693bd4af.js.map",
-    "787.bf30905a.chunk.js.map": "/static/js/787.bf30905a.chunk.js.map"
+    "main.css": "/usm/static/css/main.120ec24a.css",
+    "main.js": "/usm/static/js/main.8e31f211.js",
+    "static/js/787.bf30905a.chunk.js": "/usm/static/js/787.bf30905a.chunk.js",
+    "static/media/avatar.jpg": "/usm/static/media/avatar.0dc0ec31f1514a15e503.jpg",
+    "static/media/logo.png": "/usm/static/media/logo.76b8d48796cf4aed0e3d.png",
+    "static/media/logolong.png": "/usm/static/media/logolong.efc30a570f1a82e4f4e2.png",
+    "static/media/longlogowhite.png": "/usm/static/media/longlogowhite.b41483446aa107f56edd.png",
+    "static/media/ipv4.jpg": "/usm/static/media/ipv4.d586ce409fa38176659d.jpg",
+    "static/media/ipcamera.png": "/usm/static/media/ipcamera.d04229b23e1374ed9416.png",
+    "static/media/ipchoose.png": "/usm/static/media/ipchoose.8ccb27d82a29b867721a.png",
+    "static/media/ipstart.jpg": "/usm/static/media/ipstart.322b3ce0a0794804b8c6.jpg",
+    "static/media/ipinput.png": "/usm/static/media/ipinput.bdc2370dc4b87012b1f1.png",
+    "static/media/ipconnect.png": "/usm/static/media/ipconnect.a6de48d3fbbd5c624eda.png",
+    "index.html": "/usm/index.html",
+    "main.120ec24a.css.map": "/usm/static/css/main.120ec24a.css.map",
+    "main.8e31f211.js.map": "/usm/static/js/main.8e31f211.js.map",
+    "787.bf30905a.chunk.js.map": "/usm/static/js/787.bf30905a.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.120ec24a.css",
-    "static/js/main.693bd4af.js"
+    "static/js/main.8e31f211.js"
   ]
 }
