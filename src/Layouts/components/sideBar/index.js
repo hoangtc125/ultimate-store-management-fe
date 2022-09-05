@@ -117,7 +117,7 @@ const USMSideBar = ({Direction, ComponentSize}) => {
     ]),
     getItem('Tài khoản', 'me', <UserOutlined />, [
       getItem(<Link to={URL.ERROR_404} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Trang cá nhân</span><IdcardOutlined /></Link>, 'me-profile'),
-      getItem(<a href={URL.LOGIN} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Đăng xuất</span><LogoutOutlined /></a>, 'me-logout'),
+      getItem(<a href={URL.ULTIMATE_STORE_MANAGEMENT} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Đăng xuất</span><LogoutOutlined /></a>, 'me-logout'),
     ]),
   ];
 

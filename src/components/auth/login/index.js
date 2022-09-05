@@ -4,6 +4,7 @@ import React, { useEffect, useState }from 'react';
 import images from '../../../assets/images';
 import * as MODE from '../../../constants/mode'
 import * as ROLE from '../../../constants/role'
+import * as URL from '../../../constants/url'
 import cart from '../../../data/cart'
 import bills from '../../../data/bill'
 import admin from '../../../data/account/admin'
@@ -55,7 +56,7 @@ const Login = ({ CartData, CurrentUser, BillData }) => {
     window.localStorage.setItem("USM_ROLE", role)
     setLoading(true)
     setTimeout(() => {
-      // navigate('/home')
+      // navigate(URL.HOME)
       openNotificationWithIcon(
         'error',
         'Đăng nhập thất bại',
@@ -85,7 +86,7 @@ const Login = ({ CartData, CurrentUser, BillData }) => {
     setBillData(bills)
     setCurrentUSer(role === ROLE.ADMIN ? admin : staff)
     setTimeout(() => {
-      navigate('/home')
+      navigate(URL.HOME)
     }, 500);
   };
 

@@ -95,18 +95,19 @@ const moneyToText = (number) => {
   if (!number) {
     return "Không"
   }
-  const mySentence = to_vietnamese(number);
+  const mySentence = to_vietnamese(Math.abs(number));
   let words = mySentence.split(" ");
-  if (words[0].includes("undefined")) {
-    words[0] = "Âm "
-  }
   for (let i = 0; i < words.length; i++) {
     if (!words[i]) {
       continue
     }
     words[i] = words[i][0].toUpperCase() + words[i].slice(1) + " ";
   }
-  words.push(" Đồng")
+  if (number >= 0) {
+    words.push("Đồng")
+  } else {
+    words = ["Âm ", ...words, "Đồng"]
+  }
   return words
 }
 

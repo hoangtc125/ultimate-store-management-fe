@@ -4,7 +4,8 @@ import images from '../../../assets/images';
 const { Paragraph } = Typography;
 
 const IconLink = ({ src, text }) => (
-  <a className="example-link" href='/'>
+  // eslint-disable-next-line
+  <a className="example-link" href='#'>
     <img className="example-link-icon" src={src} alt={text} />
     {text}
   </a>

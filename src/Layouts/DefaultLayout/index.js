@@ -6,6 +6,7 @@ import USMFooter from '../components/footer'
 import USMBreadcrumb from '../components/breadcrumb';
 import { isVisit } from '../../utils/check';
 import { useNavigate } from 'react-router-dom';
+import * as URL from '../../constants/url'
   
 const { Content } = Layout;
 
@@ -16,9 +17,9 @@ const DefaultLayout = ({ Header, Component, Role, Direction, ComponentSize }) =>
     if (!isVisit(Role)) {
       const role = window.localStorage.getItem("USM_ROLE")
       if (role) {
-        navigate('/error')
+        navigate(URL.ERROR_404)
       } else {
-        navigate('/')
+        navigate(URL.ULTIMATE_STORE_MANAGEMENT)
       }
     }
     // eslint-disable-next-line
