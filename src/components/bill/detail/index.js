@@ -1,6 +1,7 @@
 import { Descriptions, List, Table, DatePicker } from "antd"
 import { moneyToText, splitMoney } from '../../../utils/money'
 import moment from 'moment'
+import * as ROLE from '../../../constants/role'
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
 const USMBillDetail = ({Data}) => {
@@ -84,14 +85,31 @@ const USMBillDetail = ({Data}) => {
             </List.Item>
           </List>
         </Descriptions.Item>
-        <Descriptions.Item span={2}>
-          Mã đơn hàng: <strong>{itemSelected?.id}</strong>
+        <Descriptions.Item>
+          <List>
+            <List.Item>
+              Mã đơn hàng: <strong>{itemSelected?.id}</strong>
+            </List.Item>
+            <List.Item>
+              Trạng thái đơn hàng: <strong>{itemSelected?.status}</strong>
+            </List.Item>
+            <List.Item>
+              Ngày mua: <DatePicker format={dateFormatList} value={moment(itemSelected?.created_at, dateFormatList)} disabled/>
+            </List.Item>
+          </List>
         </Descriptions.Item>
         <Descriptions.Item>
-          Trạng thái đơn hàng: <strong>{itemSelected?.status}</strong>
-        </Descriptions.Item>
-        <Descriptions.Item>
-          Ngày mua: <DatePicker format={dateFormatList} value={moment(itemSelected?.created_at, dateFormatList)} disabled/>
+          <List>
+            <List.Item>
+              Người bán:  {itemSelected?.seller?.name} 
+            </List.Item>
+            <List.Item>
+              Mã số : {itemSelected?.seller?.id}
+            </List.Item>
+            <List.Item>
+              Chức vụ: {itemSelected?.seller?.role === ROLE.ADMIN ? "Chủ cửa hàng" : "Nhân viên bán hàng"}
+            </List.Item>
+          </List>
         </Descriptions.Item>
         <Descriptions.Item span={2}>
           <Table

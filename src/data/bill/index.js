@@ -22,6 +22,11 @@ let bills = [
         pricePay: 10000000,
       }),
       store: new Store({}),
+      seller: {
+        id: 20194060,
+        name: "Tran Cong Hoang",
+        role: "staff",
+      },
       created_at: "02/09/2022",
       status: "Đã thanh toán",
     }
@@ -41,6 +46,11 @@ let bills = [
         pricePay: 200000,
       }),
       store: new Store({}),
+      seller: {
+        id: 20194060,
+        name: "Trần Công Hoàng",
+        role: "admin",
+      },
       created_at: "02/09/2022",
       status: "Nợ",
       note: "Tuần sau trả",

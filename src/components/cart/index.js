@@ -13,7 +13,7 @@ import USMCheckout from './checkout';
 import openNotificationWithIcon from '../../utils/notification';
 const { Search } = Input;
 
-const USMCart = ({CartData, BillData}) => {
+const USMCart = ({CartData, BillData, CurrentUser}) => {
   // const [idSelected, setIdSelected] = useState()
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -423,7 +423,7 @@ const USMCart = ({CartData, BillData}) => {
           rowExpandable: record => true,
         }}
       />
-      <USMCheckout BillData={BillData} Data={[bill, setBill]} Visible={[visible, setVisible]} CartData={CartData}/>
+      <USMCheckout BillData={BillData} Data={[bill, setBill]} Visible={[visible, setVisible]} CartData={CartData} CurrentUser={CurrentUser}/>
     </div>
   );
 };

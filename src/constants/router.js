@@ -36,6 +36,14 @@ export const Page = [
         },
     }),
     new Mapping({
+        url: URL.ULTIMATE_STORE_MANAGEMENT,
+        element: {
+            layout: LoginLayout,
+            header: USMHeaderLogin,
+            component: USMLogin,
+        },
+    }),
+    new Mapping({
         url: URL.HOME,
         element: {
             layout: DefaultLayout,

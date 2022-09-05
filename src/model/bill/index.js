@@ -11,6 +11,11 @@ function Bill (
     productsDetail = {},
     customer = new Customer(),
     store = new Store(),
+    seller = {
+      id: 0,
+      name: 0,
+      role: "staff",
+    },
     status = "",
     note = "",
   }
@@ -23,6 +28,7 @@ function Bill (
   this.productsDetail = productsDetail
   this.customer = customer
   this.store = store
+  this.seller = seller
   this.status = status
   this.note = note
 }

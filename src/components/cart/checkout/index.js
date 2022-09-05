@@ -5,15 +5,18 @@ import openNotificationWithIcon from "../../../utils/notification";
 import { useEffect, useState } from "react";
 import Customer from "../../../model/customer";
 import Cart from "../../../model/cart";
+import * as ROLE from '../../../constants/role'
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMCheckout = ({ BillData, Data, Visible, CartData }) => {
+const USMCheckout = ({ BillData, Data, Visible, CartData, CurrentUser }) => {
   // eslint-disable-next-line
   const [itemSelected, setItemSelected] = Data
   // eslint-disable-next-line
   const [billData, setBillData] = BillData
   // eslint-disable-next-line
   const [cartData, setCartData] = CartData
+  // eslint-disable-next-line
+  const [currentUser, setCurrentUSer] = CurrentUser
   const [visible, setVisible] = Visible
   const [customerTextPricePay, setCustomerTextPricePay] = useState(moneyToText(itemSelected?.customer?.pricePay))
   const [customerTextPriceBack, setCustomerTextPriceBack] = useState(moneyToText(itemSelected?.customer?.pricePay - itemSelected?.totalPrice))
@@ -46,6 +49,11 @@ const USMCheckout = ({ BillData, Data, Visible, CartData }) => {
         priceBack: values.customer_priceBack,
       }),
       note: values.note,
+      seller: {
+        id: currentUser?.id,
+        name: currentUser?.fullname,
+        role: currentUser?.role,
+      },
     }
     setBillData(prev => [...prev, newBill])
     setCartData(new Cart({
@@ -197,22 +205,39 @@ const USMCheckout = ({ BillData, Data, Visible, CartData }) => {
                 </List.Item>
               </List>
             </Descriptions.Item>
-            <Descriptions.Item span={2}>
-              Mã đơn hàng: <strong>{itemSelected?.id}</strong>
+            <Descriptions.Item>
+              <List>
+                <List.Item>
+                  Mã đơn hàng: <strong>{itemSelected?.id}</strong>
+                </List.Item>
+                <List.Item>
+                  Trạng thái đơn hàng: 
+                  <Form.Item
+                    name="status"
+                  >
+                    <Select disabled>
+                      <Select.Option value="pay">Đã thanh toán</Select.Option>
+                      <Select.Option value="debt">Nợ</Select.Option>
+                    </Select>
+                  </Form.Item>
+                </List.Item>
+                <List.Item>
+                  Ngày mua: <DatePicker format={dateFormatList} value={moment(itemSelected?.created_at, dateFormatList)} disabled/>
+                </List.Item>
+              </List>
             </Descriptions.Item>
             <Descriptions.Item>
-              Trạng thái đơn hàng: 
-              <Form.Item
-                name="status"
-              >
-                <Select disabled>
-                  <Select.Option value="pay">Đã thanh toán</Select.Option>
-                  <Select.Option value="debt">Nợ</Select.Option>
-                </Select>
-              </Form.Item>
-            </Descriptions.Item>
-            <Descriptions.Item>
-              Ngày mua: <DatePicker format={dateFormatList} value={moment(itemSelected?.created_at, dateFormatList)} disabled/>
+              <List>
+                <List.Item>
+                  Người bán:  {currentUser?.fullname} 
+                </List.Item>
+                <List.Item>
+                  Mã số : {currentUser?.id}
+                </List.Item>
+                <List.Item>
+                  Chức vụ: {currentUser?.role === ROLE.ADMIN ? "Chủ cửa hàng" : "Nhân viên bán hàng"}
+                </List.Item>
+              </List>
             </Descriptions.Item>
             <Descriptions.Item span={2}>
               <Table

@@ -1,7 +1,7 @@
 {
     "name": "fe-tsp-dashboard",
     "version": "0.1.0",
-    "homepage": "./",
+    "homepage": "https://hoangtc125.github.io/ultimate-store-management-fe/",
     "private": true,
     "dependencies": {
         "@ant-design/icons": "^4.7.0",
@@ -22,6 +22,7 @@
         "antd-img-crop": "^4.2.4",
         "bootstrap": "^5.2.0",
         "classnames": "^2.3.1",
+        "gh-pages": "^4.0.0",
         "mdb-react-ui-kit": "^4.1.0",
         "normalize.css": "^8.0.1",
         "rc-tween-one": "^3.0.6",
@@ -38,7 +39,9 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d build"
     },
     "eslintConfig": {
         "extends": [
