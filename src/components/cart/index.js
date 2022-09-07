@@ -7,13 +7,12 @@ import Highlighter from 'react-highlight-words';
 import { moneyToText, splitMoney } from '../../utils/money';
 import { getProducts } from '../../utils/cart';
 import Bill from '../../model/bill'
-import Store from '../../model/store';
 import Customer from '../../model/customer';
 import USMCheckout from './checkout';
 import openNotificationWithIcon from '../../utils/notification';
 const { Search } = Input;
 
-const USMCart = ({CartData, BillData, CurrentUser}) => {
+const USMCart = ({CartData, BillData, CurrentUser, StoreData}) => {
   // const [idSelected, setIdSelected] = useState()
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -27,6 +26,8 @@ const USMCart = ({CartData, BillData, CurrentUser}) => {
   const [cartData, setCartData] = CartData
   // eslint-disable-next-line 
   const [billData, setBillData] = BillData
+  // eslint-disable-next-line 
+  const [storeData, setStoreData] = StoreData
   const [bill, setBill] = useState()
   const [visible, setVisible] = useState(false);
   const searchInput = useRef(null);
@@ -355,7 +356,7 @@ const USMCart = ({CartData, BillData, CurrentUser}) => {
                     productsDetail: data,
                     totalPrice: totalPrice,
                     textPrice: moneyToText(totalPrice),
-                    store: new Store({}),
+                    store: storeData,
                     customer: new Customer({}),
                     created_at: new Date().toLocaleDateString('en-GB'),
                   })
@@ -423,7 +424,14 @@ const USMCart = ({CartData, BillData, CurrentUser}) => {
           rowExpandable: record => true,
         }}
       />
-      <USMCheckout BillData={BillData} Data={[bill, setBill]} Visible={[visible, setVisible]} CartData={CartData} CurrentUser={CurrentUser}/>
+      <USMCheckout 
+        BillData={BillData} 
+        Data={[bill, setBill]} 
+        Visible={[visible, setVisible]} 
+        CartData={CartData} 
+        CurrentUser={CurrentUser}
+        StoreData={StoreData}
+      />
     </div>
   );
 };

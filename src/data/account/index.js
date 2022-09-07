@@ -1,4 +1,5 @@
 import { AccountResponse } from "../../model/account";
+import * as ROLE from '../../constants/role'
 import images from '../../assets/images'
 
 let accounts = []
@@ -8,7 +9,7 @@ for (let i = 0; i < 16; i++) {
     {
       username : "string " + i,
       fullname : "string " + i,
-      role : "staff",
+      role : ROLE.STAFF,
       phone : "string " + i,
       email : "string " + i,
       ratio_salary : "string " + i,

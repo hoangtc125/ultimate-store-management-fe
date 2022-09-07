@@ -17,12 +17,18 @@ function App() {
   const [cartData, setCartData] = useState()
   const [billData, setBillData] = useState()
   const [currentUser, setCurrentUSer] = useState()
+  const [storeData, setStoreData] = useState()
 
   useEffect(() => {
-    setCurrentUSer(JSON.parse(window.localStorage.getItem("USM_USER")))
-    setCartData(JSON.parse(window.localStorage.getItem("USM_CART")))
-    if(isMode([MODE.TEST])) {
-      setBillData(JSON.parse(window.localStorage.getItem("USM_BILL")))
+    try {
+      setCurrentUSer(JSON.parse(window.localStorage.getItem("USM_USER")))
+      setCartData(JSON.parse(window.localStorage.getItem("USM_CART")))
+      setStoreData(JSON.parse(window.localStorage.getItem("USM_STORE")))
+      if(isMode([MODE.TEST])) {
+        setBillData(JSON.parse(window.localStorage.getItem("USM_BILL")))
+      }
+    } catch {
+      
     }
   }, [])
 
@@ -59,8 +65,20 @@ function App() {
               componentSize={componentSize}
             >
               <Layout 
-                Header={<Header CartData={[cartData, setCartData]} CurrentUser={[currentUser, setCurrentUSer]}/>}
-                Component={<Body CartData={[cartData, setCartData]} CurrentUser={[currentUser, setCurrentUSer]} BillData={[billData, setBillData]}/>} 
+                Header={
+                  <Header 
+                    CartData={[cartData, setCartData]} 
+                    CurrentUser={[currentUser, setCurrentUSer]}
+                  />
+                }
+                Component={
+                  <Body 
+                    CartData={[cartData, setCartData]} 
+                    CurrentUser={[currentUser, setCurrentUSer]} 
+                    BillData={[billData, setBillData]} 
+                    StoreData={[storeData, setStoreData]}
+                  />
+                } 
                 Role={Role} 
                 Direction={[direction, setDirection]}
                 ComponentSize={[componentSize, setComponentSize]}

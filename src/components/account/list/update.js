@@ -4,6 +4,7 @@ import images from '../../../assets/images';
 import USMUpload from '../../utils/upload';
 import moment from 'moment'
 import openNotificationWithIcon from '../../../utils/notification';
+import * as ROLE from '../../../constants/role'
 const { Option } = Select;
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
@@ -142,8 +143,8 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
                 ]}
               >
                 <Select placeholder="Chọn chức vụ" >
-                  <Option value="staff">Nhân viên bán hàng</Option>
-                  <Option value="admin">Chủ cửa hàng</Option>
+                  <Option value={ROLE.STAFF}>Nhân viên bán hàng</Option>
+                  <Option value={ROLE.ADMIN}>Chủ cửa hàng</Option>
                 </Select>
               </Form.Item>
             </Col>

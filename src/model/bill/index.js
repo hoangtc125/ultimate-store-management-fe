@@ -1,4 +1,5 @@
 import Store from "../store"
+import * as ROLE from '../../constants/role'
 import Customer from "../customer"
 
 function Bill (
@@ -9,12 +10,12 @@ function Bill (
     textPrice = "",
     products = {},
     productsDetail = {},
-    customer = new Customer(),
-    store = new Store(),
+    customer = new Customer({}),
+    store = new Store({}),
     seller = {
       id: 0,
       name: 0,
-      role: "staff",
+      role: ROLE.STAFF,
     },
     status = "",
     note = "",

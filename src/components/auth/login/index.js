@@ -9,8 +9,10 @@ import cart from '../../../data/cart'
 import bills from '../../../data/bill'
 import admin from '../../../data/account/admin'
 import staff from '../../../data/account/staff'
+import store from '../../../data/store';
 import { useNavigate } from 'react-router-dom';
 import openNotificationWithIcon from '../../../utils/notification';
+import * as API from '../../../constants/api'
 
 const Advertise = () => {
   return (
@@ -29,16 +31,18 @@ const Advertise = () => {
   );
 };
 
-const Login = ({ CartData, CurrentUser, BillData }) => {
+const Login = ({ CartData, CurrentUser, BillData, StoreData }) => {
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [role, setRoles] = useState("admin");
+  const [role, setRoles] = useState(ROLE.ADMIN);
   // eslint-disable-next-line
   const [cartData, setCartData] = CartData
   // eslint-disable-next-line
   const [billData, setBillData] = BillData
   // eslint-disable-next-line
   const [currentUser, setCurrentUSer] = CurrentUser
+  // eslint-disable-next-line
+  const [storeData, setStoreData] = StoreData
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -46,6 +50,7 @@ const Login = ({ CartData, CurrentUser, BillData }) => {
     window.localStorage.removeItem("USM_ROLE")
     window.localStorage.removeItem("USM_USER")
     window.localStorage.removeItem("USM_CART")
+    window.localStorage.removeItem("USM_STORE")
     window.localStorage.removeItem("USM_BILL")
     window.localStorage.removeItem("USM_TEMP_IMAGE")
     window.localStorage.removeItem("USM_IP_CAMERA")
@@ -53,17 +58,48 @@ const Login = ({ CartData, CurrentUser, BillData }) => {
 
   const onFinish = (values) => {
     window.localStorage.setItem("USM_MODE", MODE.NORMAL)
-    window.localStorage.setItem("USM_ROLE", role)
     setLoading(true)
-    setTimeout(() => {
-      // navigate(URL.HOME)
+    fetch(API.DOMAIN + API.LOGIN, {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: `grant_type=&username=${values.username}&password=${values.password}&scope=&client_id=&client_secret=`,
+    })
+    .then(response => {
+      return response.json()})
+    .then(data => {
+      // eslint-disable-next-line
+      if(data?.status_code == 1001) {
+        openNotificationWithIcon(
+          'error',
+          'Đăng nhập thất bại',
+          data?.msg,
+        )
+      } else {
+        const newCurrentUser = {
+          ...data?.account,
+          token: data?.token_type + ' ' + data?.access_token
+        }
+        setCurrentUSer(newCurrentUser)
+        setCartData(cart)
+        setStoreData(store)
+        window.localStorage.setItem("USM_USER", JSON.stringify(newCurrentUser))
+        window.localStorage.setItem("USM_ROLE", newCurrentUser?.role)
+        window.localStorage.setItem("USM_CART", JSON.stringify(cart))
+        window.localStorage.setItem("USM_STORE", JSON.stringify(store))
+        navigate(URL.HOME)
+      }
+    })
+    .catch((error) => {
       openNotificationWithIcon(
         'error',
         'Đăng nhập thất bại',
         'Hãy chọn dùng thử sản phẩm để trải nghiệm!'
       )
-      setLoading(false)
-    }, 500);
+    });
+    setLoading(false)
   };
 
   const onChange = (e) => {
@@ -82,7 +118,9 @@ const Login = ({ CartData, CurrentUser, BillData }) => {
     window.localStorage.setItem("USM_USER", role === ROLE.ADMIN ? JSON.stringify(admin) : JSON.stringify(staff))
     window.localStorage.setItem("USM_CART", JSON.stringify(cart))
     window.localStorage.setItem("USM_BILL", JSON.stringify(bills))
+    window.localStorage.setItem("USM_STORE", JSON.stringify(store))
     setCartData(cart)
+    setStoreData(store)
     setBillData(bills)
     setCurrentUSer(role === ROLE.ADMIN ? admin : staff)
     setTimeout(() => {

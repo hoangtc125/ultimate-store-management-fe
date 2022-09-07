@@ -1,4 +1,5 @@
 import { Table, Collapse } from 'antd';
+import * as ROLE from '../../../constants/role'
 const { Panel } = Collapse;
 
 const columns = [
@@ -17,12 +18,12 @@ const columns = [
 const data = [
   {
     key: '1',
-    en: 'admin',
+    en: ROLE.ADMIN,
     vi: 'Chủ cửa hàng',
   },
   {
     key: '2',
-    en: 'staff',
+    en: ROLE.STAFF,
     vi: 'Nhân viên bán hàng',
   },
   {

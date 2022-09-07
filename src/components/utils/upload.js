@@ -17,11 +17,15 @@ const USMUpload = ({usmImages, setUsmImages}) => {
       if (usmImages[0]) {
         let files = []
         for (let i = 0; i < usmImages.length; i++) {
-          let file = dataURLtoFile(usmImages[i]);
-          const uploadFile = {
-            originFileObj: file,
+          try {
+            let file = dataURLtoFile(usmImages[i]);
+            const uploadFile = {
+              originFileObj: file,
+            }
+            files.push(uploadFile)
           }
-          files.push(uploadFile)
+          catch(err) {
+          }
         }
         setFileList(files)
       }

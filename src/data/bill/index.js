@@ -1,6 +1,7 @@
 import Bill from "../../model/bill"
 import Customer from "../../model/customer"
-import Store from "../../model/store"
+import store from "../store"
+import * as ROLE from '../../constants/role'
 import { moneyToText } from "../../utils/money"
 
 let bills = [
@@ -21,11 +22,11 @@ let bills = [
         address: "Nam Định",
         pricePay: 10000000,
       }),
-      store: new Store({}),
+      store: store,
       seller: {
         id: 20194060,
         name: "Tran Cong Hoang",
-        role: "staff",
+        role: ROLE.STAFF,
       },
       created_at: "02/09/2022",
       status: "Đã thanh toán",
@@ -45,11 +46,11 @@ let bills = [
       customer: new Customer({
         pricePay: 200000,
       }),
-      store: new Store({}),
+      store: store,
       seller: {
         id: 20194060,
         name: "Trần Công Hoàng",
-        role: "admin",
+        role: ROLE.ADMIN,
       },
       created_at: "02/09/2022",
       status: "Nợ",

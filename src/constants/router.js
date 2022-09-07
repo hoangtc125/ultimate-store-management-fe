@@ -15,6 +15,8 @@ import USMCart from '../components/cart'
 import USMHeaderLogin from '../Layouts/components/header/login'
 import USMHeader from '../Layouts/components/header'
 import USMBill from '../components/bill/list'
+import USMAccountDetail from '../components/account/detail'
+import USMStore from '../components/setting/store'
 
 function Mapping (
     {
@@ -113,6 +115,24 @@ export const Page = [
             header: USMHeader,
             component: USMAccountCalendar,
             role: [ROLE.ADMIN, ROLE.STAFF],
+        },
+    }),
+    new Mapping({
+        url: URL.ACCOUNT_DETAIL,
+        element: {
+            layout: DefaultLayout,
+            header: USMHeader,
+            component: USMAccountDetail,
+            role: [ROLE.ADMIN, ROLE.STAFF],
+        },
+    }),
+    new Mapping({
+        url: URL.SETTING_STORE,
+        element: {
+            layout: DefaultLayout,
+            header: USMHeader,
+            component: USMStore,
+            role: [ROLE.ADMIN],
         },
     }),
     new Mapping({

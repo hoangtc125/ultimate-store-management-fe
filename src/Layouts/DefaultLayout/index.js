@@ -4,14 +4,17 @@ import USMSideBar from '../components/sideBar'
 import USMBody from '../components/body'
 import USMFooter from '../components/footer'
 import USMBreadcrumb from '../components/breadcrumb';
-import { isVisit } from '../../utils/check';
+import { isMode, isVisit } from '../../utils/check';
 import { useNavigate } from 'react-router-dom';
+import * as MODE from '../../constants/mode'
 import * as URL from '../../constants/url'
   
 const { Content } = Layout;
 
-const DefaultLayout = ({ Header, Component, Role, Direction, ComponentSize }) => {
+const DefaultLayout = ({ Header, Component, Role, Direction, ComponentSize, CurrentUser }) => {
   const navigate = useNavigate(null)
+  // eslint-disable-next-line
+  const [currentUser, setCurrentUser] = CurrentUser
 
   useEffect(() => {
     if (!isVisit(Role)) {
@@ -19,6 +22,15 @@ const DefaultLayout = ({ Header, Component, Role, Direction, ComponentSize }) =>
       if (role) {
         navigate(URL.ERROR_404)
       } else {
+        navigate(URL.ULTIMATE_STORE_MANAGEMENT)
+      }
+    }
+    // eslint-disable-next-line
+  }, [])
+
+  useEffect(() => {
+    if(isMode([MODE.NORMAL])) {
+      if(!currentUser?.token) {
         navigate(URL.ULTIMATE_STORE_MANAGEMENT)
       }
     }

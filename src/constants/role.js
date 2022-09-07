@@ -1,2 +1,2 @@
-export const ADMIN = "admin"
-export const STAFF = "staff"
+export const ADMIN = "ADMIN"
+export const STAFF = "STAFF"
