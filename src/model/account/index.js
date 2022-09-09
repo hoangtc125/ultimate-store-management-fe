@@ -26,6 +26,7 @@ function Account (
 
 function AccountResponse (
   {
+    key,
     username,
     fullname,
     role,
@@ -39,8 +40,10 @@ function AccountResponse (
     hashed_password,
     is_disabled,
     id,
+    token,
   }
 ) {
+  this.key = key;
   this.username = username;
   this.fullname = fullname;
   this.role = role;
@@ -54,6 +57,7 @@ function AccountResponse (
   this.hashed_password = hashed_password;
   this.is_disabled = is_disabled;
   this.id = id;
+  this.token = token;
 }
 
 export { Account, AccountResponse} 

@@ -13,7 +13,7 @@ for (let i = 0; i < 16; i++) {
       quantity: i,
       priceOut: i * 10000,
       images: [images.default, images.default, images.default, images.default, images.default, images.default],
-      is_disabled: "enable",
+      is_disabled: false,
       id: i,
     }
   )

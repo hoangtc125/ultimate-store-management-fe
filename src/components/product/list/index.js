@@ -1,5 +1,5 @@
 import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined, GoldOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, Tooltip, Image, Card, Popconfirm, message } from 'antd';
+import { Button, Input, Space, Table, Tooltip, Image, Card, Popconfirm, message, Tag } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import * as MODE from '../../../constants/mode'
 import * as ROLE from '../../../constants/role'
@@ -34,15 +34,21 @@ const USMListProduct = () => {
 
   const handleDelete = (index) => {
     // eslint-disable-next-line
-    const newData = data.filter((e) => {
-      if (e.id !== index) {
-        return true
-      } else {
-        return false
-      }
-    })
-    setData(newData)
-    message.success('Xóa thành công');
+    if(isMode([MODE.NORMAL])) {
+
+    } else {
+      const newData = data.map((e) => {
+        if (e.id === index) {
+          const newE = {...e}
+          newE.is_disabled = true
+          return newE
+        } else {
+          return e
+        }
+      })
+      setData(newData)
+      message.success('Xóa thành công');
+    }
   }
 
   const USMAction = ({i}) => {
@@ -252,6 +258,9 @@ const USMListProduct = () => {
       sorter: (a, b) => a.id - b.id,
       sortDirections: ['descend', 'ascend'],
       width: '10%',
+      render: (_, record) => {
+        return record.is_disabled ? <Tag color='red'>Vô hiệu hóa</Tag> : <Tag color='green'>Bình thường</Tag>
+      }
     },
   ];
 

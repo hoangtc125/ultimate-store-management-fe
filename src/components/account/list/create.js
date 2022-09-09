@@ -4,6 +4,9 @@ import images from '../../../assets/images';
 import USMUpload from '../../utils/upload';
 import openNotificationWithIcon from '../../../utils/notification';
 import * as ROLE from '../../../constants/role'
+import * as MODE from '../../../constants/mode'
+import * as API from '../../../constants/api'
+import { isMode } from '../../../utils/check';
 const { Option } = Select;
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
@@ -18,9 +21,40 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData}) => {
     }
     values.id = data[data.length - 1].id + 1
     values.key = data[data.length - 1].id + 1
-    values.hashed_password = values.password
     values.birthday = values.birthday._d.toLocaleDateString('en-GB')
-    setData(prev => [...prev, values])
+    if (isMode([MODE.NORMAL])) {
+      fetch(API.DOMAIN + API.ACCOUNT_CREATE, {
+        method: 'POST',
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      })
+      .then(response => {
+        return response.json()})
+      .then(data => {
+        // eslint-disable-next-line
+        if(data?.status_code != 200) {
+          openNotificationWithIcon(
+            'error',
+            'Cập nhật không thành công',
+            data?.msg,
+          )
+        } else {
+          setData(prev => [...prev, values])
+        }
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          'error',
+          'Cập nhật không thành công',
+          'Thông tin không được cập nhật!'
+        )
+      });
+    } else {
+      setData(prev => [...prev, values])
+    }
     onClose()
   }
 
@@ -219,15 +253,10 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData}) => {
               <Form.Item
                 name="is_disabled"
                 label="Trạng thái của tài khoản"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
               >
-                <Select placeholder="Chọn trạng thái của tài khoản" >
-                  <Option value="enable">Bình thường</Option>
-                  <Option value="disabled">Vô hiệu hóa</Option>
+                <Select placeholder="Chọn trạng thái của tài khoản" defaultValue={false} disabled>
+                  <Option value={false}>Bình thường</Option>
+                  <Option value={true}>Vô hiệu hóa</Option>
                 </Select>
               </Form.Item>
             </Col>

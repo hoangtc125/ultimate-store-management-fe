@@ -8,11 +8,11 @@ import listImages from '../../assets/images';
 const USMVideo = ({ipCamera, loadings, enterLoading}) => {
 
   const handleReconect = () => {
-    document.getElementById("browser-video").firstChild.src = "http://" + ipCamera + ":8080/video"
+    document.getElementById("browser-video").firstChild.src = "http://" + ipCamera + process.env.REACT_APP_PATH_VIDEO
   }
 
   useEffect(() => {
-    document.getElementById("browser-video").firstChild.src = "http://" + ipCamera + ":8080/video"
+    document.getElementById("browser-video").firstChild.src = "http://" + ipCamera + process.env.REACT_APP_PATH_VIDEO
   }, [ipCamera])
 
   const handleErrorVideo = () => {
@@ -38,7 +38,7 @@ const USMVideo = ({ipCamera, loadings, enterLoading}) => {
   }
 
   const handleShotImage = () => {
-    getBase64FromUrl("http://" + ipCamera + ":8080/photo.jpg")
+    getBase64FromUrl("http://" + ipCamera + process.env.REACT_APP_PATH_IMAGE)
       .then(res => {
         document.getElementById("browser-image").firstChild.src = res
         window.localStorage.setItem("USM_TEMP_IMAGE", res)
@@ -102,7 +102,7 @@ const USMVideo = ({ipCamera, loadings, enterLoading}) => {
             borderRadius: "10px",
             boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
           }}
-          id="browser-video" src={"http://" + ipCamera + ":8080/video"}
+          id="browser-video" src={"http://" + ipCamera + process.env.REACT_APP_PATH_VIDEO}
           onError={() => handleErrorVideo()}
         />
       <Space

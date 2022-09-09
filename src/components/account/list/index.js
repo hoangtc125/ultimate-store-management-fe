@@ -1,8 +1,10 @@
 import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined, UsergroupAddOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, Tooltip, Image, Card, DatePicker, Popconfirm, message } from 'antd';
+import { Button, Input, Space, Table, Tooltip, Image, Card, DatePicker, Popconfirm, message, Tag } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import * as MODE from '../../../constants/mode'
 import * as ROLE from '../../../constants/role'
+import * as API from '../../../constants/api'
+import openNotificationWithIcon from '../../../utils/notification';
 import { isMode, isRole } from '../../../utils/check';
 import Highlighter from 'react-highlight-words';
 import USMCreateAccount from './create';
@@ -10,9 +12,10 @@ import USMUpdateAccount from './update';
 import USMNote from './note';
 import accounts from '../../../data/account';
 import moment from 'moment'
+import { AccountResponse } from '../../../model/account';
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMListAccount = () => {
+const USMListAccount = ({CurrentUser}) => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [pagination, setPagination] = useState({
@@ -25,6 +28,8 @@ const USMListAccount = () => {
   const [visibleUpdate, setVisibleUpdate] = useState(false);
   const [idSelected, setIdSelected] = useState()
   const searchInput = useRef(null);
+  // eslint-disable-next-line
+  const [currentUser, setCurrentUSer] = CurrentUser
 
   const showDrawerCreate = () => {
     setVisibleCreate(true);
@@ -35,18 +40,57 @@ const USMListAccount = () => {
   };
 
   
-  const USMAction = ({i}) => {
+  const USMAction = ({i, disabled}) => {
     const handleDelete = (index) => {
       // eslint-disable-next-line
-      const newData = data.filter((e) => {
-        if (e.id !== index) {
-          return true
-        } else {
-          return false
-        }
-      })
-      setData(newData)
-      message.success('Xóa thành công');
+      if (isMode([MODE.NORMAL])) {
+        fetch(API.DOMAIN + API.ACCOUNT_DISABLE + index, {
+          method: 'DELETE',
+          headers: {
+            'accept': 'application/json',
+            'Authorization': currentUser.token
+          },
+        })
+        .then(response => {
+          return response.json()})
+        .then(dt => {
+          // eslint-disable-next-line
+          if(dt?.status_code != 200) {
+            openNotificationWithIcon(
+              'error',
+              'Cập nhật không thành công',
+              dt?.msg,
+            )
+          } else {
+            const newData = data.map((e) => {
+              if (e.id === index) {
+                e.is_disabled = true
+              }
+              return e
+            })
+            setData(newData)
+            message.success('Xóa thành công');
+          }
+        })
+        .catch((error) => {
+          openNotificationWithIcon(
+            'error',
+            'Cập nhật không thành công',
+            'Thông tin không được cập nhật!'
+          )
+        });
+      } else {
+        const newData = data.map((e) => {
+          if (e.id === index) {
+            const newE = {...e}
+            newE.is_disabled = true
+            return newE
+          } else {
+            return e
+          }
+        })
+        setData(newData)
+      }
     }
 
     return (
@@ -64,9 +108,10 @@ const USMListAccount = () => {
               setIdSelected(i)
               showDrawerUpdate()
             }}
+            disabled={disabled}
           />
         </Tooltip>
-        <Tooltip title="Xóa">
+        <Tooltip title="Vô hiệu hóa">
           <Popconfirm
             title="Xác nhận xóa?"
             onConfirm={() => handleDelete(i)}
@@ -74,7 +119,7 @@ const USMListAccount = () => {
             cancelText="No"
             placement='bottom'
           >
-            <Button shape="circle" danger ghost icon={<DeleteOutlined />} />
+            <Button shape="circle" danger ghost icon={<DeleteOutlined />} disabled={disabled}/>
           </Popconfirm>
         </Tooltip>
       </div>
@@ -84,13 +129,50 @@ const USMListAccount = () => {
   useEffect(() => {
     if (isMode([MODE.TEST])) {
       const vals = accounts.map(account => {
-        return {
+        return new AccountResponse({
           key: account.id,
           ...account,
-        }
+        })
       })
       setData(vals)
+    } else {
+      const url = isRole([ROLE.ADMIN]) ? API.ACCOUNTS : API.ACCOUNTS_AVAILABLE
+      fetch(API.DOMAIN + url, {
+        method: 'GET',
+        headers: {
+          'accept': 'application/json',
+          'Authorization': currentUser.token,
+        },
+      })
+      .then(response => {
+        return response.json()})
+      .then(data => {
+        // eslint-disable-next-line
+        if(data?.status_code != 200) {
+          openNotificationWithIcon(
+            'error',
+            'Cập nhật không thành công',
+            data?.msg,
+          )
+        } else {
+          const vals = data?.data.map(element => {
+            const newAccountResponse = new AccountResponse({
+              ...element, key: element.id
+            })
+            return newAccountResponse
+          })
+          setData(vals)
+        }
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          'error',
+          'Cập nhật không thành công',
+          'Thông tin không được cập nhật!'
+        )
+      });
     }
+    // eslint-disable-next-line
   }, [])
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -236,6 +318,9 @@ const USMListAccount = () => {
       key: 'role',
       ...getColumnSearchProps('role'),
       width: '8%',
+      render: (_, record) => {
+        return record.role === ROLE.ADMIN ? <Tag color='brown'>Chủ cửa hàng</Tag> : <Tag color='black'>Nhân viên bán hàng</Tag>
+      }
     },
     {
       title: 'Trạng thái',
@@ -245,6 +330,9 @@ const USMListAccount = () => {
       sorter: (a, b) => a.id - b.id,
       sortDirections: ['descend', 'ascend'],
       width: '10%',
+      render: (_, record) => {
+        return record.is_disabled ? <Tag color='red'>Vô hiệu hóa</Tag> : <Tag color='green'>Bình thường</Tag>
+      }
     },
   ];
 
@@ -255,7 +343,7 @@ const USMListAccount = () => {
       key: 'action',
       width: '10%',
       render: (_, record) => (
-        <USMAction i={record.id}/>
+        <USMAction i={record.id} disabled={record.role === ROLE.ADMIN}/>
       ),
     })
   }
@@ -290,7 +378,7 @@ const USMListAccount = () => {
               Thêm tài khoản
             </Button>
             <USMCreateAccount visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} data={data} setData={setData}/>
-            <USMUpdateAccount visibleUpdate={visibleUpdate} setVisibleUpdate={setVisibleUpdate} data={data} setData={setData} idSelected={idSelected}/>
+            <USMUpdateAccount visibleUpdate={visibleUpdate} setVisibleUpdate={setVisibleUpdate} data={data} setData={setData} idSelected={idSelected} currentUser={currentUser}/>
           </div>
         }
         <USMNote />
@@ -330,8 +418,7 @@ const USMListAccount = () => {
                 <>
                   <Card title="Tên đăng nhập">{record.username}</Card>
                   <Card title="Hệ số lương">{record.ratio_salary}</Card>
-                  <Card title="Thời điểm tạo tài khoản">{record.created_at}</Card>
-                  <Card title="Mật khẩu">{record.hashed_password}</Card>
+                  <Card title="Thời điểm tạo tài khoản">{new Date(record.created_at * 1000).toLocaleDateString('en-GB')}</Card>
                 </>
               }
               <Card title="Ngày sinh"><DatePicker format={dateFormatList} value={moment(record?.birthday, dateFormatList)} disabled /></Card>

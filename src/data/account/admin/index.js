@@ -15,7 +15,7 @@ const admin = new AccountResponse(
     birthday : '12/05/2001',
     profile : "string",
     hashed_password : "admin",
-    is_disabled : "enable",
+    is_disabled : false,
     id : 20194060,
   }
 )

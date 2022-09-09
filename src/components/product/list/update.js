@@ -201,8 +201,8 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
                 ]}
               >
                 <Select placeholder="Chọn trạng thái của sản phẩm" >
-                  <Option value="enable">Bình thường</Option>
-                  <Option value="disabled">Vô hiệu hóa</Option>
+                  <Option value={false}>Bình thường</Option>
+                  <Option value={true}>Vô hiệu hóa</Option>
                 </Select>
               </Form.Item>
             </Col>

@@ -1,19 +1,24 @@
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, Popconfirm } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, Popconfirm, message, Collapse } from 'antd';
 import React, { useEffect, useState } from 'react';
 import images from '../../../assets/images';
 import USMUpload from '../../utils/upload';
 import moment from 'moment'
 import openNotificationWithIcon from '../../../utils/notification';
 import * as ROLE from '../../../constants/role'
+import * as MODE from '../../../constants/mode'
+import * as API from '../../../constants/api'
+import { isMode } from '../../../utils/check';
+import USMPassword from '../../utils/password';
 const { Option } = Select;
+const { Panel } = Collapse;
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSelected}) => {
+const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSelected, currentUser}) => {
   const [usmImages, setUsmImages] = useState([])
   const [form] = Form.useForm();
+  const dataSelected = data.filter(element => element?.id === idSelected)[0]
   
   useEffect(() => {
-    const dataSelected = data.filter(element => element?.id === idSelected)[0]
     form.setFieldsValue({
       username: dataSelected?.username,
       fullname: dataSelected?.fullname,
@@ -24,7 +29,7 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
       created_at: dataSelected?.created_at,
       birthday: moment(dataSelected?.birthday, dateFormatList),
       profile: dataSelected?.profile,
-      hashed_password: dataSelected?.hashed_password,
+      password: dataSelected?.password,
       is_disabled: dataSelected?.is_disabled,
     });
     setUsmImages([dataSelected?.avatar])
@@ -40,13 +45,52 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
     values.id = idSelected
     values.key = idSelected
     values.birthday = values.birthday._d.toLocaleDateString('en-GB')
-    setData(prev => prev.map(element => {
-      if (element?.id === idSelected) {
-        return values
-      } else {
-        return element
-      }
-    }))
+    if(isMode([MODE.NORMAL])) {
+      fetch(API.DOMAIN + API.STAFF_UPDATE + values.id, {
+        method: 'PUT',
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': currentUser.token
+        },
+        body: JSON.stringify(values),
+      })
+      .then(response => {
+        return response.json()})
+      .then(data => {
+        // eslint-disable-next-line
+        if(data?.status_code != 200) {
+          openNotificationWithIcon(
+            'error',
+            'Cập nhật không thành công',
+            data?.msg,
+          )
+        } else {
+          setData(prev => prev.map(element => {
+            if (element?.id === idSelected) {
+              return values
+            } else {
+              return element
+            }
+          }))
+        }
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          'error',
+          'Cập nhật không thành công',
+          'Thông tin không được cập nhật!'
+        )
+      });
+    } else {
+      setData(prev => prev.map(element => {
+        if (element?.id === idSelected) {
+          return values
+        } else {
+          return element
+        }
+      }))
+    }
     onClose()
   }
 
@@ -175,21 +219,7 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
                   },
                 ]}
               >
-                <Input placeholder="Nhập tên đăng nhập" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="hashed_password"
-                label="Mật khẩu"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Mật khẩu không được để trống',
-                  },
-                ]}
-              >
-                <Input placeholder="Nhập mật khẩu" />
+                <Input placeholder="Nhập tên đăng nhập" disabled/>
               </Form.Item>
             </Col>
           </Row>
@@ -252,9 +282,48 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
                   },
                 ]}
               >
-                <Select placeholder="Chọn trạng thái của tài khoản" >
-                  <Option value="enable">Bình thường</Option>
-                  <Option value="disabled">Vô hiệu hóa</Option>
+                <Select placeholder="Chọn trạng thái của tài khoản" 
+                  onChange={value => {
+                    const url = value ? API.ACCOUNT_DISABLE : API.ACCOUNT_UNDISABLED
+                    fetch(API.DOMAIN + url + dataSelected.id, {
+                      method: value ? 'DELETE' : 'PUT',
+                      headers: {
+                        'accept': 'application/json',
+                        'Authorization': currentUser.token
+                      },
+                    })
+                    .then(response => {
+                      return response.json()})
+                    .then(dt => {
+                      // eslint-disable-next-line
+                      if(dt?.status_code != 200) {
+                        openNotificationWithIcon(
+                          'error',
+                          'Cập nhật không thành công',
+                          dt?.msg,
+                        )
+                      } else {
+                        const newData = data.map(element => {
+                          if (element.id === dataSelected.id) {
+                            element.is_disabled = value
+                          }
+                          return element
+                        })
+                        setData(newData)
+                        message.success("Cập nhật thành công")
+                      }
+                    })
+                    .catch((error) => {
+                      openNotificationWithIcon(
+                        'error',
+                        'Cập nhật không thành công',
+                        'Thông tin không được cập nhật!'
+                      )
+                    });
+                  }}
+                >
+                  <Option value={false}>Bình thường</Option>
+                  <Option value={true}>Vô hiệu hóa</Option>
                 </Select>
               </Form.Item>
             </Col>
@@ -272,6 +341,11 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
           <Button type="primary" htmlType="submit" id="usm-button-update">
           </Button>
         </Form>
+        <Collapse>
+          <Panel header="Thay đổi mật khẩu">
+            <USMPassword />
+          </Panel>
+        </Collapse>
       </Drawer>
     </>
   );

@@ -22,7 +22,7 @@ const USMBill = ({BillData}) => {
   });
   const [data, setData] = useState([])
   // eslint-disable-next-line
-  const [billData, setBillData] = isMode([MODE.TEST]) ? BillData : useState()
+  const [billData, setBillData] = BillData
   const searchInput = useRef(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 

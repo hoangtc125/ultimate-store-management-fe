@@ -18,7 +18,7 @@ for (let i = 0; i < 16; i++) {
       birthday : '12/05/2001',
       profile : "string " + i,
       hashed_password : "string " + i,
-      is_disabled : "enable",
+      is_disabled : false,
       id : i,
     }
   )

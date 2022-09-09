@@ -14,10 +14,10 @@ function App() {
   const [isLoading, setLoading] = useState(true);
   const [direction, setDirection] = useState('ltr');
   const [componentSize, setComponentSize] = useState('large');
-  const [cartData, setCartData] = useState()
-  const [billData, setBillData] = useState()
-  const [currentUser, setCurrentUSer] = useState()
-  const [storeData, setStoreData] = useState()
+  const [cartData, setCartData] = useState([])
+  const [billData, setBillData] = useState([])
+  const [currentUser, setCurrentUSer] = useState({})
+  const [storeData, setStoreData] = useState({})
 
   useEffect(() => {
     try {

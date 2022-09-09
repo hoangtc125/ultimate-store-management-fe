@@ -13,6 +13,7 @@ import store from '../../../data/store';
 import { useNavigate } from 'react-router-dom';
 import openNotificationWithIcon from '../../../utils/notification';
 import * as API from '../../../constants/api'
+import { AccountResponse } from '../../../model/account';
 
 const Advertise = () => {
   return (
@@ -78,10 +79,10 @@ const Login = ({ CartData, CurrentUser, BillData, StoreData }) => {
           data?.msg,
         )
       } else {
-        const newCurrentUser = {
+        const newCurrentUser = new AccountResponse({
           ...data?.account,
           token: data?.token_type + ' ' + data?.access_token
-        }
+        })
         setCurrentUSer(newCurrentUser)
         setCartData(cart)
         setStoreData(store)

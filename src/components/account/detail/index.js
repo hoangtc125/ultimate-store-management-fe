@@ -1,4 +1,4 @@
-import { Button, Col, DatePicker, Form, Input, Row, Select, Popconfirm } from 'antd';
+import { Button, Col, DatePicker, Form, Input, Row, Select, Popconfirm, Collapse, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
 import images from '../../../assets/images';
 import USMUpload from '../../utils/upload';
@@ -6,8 +6,13 @@ import moment from 'moment'
 import openNotificationWithIcon from '../../../utils/notification';
 import * as ROLE from '../../../constants/role'
 import * as API from '../../../constants/api'
+import * as MODE from '../../../constants/mode'
+import { isMode } from '../../../utils/check';
+import { AccountResponse } from '../../../model/account';
+import USMPassword from '../../utils/password';
 const { Option } = Select;
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
+const { Panel } = Collapse;
 
 const USMAccountDetail = ({CurrentUser}) => {
   const [usmImages, setUsmImages] = useState([])
@@ -40,41 +45,45 @@ const USMAccountDetail = ({CurrentUser}) => {
     }
     values.id = currentUser.id
     values.birthday = values.birthday._d.toLocaleDateString('en-GB')
-    fetch(API.DOMAIN + API.ACCOUNT_UPDATE + currentUser.id, {
-      method: 'PUT',
-      headers: {
-        'accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': currentUser.token
-      },
-      body: JSON.stringify(values),
-    })
-    .then(response => {
-      return response.json()})
-    .then(data => {
-      // eslint-disable-next-line
-      if(data?.status_code != 200) {
+    if (isMode([MODE.NORMAL])) {
+      fetch(API.DOMAIN + API.ACCOUNT_UPDATE + currentUser.id, {
+        method: 'PUT',
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': currentUser.token
+        },
+        body: JSON.stringify(values),
+      })
+      .then(response => {
+        return response.json()})
+      .then(data => {
+        // eslint-disable-next-line
+        if(data?.status_code != 200) {
+          openNotificationWithIcon(
+            'error',
+            'Cập nhật không thành công',
+            data?.msg,
+          )
+        } else {
+          const newCurrentUser = new AccountResponse({
+            ...values,
+            token: currentUser?.token,
+          })
+          setCurrentUser(newCurrentUser)
+          window.localStorage.setItem("USM_USER", JSON.stringify(newCurrentUser))
+        }
+      })
+      .catch((error) => {
         openNotificationWithIcon(
           'error',
           'Cập nhật không thành công',
-          data?.msg,
+          'Thông tin không được cập nhật!'
         )
-      } else {
-        const newCurrentUser = {
-          ...values,
-          token: currentUser?.token,
-        }
-        setCurrentUser(newCurrentUser)
-        window.localStorage.setItem("USM_USER", JSON.stringify(newCurrentUser))
-      }
-    })
-    .catch((error) => {
-      openNotificationWithIcon(
-        'error',
-        'Cập nhật không thành công',
-        'Thông tin không được cập nhật!'
-      )
-    });
+      });
+    } else {
+      setCurrentUser(values)
+    }
   }
 
   const confirm = (e) => {
@@ -173,14 +182,6 @@ const USMAccountDetail = ({CurrentUser}) => {
               <Input placeholder="Nhập tên đăng nhập" disabled/>
             </Form.Item>
           </Col>
-          <Col span={12}>
-            <Form.Item
-              name="password"
-              label="Mật khẩu"
-            >
-              <Input placeholder="Nhập mật khẩu" disabled/>
-            </Form.Item>
-          </Col>
         </Row>
         <Row gutter={16}>
           <Col span={12}>
@@ -242,8 +243,8 @@ const USMAccountDetail = ({CurrentUser}) => {
               ]}
             >
               <Select placeholder="Chọn trạng thái của tài khoản" disabled>
-                <Option value="enable">Bình thường</Option>
-                <Option value="disabled">Vô hiệu hóa</Option>
+                <Option value={false}>Bình thường</Option>
+                <Option value={true}>Vô hiệu hóa</Option>
               </Select>
             </Form.Item>
           </Col>
@@ -258,6 +259,15 @@ const USMAccountDetail = ({CurrentUser}) => {
             </Form.Item>
           </Col>
         </Row>
+        <Button type="primary" htmlType="submit" id="usm-button-detail">
+        </Button>
+      </Form>
+      <Space
+        size={100}
+        style={{
+          alignItems: "start"
+        }}
+      >
         <Popconfirm
           title="Đồng ý lưu thay đổi?"
           onConfirm={confirm}
@@ -270,9 +280,12 @@ const USMAccountDetail = ({CurrentUser}) => {
             Lưu thay đổi
           </Button>
         </Popconfirm>
-        <Button type="primary" htmlType="submit" id="usm-button-detail">
-        </Button>
-      </Form>
+        <Collapse>
+          <Panel header="Thay đổi mật khẩu">
+            <USMPassword />
+          </Panel>
+        </Collapse>
+      </Space>
     </>
   );
 };

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import * as MODE from '../../constants/mode'
 import { isMode } from "../../utils/check"
 import USMItemProduct from "./item"
-import { Input, Pagination, Card, Image } from 'antd';
+import { Input, Pagination, Card, Image, Empty } from 'antd';
 import products from "../../data/product";
 import images from "../../assets/images";
 const { Search } = Input;
@@ -101,6 +101,14 @@ const USMHome = ({CartData}) => {
         {pageData.map((item, id) => {
           return <USMItemProduct key={id} item={item} CartData={CartData}/>
         })}
+        {data.length === 0 && 
+          <Empty 
+            style={{
+              padding: "50px",
+              margin: "50px",
+            }}
+          />
+        }
       </div>
       <Pagination current={current} onChange={onChange} total={data.length} position={['bottomCenter']}/>
     </div>
