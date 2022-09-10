@@ -134,7 +134,7 @@ const Login = ({ CartData, CurrentUser, BillData, StoreData }) => {
   };
 
   return (
-    <Spin size="large" spinning={loading} delay={100}
+    <Spin spinning={loading}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -198,11 +198,12 @@ const Login = ({ CartData, CurrentUser, BillData, StoreData }) => {
               flexDirection: "row",
               justifyContent: "space-between",
             }}>
-              <Button type="primary" htmlType="submit" className="login-form-button" size="large">
+              <Button type="primary" htmlType="submit" className="login-form-button" size="large" loading={loading}>
                 Đăng nhập
               </Button>
               <Button type="secondary" className="login-form-button" size="large"
                 onClick={showModal}
+                loading={loading}
               >
                 Dùng thử sản phẩm
               </Button>

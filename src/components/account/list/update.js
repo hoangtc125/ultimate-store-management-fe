@@ -1,4 +1,4 @@
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, Popconfirm, message, Collapse } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, Popconfirm, message, Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
 import images from '../../../assets/images';
 import USMUpload from '../../utils/upload';
@@ -8,9 +8,8 @@ import * as ROLE from '../../../constants/role'
 import * as MODE from '../../../constants/mode'
 import * as API from '../../../constants/api'
 import { isMode } from '../../../utils/check';
-import USMPassword from '../../utils/password';
+import USMAccountPassword from '../detail/password';
 const { Option } = Select;
-const { Panel } = Collapse;
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
 const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSelected, currentUser}) => {
@@ -145,207 +144,220 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
           </Space>
         }
       >
-        <Form layout="vertical" hideRequiredMark
-          onFinish={onFinish}
-          id="usm-form-update"
-          form={form}
-        >
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="fullname"
-                label="Họ tên"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Họ tên không được bỏ trống',
-                  },
-                ]}
-              >
-                <Input placeholder="Nhập họ tên"/>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="avatar"
-                label="Ảnh đại diện (Ảnh đầu tiên sẽ được chọn)"
-              >
-                <USMUpload usmImages={usmImages} setUsmImages={setUsmImages}/>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="role"
-                label="Chức vụ"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Chức vụ không được để trống ',
-                  },
-                ]}
-              >
-                <Select placeholder="Chọn chức vụ" >
-                  <Option value={ROLE.STAFF}>Nhân viên bán hàng</Option>
-                  <Option value={ROLE.ADMIN}>Chủ cửa hàng</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="ratio_salary"
-                label="Hệ số lương"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Hệ số lương không được bỏ trống',
-                  },
-                ]}
-              >
-                <Input placeholder="Nhập hệ số lương" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="username"
-                label="Tên đăng nhập"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Tên đăng nhập không được để trống',
-                  },
-                ]}
-              >
-                <Input placeholder="Nhập tên đăng nhập" disabled/>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="phone"
-                label="Số điện thoại"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Số điện thoại không được để trống',
-                  },
-                ]}
-              >
-                <Input placeholder="Nhập số điện thoại" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="email"
-                label="Địa chỉ Email"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Địa chỉ Email không được để trống',
-                  },
-                ]}
-              >
-                <Input placeholder="Nhập địa chỉ Email" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="birthday"
-                label="Ngày sinh"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Ngày sinh không được để trống',
-                  },
-                ]}
-              >
-                <DatePicker format={dateFormatList} autocomplete="off" 
-                  style={{
-                    width: "100%",
-                  }}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="is_disabled"
-                label="Trạng thái của tài khoản"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Select placeholder="Chọn trạng thái của tài khoản" 
-                  onChange={value => {
-                    const url = value ? API.ACCOUNT_DISABLE : API.ACCOUNT_UNDISABLED
-                    fetch(API.DOMAIN + url + dataSelected.id, {
-                      method: value ? 'DELETE' : 'PUT',
-                      headers: {
-                        'accept': 'application/json',
-                        'Authorization': currentUser.token
+        <Tabs defaultActiveKey="1">
+          <Tabs.TabPane tab="Chỉnh sửa thông tin chung" key="1">
+            <Form layout="vertical" hideRequiredMark
+              onFinish={onFinish}
+              id="usm-form-update"
+              form={form}
+            >
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    name="fullname"
+                    label="Họ tên"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Họ tên không được bỏ trống',
                       },
-                    })
-                    .then(response => {
-                      return response.json()})
-                    .then(dt => {
-                      // eslint-disable-next-line
-                      if(dt?.status_code != 200) {
-                        openNotificationWithIcon(
-                          'error',
-                          'Cập nhật không thành công',
-                          dt?.msg,
-                        )
-                      } else {
-                        const newData = data.map(element => {
-                          if (element.id === dataSelected.id) {
-                            element.is_disabled = value
-                          }
-                          return element
-                        })
-                        setData(newData)
-                        message.success("Cập nhật thành công")
-                      }
-                    })
-                    .catch((error) => {
-                      openNotificationWithIcon(
-                        'error',
-                        'Cập nhật không thành công',
-                        'Thông tin không được cập nhật!'
-                      )
-                    });
-                  }}
-                >
-                  <Option value={false}>Bình thường</Option>
-                  <Option value={true}>Vô hiệu hóa</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item
-                name="profile"
-                label="Thông tin khác"
-              >
-                <Input.TextArea rows={4} placeholder="Nhập thông tin khác" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Button type="primary" htmlType="submit" id="usm-button-update">
-          </Button>
-        </Form>
-        <Collapse>
-          <Panel header="Thay đổi mật khẩu">
-            <USMPassword />
-          </Panel>
-        </Collapse>
+                    ]}
+                  >
+                    <Input placeholder="Nhập họ tên"/>
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="avatar"
+                    label="Ảnh đại diện (Ảnh đầu tiên sẽ được chọn)"
+                  >
+                    <USMUpload usmImages={usmImages} setUsmImages={setUsmImages}/>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    name="role"
+                    label="Chức vụ"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Chức vụ không được để trống ',
+                      },
+                    ]}
+                  >
+                    <Select placeholder="Chọn chức vụ" >
+                      <Option value={ROLE.STAFF}>Nhân viên bán hàng</Option>
+                      <Option value={ROLE.ADMIN}>Chủ cửa hàng</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="ratio_salary"
+                    label="Hệ số lương"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Hệ số lương không được bỏ trống',
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Nhập hệ số lương" />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    name="username"
+                    label="Tên đăng nhập"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Tên đăng nhập không được để trống',
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Nhập tên đăng nhập" disabled/>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    name="phone"
+                    label="Số điện thoại"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Số điện thoại không được để trống',
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Nhập số điện thoại" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="email"
+                    label="Địa chỉ Email"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Địa chỉ Email không được để trống',
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Nhập địa chỉ Email" />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    name="birthday"
+                    label="Ngày sinh"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Ngày sinh không được để trống',
+                      },
+                    ]}
+                  >
+                    <DatePicker format={dateFormatList} autocomplete="off" 
+                      style={{
+                        width: "100%",
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="is_disabled"
+                    label="Trạng thái của tài khoản"
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <Select placeholder="Chọn trạng thái của tài khoản" 
+                      onChange={value => {
+                        if (isMode([MODE.NORMAL])) {
+                          const url = value ? API.ACCOUNT_DISABLE : API.ACCOUNT_UNDISABLED
+                          fetch(API.DOMAIN + url + dataSelected.id, {
+                            method: value ? 'DELETE' : 'PUT',
+                            headers: {
+                              'accept': 'application/json',
+                              'Authorization': currentUser.token
+                            },
+                          })
+                          .then(response => {
+                            return response.json()})
+                          .then(dt => {
+                            // eslint-disable-next-line
+                            if(dt?.status_code != 200) {
+                              openNotificationWithIcon(
+                                'error',
+                                'Cập nhật không thành công',
+                                dt?.msg,
+                              )
+                            } else {
+                              const newData = data.map(element => {
+                                if (element.id === dataSelected.id) {
+                                  element.is_disabled = value
+                                }
+                                return element
+                              })
+                              setData(newData)
+                              message.success("Cập nhật thành công")
+                            }
+                          })
+                          .catch((error) => {
+                            openNotificationWithIcon(
+                              'error',
+                              'Cập nhật không thành công',
+                              'Thông tin không được cập nhật!'
+                            )
+                          });
+                        } else {
+                          const newData = data.map(element => {
+                            if (element.id === dataSelected.id) {
+                              element.is_disabled = value
+                            }
+                            return element
+                          })
+                          setData(newData)
+                          message.success("Cập nhật thành công")
+                        }
+                      }}
+                    >
+                      <Option value={false}>Bình thường</Option>
+                      <Option value={true}>Vô hiệu hóa</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={24}>
+                  <Form.Item
+                    name="profile"
+                    label="Thông tin khác"
+                  >
+                    <Input.TextArea rows={4} placeholder="Nhập thông tin khác" />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Button type="primary" htmlType="submit" id="usm-button-update">
+              </Button>
+            </Form>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Chỉnh sửa mật khẩu" key="2">
+            <USMAccountPassword IDAccountUpdate={idSelected} currentUser={currentUser}/>
+          </Tabs.TabPane>
+        </Tabs>
       </Drawer>
     </>
   );
