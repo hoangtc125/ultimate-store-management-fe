@@ -3,14 +3,17 @@ import { Button, Input, Space, Table, Tooltip, Image, Card, Popconfirm, message,
 import React, { useRef, useState, useEffect } from 'react';
 import * as MODE from '../../../constants/mode'
 import * as ROLE from '../../../constants/role'
+import * as API from '../../../constants/api'
 import { isMode, isRole } from '../../../utils/check';
 import Highlighter from 'react-highlight-words';
 import USMCreateProduct from './create';
 import USMUpdateProduct from './update';
 import USMNote from './note';
 import products from '../../../data/product';
+import openNotificationWithIcon from '../../../utils/notification';
+import { ProductResponse } from '../../../model/product';
 
-const USMListProduct = () => {
+const USMListProduct = ({CurrentUser}) => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [pagination, setPagination] = useState({
@@ -22,6 +25,8 @@ const USMListProduct = () => {
   const [visibleCreate, setVisibleCreate] = useState(false);
   const [visibleUpdate, setVisibleUpdate] = useState(false);
   const [idSelected, setIdSelected] = useState()
+  // eslint-disable-next-line
+  const [currentUser, setCurrentUSer] = CurrentUser
   const searchInput = useRef(null);
 
   const showDrawerCreate = () => {
@@ -93,7 +98,44 @@ const USMListProduct = () => {
         }
       })
       setData(vals)
+    } else {
+      const url = isRole([ROLE.ADMIN]) ? API.PRODUCT_GET_ALL : API.PRODUCT_GET_ALL_ACTIVATE
+      fetch(API.DOMAIN + url, {
+        method: 'GET',
+        headers: {
+          'accept': 'application/json',
+          'Authorization': currentUser.token,
+        },
+      })
+      .then(response => {
+        return response.json()})
+      .then(data => {
+        // eslint-disable-next-line
+        if(data?.status_code != 200) {
+          openNotificationWithIcon(
+            'error',
+            'Cập nhật không thành công',
+            data?.msg,
+          )
+        } else {
+          const vals = data?.data.map(element => {
+            const newProductResponse = new ProductResponse({
+              ...element, key: element.id,
+            })
+            return newProductResponse
+          })
+          setData(vals)
+        }
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          'error',
+          'Cập nhật không thành công',
+          'Thông tin không được cập nhật!'
+        )
+      });
     }
+    // eslint-disable-next-line
   }, [])
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -305,8 +347,8 @@ const USMListProduct = () => {
             >
               Thêm sản phẩm
             </Button>
-            <USMCreateProduct visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} data={data} setData={setData}/>
-            <USMUpdateProduct visibleUpdate={visibleUpdate} setVisibleUpdate={setVisibleUpdate} data={data} setData={setData} idSelected={idSelected}/>
+            <USMCreateProduct currentUser={currentUser} visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} data={data} setData={setData}/>
+            <USMUpdateProduct currentUser={currentUser} visibleUpdate={visibleUpdate} setVisibleUpdate={setVisibleUpdate} data={data} setData={setData} idSelected={idSelected}/>
           </div>
         }
         <USMNote />

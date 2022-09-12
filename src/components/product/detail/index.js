@@ -67,7 +67,7 @@ const USMProduct = ({item, CartData}) => {
                   <Button type="primary" 
                     onClick={() => {
                       let newCart = {...cartData}
-                      newCart.products[data?.id] = (newCart.products[data?.id] || 0) + inputNumberElement?.current.value
+                      newCart.products[data?.id] = parseInt(newCart.products[data?.id] || 0) + parseInt(inputNumberElement?.current.value)
                       setCartData(newCart)
                       openNotificationWithIcon(
                         'success',

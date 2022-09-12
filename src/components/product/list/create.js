@@ -4,9 +4,13 @@ import images from '../../../assets/images';
 import USMTag from '../../utils/tag';
 import USMUpload from '../../utils/upload';
 import openNotificationWithIcon from '../../../utils/notification';
+import * as API from '../../../constants/api'
+import * as MODE from '../../../constants/mode'
+import { isMode } from '../../../utils/check';
+import { ProductResponse } from '../../../model/product';
 const { Option } = Select;
 
-const USMCreateProduct = ({visibleCreate, setVisibleCreate, data, setData}) => {
+const USMCreateProduct = ({currentUser, visibleCreate, setVisibleCreate, data, setData}) => {
   const [usmImages, setUsmImages] = useState([])
   const [tags, setTags] = useState([]);
 
@@ -17,9 +21,52 @@ const USMCreateProduct = ({visibleCreate, setVisibleCreate, data, setData}) => {
       values.images = usmImages
     }
     values.nickname = tags
-    values.id = data[data.length - 1].id + 1
-    values.key = data[data.length - 1].id + 1
-    setData(prev => [...prev, values])
+    if (isMode([MODE.NORMAL])) {
+      fetch(API.DOMAIN + API.PRODUCT_CREATE, {
+        method: 'POST',
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': currentUser.token
+        },
+        body: JSON.stringify(values),
+      })
+      .then(response => {
+        return response.json()})
+      .then(data => {
+        // eslint-disable-next-line
+        if(data?.status_code != 200) {
+          openNotificationWithIcon(
+            'error',
+            'Cập nhật không thành công',
+            data?.msg,
+          )
+        } else {
+          const newProductResponse = new ProductResponse({
+            key: data?.data?.id,
+            id: data?.data?.id,
+            ...data?.data,
+          })
+          setData(prev => [...prev, newProductResponse])
+        }
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          'error',
+          'Cập nhật không thành công',
+          'Thông tin không được cập nhật!'
+        )
+      });
+    } else {
+      if (data.length > 0) {
+        values.id = data[data.length - 1].id + 1
+        values.key = data[data.length - 1].id + 1
+      } else {
+        values.id = 0
+        values.key = 0
+      }
+      setData(prev => [...prev, values])
+    }
     onClose()
   }
 
@@ -79,7 +126,21 @@ const USMCreateProduct = ({visibleCreate, setVisibleCreate, data, setData}) => {
           id="usm-form-create"
         >
           <Row gutter={16}>
-            <Col span={12}>
+            <Col span={8}>
+              <Form.Item
+                name="id"
+                label="Mã sản phẩm"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Mã sản phẩm không được bỏ trống',
+                  },
+                ]}
+              >
+                <Input placeholder="Nhập mã sản phẩm"/>
+              </Form.Item>
+            </Col>
+            <Col span={8}>
               <Form.Item
                 name="name"
                 label="Tên sản phẩm"
@@ -93,7 +154,7 @@ const USMCreateProduct = ({visibleCreate, setVisibleCreate, data, setData}) => {
                 <Input placeholder="Nhập tên sản phẩm"/>
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col span={8}>
               <Form.Item
                 name="images"
                 label="Danh sách ảnh (Có thể chọn nhiều ảnh khác nhau)"
@@ -169,13 +230,8 @@ const USMCreateProduct = ({visibleCreate, setVisibleCreate, data, setData}) => {
               <Form.Item
                 name="is_disabled"
                 label="Trạng thái của sản phẩm"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
               >
-                <Select placeholder="Chọn trạng thái của sản phẩm" >
+                <Select placeholder="Chọn trạng thái của sản phẩm" defaultValue={false} disabled>
                   <Option value={false}>Bình thường</Option>
                   <Option value={true}>Vô hiệu hóa</Option>
                 </Select>

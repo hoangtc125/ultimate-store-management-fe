@@ -1,8 +1,6 @@
 import { SearchOutlined, DeleteOutlined, ShoppingCartOutlined, DollarOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, Tooltip, Image, Card, Popconfirm, InputNumber } from 'antd';
+import { Button, Input, Space, Table, Tooltip, Card, Popconfirm, InputNumber } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
-import * as MODE from '../../constants/mode'
-import { isMode } from '../../utils/check';
 import Highlighter from 'react-highlight-words';
 import { moneyToText, splitMoney } from '../../utils/money';
 import { getProducts } from '../../utils/cart';
@@ -68,8 +66,9 @@ const USMCart = ({CartData, BillData, CurrentUser, StoreData}) => {
     )
   }
 
-  const updateData = (c) => {
-    const newProducts = getProducts(c) || []
+  const updateData = async (c) => {
+    const newProducts = await getProducts(c)
+    console.log(newProducts)
     let vals = newProducts.map(product => {
       return {
         key: product?.id,
@@ -87,9 +86,7 @@ const USMCart = ({CartData, BillData, CurrentUser, StoreData}) => {
   }
   
   useEffect(() => {
-    if (isMode([MODE.TEST])) {
-      updateData(cartData)
-    }
+    updateData(cartData)
   }, [cartData])
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -206,16 +203,6 @@ const USMCart = ({CartData, BillData, CurrentUser, StoreData}) => {
       sortDirections: ['descend', 'ascend'],
     },
     {
-      title: 'Hình ảnh sản phẩm',
-      dataIndex: 'images',
-      key: 'images',
-      width: '10%',
-      ...getColumnSearchProps('images'),
-      render: (_, record) => {
-        return <Image src={record.images[0]} width={50}/>
-      }
-    },
-    {
       title: 'Giá bán 1 sản phẩm',
       dataIndex: 'priceOut',
       key: 'priceOut',
@@ -232,11 +219,11 @@ const USMCart = ({CartData, BillData, CurrentUser, StoreData}) => {
       ...getColumnSearchProps('itemQuantity'),
       width: '15%',
       render: (_, record) => {
-        return <InputNumber min={1} max={100} value={record.itemQuantity} onChange={(value) => {
+        return <InputNumber min={1} max={100} value={record.itemQuantity} onChange={async (value) => {
           let newCart = {...cartData}
           newCart.products[record.id] = value
           setCartData(newCart)
-          updateData(newCart)
+          await updateData(newCart)
         }} />
       }
     },
@@ -410,13 +397,6 @@ const USMCart = ({CartData, BillData, CurrentUser, StoreData}) => {
               <Card title="Thương hiệu">
                 <Space>
                   {record.brand}  
-                </Space>  
-              </Card>
-              <Card title="Ảnh chi tiết">
-                <Space>
-                  {record.images.map((image, id) => {
-                    return <Image key={id} src={image} width={75}/>
-                  })}  
                 </Space>  
               </Card>
             </div>

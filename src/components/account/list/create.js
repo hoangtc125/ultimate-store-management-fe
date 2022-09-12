@@ -7,6 +7,7 @@ import * as ROLE from '../../../constants/role'
 import * as MODE from '../../../constants/mode'
 import * as API from '../../../constants/api'
 import { isMode } from '../../../utils/check';
+import { AccountResponse } from '../../../model/account';
 const { Option } = Select;
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
@@ -42,7 +43,11 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData}) => {
             data?.msg,
           )
         } else {
-          setData(prev => [...prev, values])
+          const newAccountResponse = new AccountResponse({
+            key: data?.data?.id,
+            ...data?.data,
+          })
+          setData(prev => [...prev, newAccountResponse])
         }
       })
       .catch((error) => {

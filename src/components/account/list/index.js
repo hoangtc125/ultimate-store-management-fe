@@ -40,7 +40,6 @@ const USMListAccount = ({CurrentUser}) => {
     setVisibleUpdate(true);
   };
 
-  
   const USMAction = ({i, disabled}) => {
     const handleDelete = (index) => {
       // eslint-disable-next-line

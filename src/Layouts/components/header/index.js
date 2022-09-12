@@ -4,9 +4,7 @@ import {
   TrademarkOutlined,
 } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
-import * as MODE from '../../../constants/mode'
 import images from '../../../assets/images'
-import { isMode } from '../../../utils/check';
 import { getProducts } from '../../../utils/cart';
 import { moneyToText, splitMoney,  } from '../../../utils/money';
 import { Link } from 'react-router-dom';
@@ -21,8 +19,8 @@ const Header = ({ CartData, CurrentUser }) => {
   const [currentUser, setCurrentUSer] = CurrentUser
   const [totalPrice, setTotalPrice] = useState(0)
 
-  const updateData = (c) => {
-    const newProducts = getProducts(c) || []
+  const updateData = async (c) => {
+    const newProducts = await getProducts(c)
     let vals = newProducts.map(product => {
       return {
         key: product?.id,
@@ -40,9 +38,7 @@ const Header = ({ CartData, CurrentUser }) => {
   }
 
   useEffect(() => {
-    if (isMode([MODE.TEST])) {
-      updateData(cartData)
-    }
+    updateData(cartData)
   }, [cartData])
 
   const renderContent = () => (

@@ -1,8 +1,6 @@
 import { SearchOutlined, SnippetsOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table, DatePicker, Modal } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
-import * as MODE from '../../../constants/mode'
-import { isMode } from '../../../utils/check';
 import Highlighter from 'react-highlight-words';
 import { getProducts } from '../../../utils/cart';
 import moment from 'moment'
@@ -63,9 +61,10 @@ const USMBill = ({BillData}) => {
     )
   }
 
-  const updateData = (b) => {
-    const newBillData = b.map(bill => {
-      const newProducts = getProducts(bill) || []
+  const updateData = async (b) => {
+    const newBillData = b.map(async (bill) => {
+      const newProducts = await getProducts(bill) || []
+      console.log(newProducts)
       let vals = newProducts.map(product => {
         return {
           key: product?.id,
@@ -80,9 +79,7 @@ const USMBill = ({BillData}) => {
   }
   
   useEffect(() => {
-    if (isMode([MODE.TEST])) {
-      updateData(billData)
-    }
+    updateData(billData)
   }, [billData])
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {

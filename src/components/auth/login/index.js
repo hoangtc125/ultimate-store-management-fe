@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import openNotificationWithIcon from '../../../utils/notification';
 import * as API from '../../../constants/api'
 import { AccountResponse } from '../../../model/account';
+import Cart from '../../../model/cart';
 
 const Advertise = () => {
   return (
@@ -84,14 +85,15 @@ const Login = ({ CartData, CurrentUser, BillData, StoreData }) => {
           token: data?.token_type + ' ' + data?.access_token
         })
         setCurrentUSer(newCurrentUser)
-        setCartData(cart)
+        setCartData(new Cart({}))
         setStoreData(store)
         window.localStorage.setItem("USM_USER", JSON.stringify(newCurrentUser))
         window.localStorage.setItem("USM_ROLE", newCurrentUser?.role)
-        window.localStorage.setItem("USM_CART", JSON.stringify(cart))
+        window.localStorage.setItem("USM_CART", JSON.stringify(new Cart({})))
         window.localStorage.setItem("USM_STORE", JSON.stringify(store))
         navigate(URL.HOME)
       }
+      setLoading(false)
     })
     .catch((error) => {
       openNotificationWithIcon(
@@ -99,8 +101,8 @@ const Login = ({ CartData, CurrentUser, BillData, StoreData }) => {
         'Đăng nhập thất bại',
         'Hãy chọn dùng thử sản phẩm để trải nghiệm!'
       )
+      setLoading(false)
     });
-    setLoading(false)
   };
 
   const onChange = (e) => {

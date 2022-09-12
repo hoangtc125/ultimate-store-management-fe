@@ -1,16 +1,21 @@
 import { useEffect, useRef, useState } from "react"
+import * as API from '../../constants/api'
 import * as MODE from '../../constants/mode'
 import { isMode } from "../../utils/check"
 import USMItemProduct from "./item"
 import { Input, Pagination, Card, Image, Empty } from 'antd';
 import products from "../../data/product";
 import images from "../../assets/images";
+import { ProductResponse } from "../../model/product"
+import openNotificationWithIcon from "../../utils/notification";
 const { Search } = Input;
 
-const USMHome = ({CartData}) => {
+const USMHome = ({CurrentUser, CartData}) => {
   const [data, setData] = useState([])
   const [pageData, setPageData] = useState([])
   const [current, setCurrent] = useState(1);
+  // eslint-disable-next-line
+  const [currentUser, setCurrentUser] = CurrentUser
   const searchElement = useRef(null)
 
   const onChange = (page) => {
@@ -24,6 +29,42 @@ const USMHome = ({CartData}) => {
     if (isMode([MODE.TEST])) {
       setData(products)
       setPageData(products.slice((current - 1) * 12, current * 12))
+    } else {
+      fetch(API.DOMAIN + API.PRODUCT_GET_ALL_ACTIVATE, {
+        method: 'GET',
+        headers: {
+          'accept': 'application/json',
+          'Authorization': currentUser.token,
+        },
+      })
+      .then(response => {
+        return response.json()})
+      .then(data => {
+        // eslint-disable-next-line
+        if(data?.status_code != 200) {
+          openNotificationWithIcon(
+            'error',
+            'Cập nhật không thành công',
+            data?.msg,
+          )
+        } else {
+          const vals = data?.data.map(element => {
+            const newProductResponse = new ProductResponse({
+              ...element, key: element.id,
+            })
+            return newProductResponse
+          })
+          setData(vals)
+          setPageData(vals.slice((current - 1) * 12, current * 12))
+        }
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          'error',
+          'Cập nhật không thành công',
+          'Thông tin không được cập nhật!'
+        )
+      });
     }
     // eslint-disable-next-line
   }, [])
@@ -31,9 +72,7 @@ const USMHome = ({CartData}) => {
   const handleSearch = (value) => {
     const keyword = value.trim()
     if (!keyword) {
-      if (isMode([MODE.TEST])) {
-        setPageData(products.slice((current - 1) * 12, current * 12))
-      }
+      setPageData(data.slice((current - 1) * 12, current * 12))
       return
     }
     const res = data.filter(element => {

@@ -28,7 +28,7 @@ const USMItemProduct = ({item, CartData}) => {
           margin: 10,
         }}
         onClick={showModal}
-        cover={<img alt="example" src={images.default} />}
+        cover={<img alt="example" src={item?.images[0] || images.default} />}
       >
         <Meta title={item?.name} description={item?.nickname.join(", ")} />
       </Card>
