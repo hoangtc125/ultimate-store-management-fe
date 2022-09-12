@@ -62,19 +62,20 @@ const USMBill = ({BillData}) => {
   }
 
   const updateData = async (b) => {
-    const newBillData = b.map(async (bill) => {
-      const newProducts = await getProducts(bill) || []
-      console.log(newProducts)
+    let newBillData = []
+    for (let i = 0; i < b.length; i++) {
+      const newProducts = await getProducts(b[i]) || []
       let vals = newProducts.map(product => {
         return {
           key: product?.id,
-          itemQuantity: bill.products[product?.id],
-          itemSubPrice: bill.products[product?.id] * product?.priceOut,
+          itemQuantity: b[i].products[product?.id],
+          itemSubPrice: b[i].products[product?.id] * product?.priceOut,
           ...product,
         }
       })
-      return {key: bill.id ,...bill, productsDetail: vals}
-    })
+      newBillData.push({key: b[i].id ,...b[i], productsDetail: vals})
+    }
+    console.log(newBillData)
     setData(newBillData)
   }
   
@@ -195,7 +196,7 @@ const USMBill = ({BillData}) => {
       sorter: (a, b) => a.id - b.id,
       sortDirections: ['descend', 'ascend'],
       render: (_, record) => {
-        return record.customer.name
+        return record?.customer?.name
       }
     },
     {
@@ -216,8 +217,8 @@ const USMBill = ({BillData}) => {
       ...getColumnSearchProps('productsDetail'),
       render: (_, record) => {
         return (
-          record.productsDetail.map(product => {
-            return product.name
+          (record?.productsDetail || []).map(product => {
+            return product?.name
           }).join(", ")
         )
       }
