@@ -58,10 +58,10 @@ const Login = ({ CartData, CurrentUser, BillData, StoreData }) => {
     window.localStorage.removeItem("USM_IP_CAMERA")
   }, [])
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     window.localStorage.setItem("USM_MODE", MODE.NORMAL)
     setLoading(true)
-    fetch(API.DOMAIN + API.LOGIN, {
+    fetch(await API.DOMAIN() + API.LOGIN, {
       method: 'POST',
       headers: {
         'accept': 'application/json',

@@ -1,4 +1,9 @@
-export const DOMAIN = process.env.REACT_APP_API_PROTOCAL + '://' + window.location.hostname + ':' + process.env.REACT_APP_BACKEND_PORT
+import USMENV from '../utils/env'
+
+export const DOMAIN = async () => {
+  const env = await USMENV()
+  return env.REACT_APP_API_PROTOCAL + '://' + window.location.hostname + ':' + env.REACT_APP_BACKEND_PORT
+}
 export const LOGIN = '/account/login'
 export const ABOUT_ME = '/account/me'
 export const ACCOUNT_UPDATE = '/account/update?account_id='

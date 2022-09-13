@@ -1,18 +1,21 @@
-import { Button, Col, Drawer, Form, Input, Row, Select, Space, Popconfirm } from 'antd';
+import { Button, Col, Drawer, Form, Input, Row, Select, Space, Popconfirm, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import images from '../../../assets/images';
 import USMTag from '../../utils/tag';
 import USMUpload from '../../utils/upload';
+import * as MODE from '../../../constants/mode'
+import * as API from '../../../constants/api'
 import openNotificationWithIcon from '../../../utils/notification';
+import { isMode } from '../../../utils/check';
 const { Option } = Select;
 
-const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSelected}) => {
+const USMUpdateAccount = ({currentUser, visibleUpdate, setVisibleUpdate, data, setData, idSelected}) => {
   const [usmImages, setUsmImages] = useState([])
   const [tags, setTags] = useState([]);
   const [form] = Form.useForm();
+  const dataSelected = data.filter(element => element?.id === idSelected)[0]
   
   useEffect(() => {
-    const dataSelected = data.filter(element => element?.id === idSelected)[0]
     form.setFieldsValue({
       name: dataSelected?.name,
       nickname: dataSelected?.nickname,
@@ -37,13 +40,52 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
     values.nickname = tags
     values.id = idSelected
     values.key = idSelected
-    setData(prev => prev.map(element => {
-      if (element?.id === idSelected) {
-        return values
-      } else {
-        return element
-      }
-    }))
+    if(isMode([MODE.NORMAL])) {
+      fetch(API.DOMAIN + API.PRODUCT_UPDATE + values.id, {
+        method: 'PUT',
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': currentUser.token
+        },
+        body: JSON.stringify(values),
+      })
+      .then(response => {
+        return response.json()})
+      .then(data => {
+        // eslint-disable-next-line
+        if(data?.status_code != 200) {
+          openNotificationWithIcon(
+            'error',
+            'Cập nhật không thành công',
+            data?.msg,
+          )
+        } else {
+          setData(prev => prev.map(element => {
+            if (element?.id === idSelected) {
+              return values
+            } else {
+              return element
+            }
+          }))
+        }
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          'error',
+          'Cập nhật không thành công',
+          'Thông tin không được cập nhật!'
+        )
+      });
+    } else {
+      setData(prev => prev.map(element => {
+        if (element?.id === idSelected) {
+          return values
+        } else {
+          return element
+        }
+      }))
+    }
     onClose()
   }
 
@@ -200,7 +242,57 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
                   },
                 ]}
               >
-                <Select placeholder="Chọn trạng thái của sản phẩm" >
+                <Select placeholder="Chọn trạng thái của sản phẩm" 
+                      onChange={value => {
+                        if (isMode([MODE.NORMAL])) {
+                          const url = value ? API.PRODUCT_DISABLE : API.PRODUCT_UNDISABLED
+                          fetch(API.DOMAIN + url + dataSelected.id, {
+                            method: value ? 'DELETE' : 'PUT',
+                            headers: {
+                              'accept': 'application/json',
+                              'Authorization': currentUser.token
+                            },
+                          })
+                          .then(response => {
+                            return response.json()})
+                          .then(dt => {
+                            // eslint-disable-next-line
+                            if(dt?.status_code != 200) {
+                              openNotificationWithIcon(
+                                'error',
+                                'Cập nhật không thành công',
+                                dt?.msg,
+                              )
+                            } else {
+                              const newData = data.map(element => {
+                                if (element.id === dataSelected.id) {
+                                  element.is_disabled = value
+                                }
+                                return element
+                              })
+                              setData(newData)
+                              message.success("Cập nhật thành công")
+                            }
+                          })
+                          .catch((error) => {
+                            openNotificationWithIcon(
+                              'error',
+                              'Cập nhật không thành công',
+                              'Thông tin không được cập nhật!'
+                            )
+                          });
+                        } else {
+                          const newData = data.map(element => {
+                            if (element.id === dataSelected.id) {
+                              element.is_disabled = value
+                            }
+                            return element
+                          })
+                          setData(newData)
+                          message.success("Cập nhật thành công")
+                        }
+                      }}
+                    >
                   <Option value={false}>Bình thường</Option>
                   <Option value={true}>Vô hiệu hóa</Option>
                 </Select>

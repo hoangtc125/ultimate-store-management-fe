@@ -1,5 +1,5 @@
 import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined, GoldOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, Tooltip, Image, Card, Popconfirm, message, Tag } from 'antd';
+import { Button, Input, Space, Table, Tooltip, Image, Card, Popconfirm, message, Tag, Spin } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import * as MODE from '../../../constants/mode'
 import * as ROLE from '../../../constants/role'
@@ -25,6 +25,7 @@ const USMListProduct = ({CurrentUser}) => {
   const [visibleCreate, setVisibleCreate] = useState(false);
   const [visibleUpdate, setVisibleUpdate] = useState(false);
   const [idSelected, setIdSelected] = useState()
+  const [loading, setLoading] = useState(false)
   // eslint-disable-next-line
   const [currentUser, setCurrentUSer] = CurrentUser
   const searchInput = useRef(null);
@@ -40,7 +41,44 @@ const USMListProduct = ({CurrentUser}) => {
   const handleDelete = (index) => {
     // eslint-disable-next-line
     if(isMode([MODE.NORMAL])) {
-
+      setLoading(true)
+      fetch(API.DOMAIN + API.PRODUCT_DISABLE + index, {
+        method: 'DELETE',
+        headers: {
+          'accept': 'application/json',
+          'Authorization': currentUser.token
+        },
+      })
+      .then(response => {
+        return response.json()})
+      .then(dt => {
+        // eslint-disable-next-line
+        if(dt?.status_code != 200) {
+          openNotificationWithIcon(
+            'error',
+            'Cập nhật không thành công',
+            dt?.msg,
+          )
+        } else {
+          const newData = data.map((e) => {
+            if (e.id === index) {
+              e.is_disabled = true
+            }
+            return e
+          })
+          setData(newData)
+          message.success('Xóa thành công');
+        }
+        setLoading(false)
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          'error',
+          'Cập nhật không thành công',
+          'Thông tin không được cập nhật!'
+        )
+        setLoading(false)
+      });
     } else {
       const newData = data.map((e) => {
         if (e.id === index) {
@@ -74,7 +112,7 @@ const USMListProduct = ({CurrentUser}) => {
             }}
           />
         </Tooltip>
-        <Tooltip title="Xóa">
+        <Tooltip title="Vô hiệu hóa">
           <Popconfirm
             title="Xác nhận xóa?"
             onConfirm={() => handleDelete(i)}
@@ -248,7 +286,7 @@ const USMListProduct = ({CurrentUser}) => {
       key: 'name',
       width: '15%',
       ...getColumnSearchProps('name'),
-      sorter: (a, b) => a.role - b.role,
+      sorter: (a, b) => a.name.localeCompare(b.name),
       sortDirections: ['descend', 'ascend'],
     },
     {
@@ -274,6 +312,8 @@ const USMListProduct = ({CurrentUser}) => {
       key: 'priceOut',
       width: '10%',
       ...getColumnSearchProps('priceOut'),
+      sorter: (a, b) => a.priceOut - b.priceOut,
+      sortDirections: ['descend', 'ascend'],
     },
     {
       title: 'Số lượng',
@@ -281,6 +321,8 @@ const USMListProduct = ({CurrentUser}) => {
       key: 'quantity',
       ...getColumnSearchProps('quantity'),
       width: '8%',
+      sorter: (a, b) => a.quantity - b.quantity,
+      sortDirections: ['descend', 'ascend'],
     },
     {
       title: 'Hình ảnh',
@@ -297,7 +339,7 @@ const USMListProduct = ({CurrentUser}) => {
       dataIndex: 'is_disabled',
       key: 'is_disabled',
       ...getColumnSearchProps('is_disabled'),
-      sorter: (a, b) => a.id - b.id,
+      sorter: (a, b) => b.is_disabled,
       sortDirections: ['descend', 'ascend'],
       width: '10%',
       render: (_, record) => {
@@ -353,54 +395,56 @@ const USMListProduct = ({CurrentUser}) => {
         }
         <USMNote />
       </div>
-      <Table
-        title={() => {
-          return (
-            <Space>
-              <GoldOutlined style={{fontSize: "2rem"}}/> 
-              <span>Danh sách sản phẩm trong cửa hàng ({data.length})</span>
-            </Space>
-          )
-        }}
-        bordered
-        columns={columns}
-        dataSource={data}
-        pagination={pagination}
-        onChange={handleTableChange}
-        style={{
-          borderRadius: "10px",
-          boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
-          margin: "10px 0px",
-        }}
-        expandable={{
-          expandedRowRender: (record) => (
-            <div
-              style={{
-                margin: 0,
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                justifyContent: "flex-start",
-              }}
-            >
-              {
-                isRole([ROLE.ADMIN]) && 
-                <>
-                  <Card title="Giá nhập vào">{record.priceIn}</Card>
-                </>
-              }
-              <Card title="Ảnh chi tiết">
-                <Space>
-                  {record.images.map((image, id) => {
-                    return <Image key={id} src={image} width={75}/>
-                  })}  
-                </Space>  
-              </Card>
-            </div>
-          ),
-          rowExpandable: record => true,
-        }}
-      />
+      <Spin spinning={loading}>
+        <Table
+          title={() => {
+            return (
+              <Space>
+                <GoldOutlined style={{fontSize: "2rem"}}/> 
+                <span>Danh sách sản phẩm trong cửa hàng ({data.length})</span>
+              </Space>
+            )
+          }}
+          bordered
+          columns={columns}
+          dataSource={data}
+          pagination={pagination}
+          onChange={handleTableChange}
+          style={{
+            borderRadius: "10px",
+            boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
+            margin: "10px 0px",
+          }}
+          expandable={{
+            expandedRowRender: (record) => (
+              <div
+                style={{
+                  margin: 0,
+                  display: "flex",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  justifyContent: "flex-start",
+                }}
+              >
+                {
+                  isRole([ROLE.ADMIN]) && 
+                  <>
+                    <Card title="Giá nhập vào">{record.priceIn}</Card>
+                  </>
+                }
+                <Card title="Ảnh chi tiết">
+                  <Space>
+                    {record.images.map((image, id) => {
+                      return <Image key={id} src={image} width={75}/>
+                    })}  
+                  </Space>  
+                </Card>
+              </div>
+            ),
+            rowExpandable: record => true,
+          }}
+        />
+      </Spin>
     </div>
   );
 };

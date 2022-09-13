@@ -1,4 +1,4 @@
-import { Image, Space, Badge, Descriptions, InputNumber, Button } from "antd"
+import { Image, Space, Badge, Descriptions, InputNumber, Button, Tag } from "antd"
 import openNotificationWithIcon from "../../../utils/notification"
 import { useRef, useState } from "react"
 
@@ -96,7 +96,7 @@ const USMProduct = ({item, CartData}) => {
             <Descriptions.Item label="Thương hiệu">{data?.brand}</Descriptions.Item>
             <Descriptions.Item label="Số lượng">{data?.quantity}</Descriptions.Item>
             <Descriptions.Item label="Trạng thái">
-              <Badge status="processing" text={data?.is_disabled} />
+              <Badge status="processing" text={data?.is_disabled ? <Tag color='red'>Vô hiệu hóa</Tag> : <Tag color='green'>Bình thường</Tag>} />
             </Descriptions.Item>
             <Descriptions.Item label="Tên gọi khác" span={2}>
               {data?.nickname.join(", ")}

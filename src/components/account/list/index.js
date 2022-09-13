@@ -72,6 +72,7 @@ const USMListAccount = ({CurrentUser}) => {
             setData(newData)
             message.success('Xóa thành công');
           }
+          setLoading(false)
         })
         .catch((error) => {
           openNotificationWithIcon(
@@ -79,8 +80,8 @@ const USMListAccount = ({CurrentUser}) => {
             'Cập nhật không thành công',
             'Thông tin không được cập nhật!'
           )
+          setLoading(false)
         });
-        setLoading(false)
       } else {
         const newData = data.map((e) => {
           if (e.id === index) {
@@ -166,6 +167,7 @@ const USMListAccount = ({CurrentUser}) => {
           })
           setData(vals)
         }
+        setLoading(false)
       })
       .catch((error) => {
         openNotificationWithIcon(
@@ -173,8 +175,8 @@ const USMListAccount = ({CurrentUser}) => {
           'Cập nhật không thành công',
           'Thông tin không được cập nhật!'
         )
+        setLoading(false)
       });
-      setLoading(false)
     }
     // eslint-disable-next-line
   }, [])
@@ -289,7 +291,7 @@ const USMListAccount = ({CurrentUser}) => {
       key: 'fullname',
       width: '20%',
       ...getColumnSearchProps('fullname'),
-      sorter: (a, b) => a.role - b.role,
+      sorter: (a, b) => a.fullname.localeCompare(b.fullname),
       sortDirections: ['descend', 'ascend'],
     },
     {
@@ -298,6 +300,8 @@ const USMListAccount = ({CurrentUser}) => {
       key: 'phone',
       width: '15%',
       ...getColumnSearchProps('phone'),
+      sorter: (a, b) => a.phone.localeCompare(b.phone),
+      sortDirections: ['descend', 'ascend'],
     },
     {
       title: 'Địa chỉ Email',
@@ -305,6 +309,8 @@ const USMListAccount = ({CurrentUser}) => {
       key: 'email',
       width: '20%',
       ...getColumnSearchProps('email'),
+      sorter: (a, b) => a.email.localeCompare(b.email),
+      sortDirections: ['descend', 'ascend'],
     },
     {
       title: 'Ảnh đai diện',
@@ -322,6 +328,8 @@ const USMListAccount = ({CurrentUser}) => {
       key: 'role',
       ...getColumnSearchProps('role'),
       width: '8%',
+      sorter: (a, b) => a.role.localeCompare(b.role),
+      sortDirections: ['descend', 'ascend'],
       render: (_, record) => {
         return record.role === ROLE.ADMIN ? <Tag color='brown'>Chủ cửa hàng</Tag> : <Tag color='black'>Nhân viên bán hàng</Tag>
       }
@@ -331,7 +339,7 @@ const USMListAccount = ({CurrentUser}) => {
       dataIndex: 'is_disabled',
       key: 'is_disabled',
       ...getColumnSearchProps('is_disabled'),
-      sorter: (a, b) => a.id - b.id,
+      sorter: (a, b) => b.is_disabled,
       sortDirections: ['descend', 'ascend'],
       width: '10%',
       render: (_, record) => {

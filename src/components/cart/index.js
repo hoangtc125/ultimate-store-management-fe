@@ -199,7 +199,7 @@ const USMCart = ({CartData, BillData, CurrentUser, StoreData}) => {
       key: 'name',
       width: '20%',
       ...getColumnSearchProps('name'),
-      sorter: (a, b) => a.role - b.role,
+      sorter: (a, b) => a.name.localeCompare(b.name),
       sortDirections: ['descend', 'ascend'],
     },
     {
@@ -208,6 +208,8 @@ const USMCart = ({CartData, BillData, CurrentUser, StoreData}) => {
       key: 'priceOut',
       width: '15%',
       ...getColumnSearchProps('priceOut'),
+      sorter: (a, b) => a.priceOut - b.priceOut,
+      sortDirections: ['descend', 'ascend'],
       render: (_, record) => {
         return splitMoney(record.priceOut)
       }
@@ -218,6 +220,8 @@ const USMCart = ({CartData, BillData, CurrentUser, StoreData}) => {
       key: 'itemQuantity',
       ...getColumnSearchProps('itemQuantity'),
       width: '15%',
+      sorter: (a, b) => a.itemQuantity - b.itemQuantity,
+      sortDirections: ['descend', 'ascend'],
       render: (_, record) => {
         return <InputNumber min={1} max={100} value={record.itemQuantity} onChange={async (value) => {
           let newCart = {...cartData}
@@ -232,9 +236,9 @@ const USMCart = ({CartData, BillData, CurrentUser, StoreData}) => {
       dataIndex: 'itemSubPrice',
       key: 'itemSubPrice',
       ...getColumnSearchProps('itemSubPrice'),
-      sorter: (a, b) => a.id - b.id,
-      sortDirections: ['descend', 'ascend'],
       width: '15%',
+      sorter: (a, b) => a.itemSubPrice - b.itemSubPrice,
+      sortDirections: ['descend', 'ascend'],
       render: (_, record) => {
         return splitMoney(record.itemSubPrice)
       }
