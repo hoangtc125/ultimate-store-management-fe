@@ -10,7 +10,7 @@ import { ProductResponse } from "../../model/product"
 import openNotificationWithIcon from "../../utils/notification";
 const { Search } = Input;
 
-const USMHome = ({CurrentUser, CartData}) => {
+const USMHome = ({CurrentUser, CartData, env}) => {
   const [data, setData] = useState([])
   const [pageData, setPageData] = useState([])
   const [current, setCurrent] = useState(1);
@@ -30,7 +30,7 @@ const USMHome = ({CurrentUser, CartData}) => {
       setData(products)
       setPageData(products.slice((current - 1) * 12, current * 12))
     } else {
-      fetch(API.DOMAIN + API.PRODUCT_GET_ALL_ACTIVATE, {
+      fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.PRODUCT_GET_ALL_ACTIVATE, {
         method: 'GET',
         headers: {
           'accept': 'application/json',
@@ -138,7 +138,7 @@ const USMHome = ({CurrentUser, CartData}) => {
         }}
       >
         {pageData.map((item, id) => {
-          return <USMItemProduct key={id} item={item} CartData={CartData}/>
+          return <USMItemProduct key={id} item={item} CartData={CartData} env={env}/>
         })}
         {data.length === 0 && 
           <Empty 

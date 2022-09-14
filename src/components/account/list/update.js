@@ -12,7 +12,7 @@ import USMAccountPassword from '../detail/password';
 const { Option } = Select;
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSelected, currentUser}) => {
+const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSelected, currentUser, env}) => {
   const [usmImages, setUsmImages] = useState([])
   const [form] = Form.useForm();
   const dataSelected = data.filter(element => element?.id === idSelected)[0]
@@ -45,7 +45,7 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
     values.key = idSelected
     values.birthday = values.birthday._d.toLocaleDateString('en-GB')
     if(isMode([MODE.NORMAL])) {
-      fetch(API.DOMAIN + API.STAFF_UPDATE + values.id, {
+      fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.STAFF_UPDATE + values.id, {
         method: 'PUT',
         headers: {
           'accept': 'application/json',
@@ -287,7 +287,7 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
                       onChange={value => {
                         if (isMode([MODE.NORMAL])) {
                           const url = value ? API.ACCOUNT_DISABLE : API.ACCOUNT_UNDISABLED
-                          fetch(API.DOMAIN + url + dataSelected.id, {
+                          fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + url + dataSelected.id, {
                             method: value ? 'DELETE' : 'PUT',
                             headers: {
                               'accept': 'application/json',
@@ -355,7 +355,7 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
             </Form>
           </Tabs.TabPane>
           <Tabs.TabPane tab="Chỉnh sửa mật khẩu" key="2">
-            <USMAccountPassword IDAccountUpdate={idSelected} currentUser={currentUser}/>
+            <USMAccountPassword IDAccountUpdate={idSelected} currentUser={currentUser} env={env}/>
           </Tabs.TabPane>
         </Tabs>
       </Drawer>

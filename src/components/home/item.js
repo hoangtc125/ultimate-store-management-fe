@@ -4,7 +4,7 @@ import { useState } from 'react';
 import USMProduct from '../product/detail';
 const { Meta } = Card;
 
-const USMItemProduct = ({item, CartData}) => {
+const USMItemProduct = ({item, CartData, env}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = () => {

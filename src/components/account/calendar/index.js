@@ -2,7 +2,7 @@ import { Alert, Calendar, Select, Row, Col, Radio } from 'antd';
 import moment from 'moment';
 import React, { useState } from 'react';
 
-const USMAccountCalendar = () => {
+const USMAccountCalendar = ({CurrentUser, env}) => {
   const [value, setValue] = useState(moment());
   const [selectedValue, setSelectedValue] = useState(moment());
 

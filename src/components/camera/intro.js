@@ -311,7 +311,7 @@ const StepsIntro = () => {
   );
 };
 
-const USMIntro = ({ setIpCamera }) => {
+const USMIntro = ({ setIpCamera, env }) => {
 
   return (
     <div
@@ -332,7 +332,7 @@ const USMIntro = ({ setIpCamera }) => {
           width: "35%",
         }}
       >
-        <USMIP setIpCamera={setIpCamera}/>
+        <USMIP setIpCamera={setIpCamera} env={env}/>
         <Alert
           message="Chú ý"
           description="Thiết bị sử dụng Camera của bạn và máy tính này cần kết nối chung trong 1 mạng (Mạng Wifi hoặc mạng Lan)"

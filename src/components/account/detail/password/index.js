@@ -4,11 +4,11 @@ import * as MODE from '../../../../constants/mode'
 import { isMode } from '../../../../utils/check';
 import openNotificationWithIcon from '../../../../utils/notification';
 
-const USMAccountPassword = ({currentUser, IDAccountUpdate}) => {
+const USMAccountPassword = ({currentUser, IDAccountUpdate, env}) => {
   const onFinish = (values) => {
     if (isMode([MODE.NORMAL])) {
       const url = IDAccountUpdate ? API.ACCOUNT_UPDATE_PASSWORD_STAFF + IDAccountUpdate : API.ACCOUNT_UPDATE_PASSWORD
-      fetch(API.DOMAIN + url, {
+      fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + url, {
         method: 'PUT',
         headers: {
           'accept': 'application/json',

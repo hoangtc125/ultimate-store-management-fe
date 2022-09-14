@@ -12,7 +12,7 @@ import * as URL from '../../../constants/url'
 import moment from 'moment'
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const Header = ({ CartData, CurrentUser }) => {
+const Header = ({ CartData, CurrentUser, env }) => {
   const [data, setData] = useState([])
   const [cartData, setCartData] = CartData
   // eslint-disable-next-line
@@ -20,7 +20,7 @@ const Header = ({ CartData, CurrentUser }) => {
   const [totalPrice, setTotalPrice] = useState(0)
 
   const updateData = async (c) => {
-    const newProducts = await getProducts(c)
+    const newProducts = await getProducts(c, env)
     let vals = newProducts.map(product => {
       return {
         key: product?.id,
@@ -39,6 +39,7 @@ const Header = ({ CartData, CurrentUser }) => {
 
   useEffect(() => {
     updateData(cartData)
+    // eslint-disable-next-line
   }, [cartData])
 
   const renderContent = () => (

@@ -8,7 +8,7 @@ import Cart from "../../../model/cart";
 import * as ROLE from '../../../constants/role'
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMCheckout = ({ BillData, Data, Visible, CartData, CurrentUser, StoreData }) => {
+const USMCheckout = ({ BillData, Data, Visible, CartData, CurrentUser, StoreData, env }) => {
   // eslint-disable-next-line
   const [itemSelected, setItemSelected] = Data
   // eslint-disable-next-line

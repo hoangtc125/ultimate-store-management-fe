@@ -4,7 +4,7 @@ import USMVideo from './video';
 import USMImage from './image';
 import USMIntro from './intro';
 
-const USMCamera = ({setImagesFromCamera}) => {
+const USMCamera = ({setImagesFromCamera, env}) => {
   // eslint-disable-next-line 
   const [ipCamera, setIpCamera] = useState(window.localStorage.getItem("USM_IP_CAMERA"))
   const [images, setImages] = useState([])
@@ -39,7 +39,7 @@ const USMCamera = ({setImagesFromCamera}) => {
       justifyContent: "space-between",
       flexWrap: "wrap"
     }}>
-      <USMIntro setIpCamera={setIpCamera}/>
+      <USMIntro setIpCamera={setIpCamera} env={env}/>
       <div
         style={{
           display: "flex",
@@ -50,8 +50,8 @@ const USMCamera = ({setImagesFromCamera}) => {
           flexWrap: "wrap"
         }}
       >
-        <USMVideo ipCamera={ipCamera} loadings={loadings} enterLoading={enterLoading}/>
-        <USMImage loadings={loadings} enterLoading={enterLoading} setImages={setImages}/>
+        <USMVideo ipCamera={ipCamera} loadings={loadings} enterLoading={enterLoading} env={env}/>
+        <USMImage loadings={loadings} enterLoading={enterLoading} setImages={setImages} env={env}/>
       </div>
       <div
         style={{

@@ -9,7 +9,7 @@ import { splitMoney } from '../../../utils/money';
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 const { Search } = Input;
 
-const USMBill = ({BillData}) => {
+const USMBill = ({BillData, env}) => {
   const [itemSelected, setItemSelected] = useState()
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -64,7 +64,7 @@ const USMBill = ({BillData}) => {
   const updateData = async (b) => {
     let newBillData = []
     for (let i = 0; i < b.length; i++) {
-      const newProducts = await getProducts(b[i]) || []
+      const newProducts = await getProducts(b[i], env) || []
       let vals = newProducts.map(product => {
         return {
           key: product?.id,
@@ -81,6 +81,7 @@ const USMBill = ({BillData}) => {
   
   useEffect(() => {
     updateData(billData)
+    // eslint-disable-next-line
   }, [billData])
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {

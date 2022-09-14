@@ -10,7 +10,7 @@ import USMCheckout from './checkout';
 import openNotificationWithIcon from '../../utils/notification';
 const { Search } = Input;
 
-const USMCart = ({CartData, BillData, CurrentUser, StoreData}) => {
+const USMCart = ({CartData, BillData, CurrentUser, StoreData, env}) => {
   // const [idSelected, setIdSelected] = useState()
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -67,7 +67,7 @@ const USMCart = ({CartData, BillData, CurrentUser, StoreData}) => {
   }
 
   const updateData = async (c) => {
-    const newProducts = await getProducts(c)
+    const newProducts = await getProducts(c, env)
     console.log(newProducts)
     let vals = newProducts.map(product => {
       return {
@@ -87,6 +87,7 @@ const USMCart = ({CartData, BillData, CurrentUser, StoreData}) => {
   
   useEffect(() => {
     updateData(cartData)
+    // eslint-disable-next-line
   }, [cartData])
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -415,6 +416,7 @@ const USMCart = ({CartData, BillData, CurrentUser, StoreData}) => {
         CartData={CartData} 
         CurrentUser={CurrentUser}
         StoreData={StoreData}
+        env={env}
       />
     </div>
   );

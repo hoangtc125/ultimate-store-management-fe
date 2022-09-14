@@ -2,7 +2,7 @@ import { Button, Form, Input } from 'antd';
 import React, { useEffect } from 'react';
 import openNotificationWithIcon from '../../../utils/notification';
 
-const USMStore = ({StoreData}) => {
+const USMStore = ({StoreData, env}) => {
   // eslint-disable-next-line
   const [storeData, setStoreData] = StoreData
   const [form] = Form.useForm();

@@ -13,7 +13,7 @@ import products from '../../../data/product';
 import openNotificationWithIcon from '../../../utils/notification';
 import { ProductResponse } from '../../../model/product';
 
-const USMListProduct = ({CurrentUser}) => {
+const USMListProduct = ({CurrentUser, env}) => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [pagination, setPagination] = useState({
@@ -42,7 +42,7 @@ const USMListProduct = ({CurrentUser}) => {
     // eslint-disable-next-line
     if(isMode([MODE.NORMAL])) {
       setLoading(true)
-      fetch(API.DOMAIN + API.PRODUCT_DISABLE + index, {
+      fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.PRODUCT_DISABLE + index, {
         method: 'DELETE',
         headers: {
           'accept': 'application/json',
@@ -138,7 +138,7 @@ const USMListProduct = ({CurrentUser}) => {
       setData(vals)
     } else {
       const url = isRole([ROLE.ADMIN]) ? API.PRODUCT_GET_ALL : API.PRODUCT_GET_ALL_ACTIVATE
-      fetch(API.DOMAIN + url, {
+      fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + url, {
         method: 'GET',
         headers: {
           'accept': 'application/json',
@@ -389,8 +389,8 @@ const USMListProduct = ({CurrentUser}) => {
             >
               Thêm sản phẩm
             </Button>
-            <USMCreateProduct currentUser={currentUser} visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} data={data} setData={setData}/>
-            <USMUpdateProduct currentUser={currentUser} visibleUpdate={visibleUpdate} setVisibleUpdate={setVisibleUpdate} data={data} setData={setData} idSelected={idSelected}/>
+            <USMCreateProduct currentUser={currentUser} visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} data={data} setData={setData} env={env}/>
+            <USMUpdateProduct currentUser={currentUser} visibleUpdate={visibleUpdate} setVisibleUpdate={setVisibleUpdate} data={data} setData={setData} idSelected={idSelected} env={env}/>
           </div>
         }
         <USMNote />

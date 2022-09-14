@@ -15,7 +15,7 @@ import moment from 'moment'
 import { AccountResponse } from '../../../model/account';
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMListAccount = ({CurrentUser}) => {
+const USMListAccount = ({CurrentUser, env}) => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [pagination, setPagination] = useState({
@@ -45,7 +45,7 @@ const USMListAccount = ({CurrentUser}) => {
       // eslint-disable-next-line
       if (isMode([MODE.NORMAL])) {
         setLoading(true)
-        fetch(API.DOMAIN + API.ACCOUNT_DISABLE + index, {
+        fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.ACCOUNT_DISABLE + index, {
           method: 'DELETE',
           headers: {
             'accept': 'application/json',
@@ -141,7 +141,7 @@ const USMListAccount = ({CurrentUser}) => {
     } else {
       setLoading(true)
       const url = isRole([ROLE.ADMIN]) ? API.ACCOUNTS : API.ACCOUNTS_AVAILABLE
-      fetch(API.DOMAIN + url, {
+      fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + url, {
         method: 'GET',
         headers: {
           'accept': 'application/json',
@@ -389,8 +389,8 @@ const USMListAccount = ({CurrentUser}) => {
             >
               Thêm tài khoản
             </Button>
-            <USMCreateAccount visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} data={data} setData={setData}/>
-            <USMUpdateAccount visibleUpdate={visibleUpdate} setVisibleUpdate={setVisibleUpdate} data={data} setData={setData} idSelected={idSelected} currentUser={currentUser}/>
+            <USMCreateAccount visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} data={data} setData={setData} env={env}/>
+            <USMUpdateAccount visibleUpdate={visibleUpdate} setVisibleUpdate={setVisibleUpdate} data={data} setData={setData} idSelected={idSelected} currentUser={currentUser} env={env}/>
           </div>
         }
         <USMNote />

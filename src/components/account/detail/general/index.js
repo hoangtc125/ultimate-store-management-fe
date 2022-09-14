@@ -12,7 +12,7 @@ import { AccountResponse } from '../../../../model/account';
 const { Option } = Select;
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMAccountGeneral = ({CurrentUser}) => {
+const USMAccountGeneral = ({CurrentUser, env}) => {
   const [usmImages, setUsmImages] = useState([])
   const [currentUser, setCurrentUser] = CurrentUser
   const [form] = Form.useForm();
@@ -44,7 +44,7 @@ const USMAccountGeneral = ({CurrentUser}) => {
     values.id = currentUser.id
     values.birthday = values.birthday._d.toLocaleDateString('en-GB')
     if (isMode([MODE.NORMAL])) {
-      fetch(API.DOMAIN + API.ACCOUNT_UPDATE + currentUser.id, {
+      fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.ACCOUNT_UPDATE + currentUser.id, {
         method: 'PUT',
         headers: {
           'accept': 'application/json',

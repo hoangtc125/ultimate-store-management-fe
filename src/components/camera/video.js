@@ -1,30 +1,17 @@
 import { Image, Button, Space } from 'antd';
 import { ReloadOutlined, CameraOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import openNotificationWithIcon from '../../utils/notification';
 import listImages from '../../assets/images';
-import USMENV from '../../utils/env';
 
-
-const USMVideo = ({ipCamera, loadings, enterLoading}) => {
-  const [pathImage, setPathImage] = useState()
-  const [pathVideo, setPathVideo] = useState()
-
-  useEffect(() => {
-    async function fetchENV() {
-      const env = await USMENV()
-      setPathImage(env.REACT_APP_PATH_IMAGE)
-      setPathVideo(env.REACT_APP_PATH_VIDEO)
-    }
-    fetchENV()
-  }, [])
+const USMVideo = ({ipCamera, loadings, enterLoading, env}) => {
 
   const handleReconect = () => {
-    document.getElementById("browser-video").firstChild.src = "http://" + ipCamera + pathVideo
+    document.getElementById("browser-video").firstChild.src = "http://" + ipCamera + env.REACT_APP_PATH_VIDEO
   }
 
   useEffect(() => {
-    document.getElementById("browser-video").firstChild.src = "http://" + ipCamera + pathVideo
+    document.getElementById("browser-video").firstChild.src = "http://" + ipCamera + env.REACT_APP_PATH_VIDEO
     // eslint-disable-next-line
   }, [ipCamera])
 
@@ -51,7 +38,7 @@ const USMVideo = ({ipCamera, loadings, enterLoading}) => {
   }
 
   const handleShotImage = () => {
-    getBase64FromUrl("http://" + ipCamera + pathImage)
+    getBase64FromUrl("http://" + ipCamera + env.REACT_APP_PATH_IMAGE)
       .then(res => {
         document.getElementById("browser-image").firstChild.src = res
         window.localStorage.setItem("USM_TEMP_IMAGE", res)
@@ -115,7 +102,7 @@ const USMVideo = ({ipCamera, loadings, enterLoading}) => {
             borderRadius: "10px",
             boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
           }}
-          id="browser-video" src={"http://" + ipCamera + pathVideo}
+          id="browser-video" src={"http://" + ipCamera + env.REACT_APP_PATH_VIDEO}
           onError={() => handleErrorVideo()}
         />
       <Space

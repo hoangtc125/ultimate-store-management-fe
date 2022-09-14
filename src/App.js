@@ -18,6 +18,7 @@ function App() {
   const [billData, setBillData] = useState([])
   const [currentUser, setCurrentUSer] = useState({})
   const [storeData, setStoreData] = useState({})
+  const [env, setEnv] = useState({})
 
   useEffect(() => {
     try {
@@ -46,6 +47,15 @@ function App() {
     });
   }, []);
 
+  useEffect(() => {
+    async function fetchENV() {
+      const response = await fetch('static/env.json')
+      const usmEnv = await response.json()
+      setEnv(usmEnv || {})
+    }
+    fetchENV()
+  }, [])
+
   if (isLoading) {
     return null;
   }
@@ -69,6 +79,7 @@ function App() {
                   <Header 
                     CartData={[cartData, setCartData]} 
                     CurrentUser={[currentUser, setCurrentUSer]}
+                    env={env}
                   />
                 }
                 Component={
@@ -77,6 +88,7 @@ function App() {
                     CurrentUser={[currentUser, setCurrentUSer]} 
                     BillData={[billData, setBillData]} 
                     StoreData={[storeData, setStoreData]}
+                    env={env}
                   />
                 } 
                 Role={Role} 

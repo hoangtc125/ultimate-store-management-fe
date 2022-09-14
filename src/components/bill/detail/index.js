@@ -4,7 +4,7 @@ import moment from 'moment'
 import * as ROLE from '../../../constants/role'
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMBillDetail = ({Data}) => {
+const USMBillDetail = ({Data, env}) => {
   // eslint-disable-next-line
   const [itemSelected, setItemSelected] = Data
 

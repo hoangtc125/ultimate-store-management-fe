@@ -9,7 +9,7 @@ import openNotificationWithIcon from '../../../utils/notification';
 import { isMode } from '../../../utils/check';
 const { Option } = Select;
 
-const USMUpdateAccount = ({currentUser, visibleUpdate, setVisibleUpdate, data, setData, idSelected}) => {
+const USMUpdateAccount = ({currentUser, visibleUpdate, setVisibleUpdate, data, setData, idSelected, env}) => {
   const [usmImages, setUsmImages] = useState([])
   const [tags, setTags] = useState([]);
   const [form] = Form.useForm();
@@ -41,7 +41,7 @@ const USMUpdateAccount = ({currentUser, visibleUpdate, setVisibleUpdate, data, s
     values.id = idSelected
     values.key = idSelected
     if(isMode([MODE.NORMAL])) {
-      fetch(API.DOMAIN + API.PRODUCT_UPDATE + values.id, {
+      fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.PRODUCT_UPDATE + values.id, {
         method: 'PUT',
         headers: {
           'accept': 'application/json',
@@ -246,7 +246,7 @@ const USMUpdateAccount = ({currentUser, visibleUpdate, setVisibleUpdate, data, s
                       onChange={value => {
                         if (isMode([MODE.NORMAL])) {
                           const url = value ? API.PRODUCT_DISABLE : API.PRODUCT_UNDISABLED
-                          fetch(API.DOMAIN + url + dataSelected.id, {
+                          fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + url + dataSelected.id, {
                             method: value ? 'DELETE' : 'PUT',
                             headers: {
                               'accept': 'application/json',

@@ -5,7 +5,7 @@ import openNotificationWithIcon from './notification'
 import { isMode } from './check'
 import { ProductResponse } from '../model/product'
 
-const getProducts = async (cart) => {
+const getProducts = async (cart, env) => {
   if (!cart?.products) {
     return 
   }
@@ -19,7 +19,7 @@ const getProducts = async (cart) => {
     })
     return res
   }
-  const response = await fetch(API.DOMAIN + API.GET_ALL_MIN, {
+  const response = await fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.GET_ALL_MIN, {
     method: 'GET',
     headers: {
       'accept': 'application/json',

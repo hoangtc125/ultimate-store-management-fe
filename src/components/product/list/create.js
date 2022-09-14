@@ -10,7 +10,7 @@ import { isMode } from '../../../utils/check';
 import { ProductResponse } from '../../../model/product';
 const { Option } = Select;
 
-const USMCreateProduct = ({currentUser, visibleCreate, setVisibleCreate, data, setData}) => {
+const USMCreateProduct = ({currentUser, visibleCreate, setVisibleCreate, data, setData, env}) => {
   const [usmImages, setUsmImages] = useState([])
   const [tags, setTags] = useState([]);
 
@@ -22,7 +22,7 @@ const USMCreateProduct = ({currentUser, visibleCreate, setVisibleCreate, data, s
     }
     values.nickname = tags
     if (isMode([MODE.NORMAL])) {
-      fetch(API.DOMAIN + API.PRODUCT_CREATE, {
+      fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.PRODUCT_CREATE, {
         method: 'POST',
         headers: {
           'accept': 'application/json',

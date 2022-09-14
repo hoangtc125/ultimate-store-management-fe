@@ -33,7 +33,7 @@ const Advertise = () => {
   );
 };
 
-const Login = ({ CartData, CurrentUser, BillData, StoreData }) => {
+const Login = ({ CartData, CurrentUser, BillData, StoreData, env }) => {
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [role, setRoles] = useState(ROLE.ADMIN);
@@ -58,10 +58,10 @@ const Login = ({ CartData, CurrentUser, BillData, StoreData }) => {
     window.localStorage.removeItem("USM_IP_CAMERA")
   }, [])
 
-  const onFinish = async (values) => {
+  const onFinish = (values) => {
     window.localStorage.setItem("USM_MODE", MODE.NORMAL)
     setLoading(true)
-    fetch(await API.DOMAIN() + API.LOGIN, {
+    fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.LOGIN, {
       method: 'POST',
       headers: {
         'accept': 'application/json',

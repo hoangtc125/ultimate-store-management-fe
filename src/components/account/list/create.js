@@ -11,7 +11,7 @@ import { AccountResponse } from '../../../model/account';
 const { Option } = Select;
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData}) => {
+const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData, env}) => {
   const [usmImages, setUsmImages] = useState([])
 
   const onFinish = (values) => {
@@ -24,7 +24,7 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData}) => {
     values.key = data[data.length - 1].id + 1
     values.birthday = values.birthday._d.toLocaleDateString('en-GB')
     if (isMode([MODE.NORMAL])) {
-      fetch(API.DOMAIN + API.ACCOUNT_CREATE, {
+      fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.ACCOUNT_CREATE, {
         method: 'POST',
         headers: {
           'accept': 'application/json',

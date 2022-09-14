@@ -6,7 +6,7 @@ import * as MODE from '../../constants/mode'
 const { Option } = Select;
 let index = 0;
 
-const USMIP = ({setIpCamera}) => {
+const USMIP = ({setIpCamera, env}) => {
   const [items, setItems] = useState([]);
   const [name, setName] = useState('');
   const inputRef = useRef(null);

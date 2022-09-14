@@ -2,7 +2,7 @@ import { Image, Space, Badge, Descriptions, InputNumber, Button, Tag } from "ant
 import openNotificationWithIcon from "../../../utils/notification"
 import { useRef, useState } from "react"
 
-const USMProduct = ({item, CartData}) => {
+const USMProduct = ({item, CartData, env}) => {
   // eslint-disable-next-line
   const [data, setData] = useState(item)
   const [idImage, setIdImage] = useState(0)
