@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import Customer from "../../../model/customer";
 import Cart from "../../../model/cart";
 import * as ROLE from '../../../constants/role'
+import * as MODE from '../../../constants/mode'
+import * as API from '../../../constants/api'
+import { isMode } from "../../../utils/check";
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
 const USMCheckout = ({ BillData, Data, Visible, CartData, CurrentUser, StoreData, env }) => {
@@ -55,10 +58,50 @@ const USMCheckout = ({ BillData, Data, Visible, CartData, CurrentUser, StoreData
         role: currentUser?.role,
       },
     }
-    setBillData(prev => [...prev, newBill])
-    setCartData(new Cart({
-      products: {},
-    }))
+    if (isMode([MODE.TEST])) {
+      setBillData(prev => [...prev, newBill])
+      setCartData(new Cart({
+        products: {},
+      }))
+    } else {
+      fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.BILL_CREATE, {
+        method: 'POST',
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': currentUser.token
+        },
+        body: JSON.stringify(newBill),
+      })
+      .then(response => {
+        return response.json()})
+      .then(data => {
+        // eslint-disable-next-line
+        if(data?.status_code != 200) {
+          openNotificationWithIcon(
+            'error',
+            'Thanh toán không thành công',
+            data?.msg,
+          )
+        } else {
+          setCartData(new Cart({
+            products: {},
+          }))
+          openNotificationWithIcon(
+            'success',
+            'Thanh toán thành công',
+            'Hóa đơn mới đã được tạo!',
+          )
+        }
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          'error',
+          'Thanh toán không thành công',
+          'Thông tin không được cập nhật!'
+        )
+      });
+    }
     onClose()
   }
 

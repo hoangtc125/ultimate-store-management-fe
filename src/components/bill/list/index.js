@@ -1,15 +1,21 @@
 import { SearchOutlined, SnippetsOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, DatePicker, Modal } from 'antd';
+import { Button, Input, Space, Table, DatePicker, Modal, Spin } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import Highlighter from 'react-highlight-words';
 import { getProducts } from '../../../utils/cart';
 import moment from 'moment'
 import USMBillDetail from '../detail';
 import { splitMoney } from '../../../utils/money';
+import * as MODE from '../../../constants/mode'
+import * as API from '../../../constants/api'
+import openNotificationWithIcon from '../../../utils/notification';
+import { isMode } from '../../../utils/check';
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 const { Search } = Input;
 
-const USMBill = ({BillData, env}) => {
+const USMBill = ({CurrentUser, BillData, env}) => {
+  // eslint-disable-next-line
+  const [currentUser, setCurrentUSer] = CurrentUser
   const [itemSelected, setItemSelected] = useState()
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -20,9 +26,47 @@ const USMBill = ({BillData, env}) => {
   });
   const [data, setData] = useState([])
   // eslint-disable-next-line
-  const [billData, setBillData] = BillData
+  const [billData, setBillData] = isMode([MODE.TEST]) ? BillData : useState([])
+  const [loading, setLoading] = useState(false)
   const searchInput = useRef(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  useEffect(() => {
+    if(isMode([MODE.NORMAL])) {
+      setLoading(true)
+      fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.BILL_GET_ALL, {
+        method: 'GET',
+        headers: {
+          'accept': 'application/json',
+          'Authorization': currentUser.token,
+        },
+      })
+      .then(response => {
+        return response.json()})
+      .then(data => {
+        // eslint-disable-next-line
+        if(data?.status_code != 200) {
+          openNotificationWithIcon(
+            'error',
+            'Cập nhật không thành công',
+            data?.msg,
+          )
+        } else {
+          setBillData(data?.data || [])
+        }
+        setLoading(false)
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          'error',
+          'Cập nhật không thành công',
+          'Thông tin không được cập nhật!'
+        )
+        setLoading(false)
+      });
+    }
+    // eslint-disable-next-line
+  }, [])
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -255,45 +299,47 @@ const USMBill = ({BillData, env}) => {
 
   return (
     <div>
-      <Table
-        title={() => {
-          return (
-            <Space
-              style={{
-                width: "100%",
-                dispaly: "flex",
-                flexDirection: "row",
-                justifyContent :"space-between",
-                alignItems: "center",
-              }}
-            >
-              <Space>
-                <SnippetsOutlined style={{fontSize: "2rem"}}/> 
-                <span>Danh sách hóa đơn ({Object.keys(billData).length})</span>
-              </Space>
-              <Search
-                placeholder="Nhập sản phẩm"
-                allowClear
-                enterButton="Tìm kiếm nhanh"
-                onSearch={(value) => handleSearch(value)}
+      <Spin spinning={loading}>
+        <Table
+          title={() => {
+            return (
+              <Space
                 style={{
                   width: "100%",
+                  dispaly: "flex",
+                  flexDirection: "row",
+                  justifyContent :"space-between",
+                  alignItems: "center",
                 }}
-              />
-            </Space>
-          )
-        }}
-        bordered
-        columns={columns}
-        dataSource={data}
-        pagination={pagination}
-        onChange={handleTableChange}
-        style={{
-          borderRadius: "10px",
-          boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
-          margin: "10px 0px",
-        }}
-      />
+              >
+                <Space>
+                  <SnippetsOutlined style={{fontSize: "2rem"}}/>
+                  <span>Danh sách hóa đơn ({Object.keys(billData).length})</span>
+                </Space>
+                <Search
+                  placeholder="Nhập sản phẩm"
+                  allowClear
+                  enterButton="Tìm kiếm nhanh"
+                  onSearch={(value) => handleSearch(value)}
+                  style={{
+                    width: "100%",
+                  }}
+                />
+              </Space>
+            )
+          }}
+          bordered
+          columns={columns}
+          dataSource={data}
+          pagination={pagination}
+          onChange={handleTableChange}
+          style={{
+            borderRadius: "10px",
+            boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
+            margin: "10px 0px",
+          }}
+        />
+      </Spin>
       <Modal title="Chi tiết hóa đơn" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={"70%"} destroyOnClose={true}>
         <USMBillDetail Data={[itemSelected, setItemSelected]}/>
       </Modal>

@@ -68,7 +68,6 @@ const USMCart = ({CartData, BillData, CurrentUser, StoreData, env}) => {
 
   const updateData = async (c) => {
     const newProducts = await getProducts(c, env)
-    console.log(newProducts)
     let vals = newProducts.map(product => {
       return {
         key: product?.id,

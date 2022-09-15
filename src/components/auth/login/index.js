@@ -86,7 +86,7 @@ const Login = ({ CartData, CurrentUser, BillData, StoreData, env }) => {
         })
         setCurrentUSer(newCurrentUser)
         setCartData(new Cart({}))
-        setStoreData(store)
+        setStoreData(data?.store)
         window.localStorage.setItem("USM_USER", JSON.stringify(newCurrentUser))
         window.localStorage.setItem("USM_ROLE", newCurrentUser?.role)
         window.localStorage.setItem("USM_CART", JSON.stringify(new Cart({})))
