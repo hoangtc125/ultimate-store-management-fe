@@ -1,4 +1,4 @@
-import { Alert, Calendar, Select, Row, Col, Radio } from 'antd';
+import { Alert, Calendar, Select, Row, Col, Radio, Badge } from 'antd';
 import moment from 'moment';
 import React, { useState } from 'react';
 
@@ -15,10 +15,109 @@ const USMAccountCalendar = ({CurrentUser, env}) => {
     setValue(newValue);
   };
 
+  const getListData = (value) => {
+    let listData;
+  
+    switch (value.date()) {
+      case 8:
+        listData = [
+          {
+            type: 'warning',
+            content: 'This is warning event.',
+          },
+          {
+            type: 'success',
+            content: 'This is usual event.',
+          },
+        ];
+        break;
+  
+      case 10:
+        listData = [
+          {
+            type: 'warning',
+            content: 'This is warning event.',
+          },
+          {
+            type: 'success',
+            content: 'This is usual event.',
+          },
+          {
+            type: 'error',
+            content: 'This is error event.',
+          },
+        ];
+        break;
+  
+      case 15:
+        listData = [
+          {
+            type: 'warning',
+            content: 'This is warning event',
+          },
+          {
+            type: 'success',
+            content: 'This is very long usual event。。....',
+          },
+          {
+            type: 'error',
+            content: 'This is error event 1.',
+          },
+          {
+            type: 'error',
+            content: 'This is error event 2.',
+          },
+          {
+            type: 'error',
+            content: 'This is error event 3.',
+          },
+          {
+            type: 'error',
+            content: 'This is error event 4.',
+          },
+        ];
+        break;
+  
+      default:
+    }
+  
+    return listData || [];
+  };
+  
+  const getMonthData = (value) => {
+    if (value.month() === 9) {
+      return 2022;
+    }
+  };
+
+  const monthCellRender = (value) => {
+    const num = getMonthData(value);
+    return num ? (
+      <div className="notes-month">
+        <section>{num}</section>
+        <span>Backlog number</span>
+      </div>
+    ) : null;
+  };
+
+  const dateCellRender = (value) => {
+    const listData = getListData(value);
+    return (
+      <ul className="events">
+        {listData.map((item) => (
+          <li key={item.content}>
+            <Badge status={item.type} text={item.content} />
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
   return (
     <>
       <Alert message={`Ngày đã chọn: ${selectedValue?.format('DD/MM/YYYY')}`} />
       <Calendar value={value} onSelect={onSelect} onPanelChange={onPanelChange}
+        dateCellRender={dateCellRender} monthCellRender={monthCellRender}
         headerRender={({ value, type, onChange, onTypeChange }) => {
           const start = 0;
           const end = 12;

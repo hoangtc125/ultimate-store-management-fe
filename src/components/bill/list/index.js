@@ -229,7 +229,7 @@ const USMBill = ({CurrentUser, BillData, env}) => {
       key: 'id',
       width: '8%',
       ...getColumnSearchProps('id'),
-      sorter: (a, b) => a.id - b.id,
+      sorter: (a, b) => a.id.localeCompare(b.id),
       sortDirections: ['descend', 'ascend'],
     },
     {
@@ -238,7 +238,7 @@ const USMBill = ({CurrentUser, BillData, env}) => {
       key: 'customer',
       width: '20%',
       ...getColumnSearchProps('customer'),
-      sorter: (a, b) => a.id - b.id,
+      sorter: (a, b) => a?.customer?.name.localeCompare(b?.customer?.name),
       sortDirections: ['descend', 'ascend'],
       render: (_, record) => {
         return record?.customer?.name
@@ -273,7 +273,7 @@ const USMBill = ({CurrentUser, BillData, env}) => {
       dataIndex: 'totalPrice',
       key: 'totalPrice',
       ...getColumnSearchProps('totalPrice'),
-      sorter: (a, b) => a.id - b.id,
+      sorter: (a, b) => a.totalPrice - b.totalPrice,
       sortDirections: ['descend', 'ascend'],
       width: '15%',
       render: (_, record) => {

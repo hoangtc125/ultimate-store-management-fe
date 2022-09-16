@@ -16,19 +16,23 @@ const USMHome = ({CurrentUser, CartData, env}) => {
   const [current, setCurrent] = useState(1);
   // eslint-disable-next-line
   const [currentUser, setCurrentUser] = CurrentUser
+  // eslint-disable-next-line
+  const [pageSize, setPageSize] = useState(12)
   const searchElement = useRef(null)
 
   const onChange = (page) => {
     setCurrent(page);
     if (isMode([MODE.TEST])) {
-      setPageData(products.slice((page - 1) * 12, page * 12))
+      setPageData(products.slice((page - 1) * pageSize, page * pageSize))
+    } else {
+      setPageData(data.slice((page - 1) * pageSize, page * pageSize))
     }
   };
 
   useEffect(() => {
     if (isMode([MODE.TEST])) {
       setData(products)
-      setPageData(products.slice((current - 1) * 12, current * 12))
+      setPageData(products.slice((current - 1) * pageSize, current * pageSize))
     } else {
       fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.PRODUCT_GET_ALL_ACTIVATE, {
         method: 'GET',
@@ -55,7 +59,7 @@ const USMHome = ({CurrentUser, CartData, env}) => {
             return newProductResponse
           })
           setData(vals)
-          setPageData(vals.slice((current - 1) * 12, current * 12))
+          setPageData(vals.slice((current - 1) * pageSize, current * pageSize))
         }
       })
       .catch((error) => {
@@ -72,7 +76,7 @@ const USMHome = ({CurrentUser, CartData, env}) => {
   const handleSearch = (value) => {
     const keyword = value.trim()
     if (!keyword) {
-      setPageData(data.slice((current - 1) * 12, current * 12))
+      setPageData(data.slice((current - 1) * pageSize, current * pageSize))
       return
     }
     const res = data.filter(element => {
@@ -149,7 +153,7 @@ const USMHome = ({CurrentUser, CartData, env}) => {
           />
         }
       </div>
-      <Pagination current={current} onChange={onChange} total={data.length} position={['bottomCenter']}/>
+      <Pagination current={current} onChange={onChange} total={data.length - 1} position={['bottomCenter']}/>
     </div>
   )
 }

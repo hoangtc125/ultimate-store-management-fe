@@ -2,7 +2,7 @@ import USMColumn from "./column";
 import USMLine from "./line";
 import USMPie from "./pie";
 
-const USMChart = () => {
+const USMChart = ({CurrentUser, env}) => {
   return (
     <div
       style={{
@@ -19,14 +19,14 @@ const USMChart = () => {
           width: "60%",
         }}
       >
-        <USMColumn />
+        <USMColumn CurrentUser={CurrentUser} env={env}/>
       </div>
       <div 
         style={{
           width: "30%",
         }}
       >
-        <USMPie />
+        <USMPie CurrentUser={CurrentUser} env={env}/>
       </div>
       <div 
         style={{
@@ -34,7 +34,7 @@ const USMChart = () => {
           margin: "20px 0px",
         }}
       >
-        <USMLine />
+        <USMLine CurrentUser={CurrentUser} env={env}/>
       </div>
     </div>
   )

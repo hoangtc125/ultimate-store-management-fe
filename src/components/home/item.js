@@ -2,6 +2,7 @@ import { Card, Modal } from 'antd';
 import images from '../../assets/images';
 import { useState } from 'react';
 import USMProduct from '../product/detail';
+import { splitMoney } from '../../utils/money';
 const { Meta } = Card;
 
 const USMItemProduct = ({item, CartData, env}) => {
@@ -30,7 +31,22 @@ const USMItemProduct = ({item, CartData, env}) => {
         onClick={showModal}
         cover={<img alt="example" src={item?.images[0] || images.default} />}
       >
-        <Meta title={item?.name} description={item?.nickname.join(", ")} />
+        <Meta 
+          title={
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+              }}
+            >
+              <span>{item?.name}</span>
+              <span>{splitMoney(item?.priceOut)}</span>
+            </div>
+          } 
+          description={item?.nickname.join(", ")}
+        />
       </Card>
       <Modal title="Thông tin sản phẩm" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}
         width={"90%"} 
