@@ -9,9 +9,11 @@ import * as ROLE from '../../../constants/role'
 import * as MODE from '../../../constants/mode'
 import * as API from '../../../constants/api'
 import { isMode } from "../../../utils/check";
+import USMUpload from "../../utils/upload";
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
 const USMCheckout = ({ BillData, Data, Visible, CartData, CurrentUser, StoreData, env }) => {
+  const [usmImages, setUsmImages] = useState([])
   // eslint-disable-next-line
   const [itemSelected, setItemSelected] = Data
   // eslint-disable-next-line
@@ -57,6 +59,7 @@ const USMCheckout = ({ BillData, Data, Visible, CartData, CurrentUser, StoreData
         name: currentUser?.fullname,
         role: currentUser?.role,
       },
+      images: usmImages,
     }
     if (isMode([MODE.TEST])) {
       setBillData(prev => [...prev, newBill])
@@ -349,6 +352,17 @@ const USMCheckout = ({ BillData, Data, Visible, CartData, CurrentUser, StoreData
             </Descriptions.Item>
             <Descriptions.Item>
                 <span>Bằng chữ: <i>{customerTextPriceBack}</i></span>
+            </Descriptions.Item>
+            <Descriptions.Item span={2}>
+              <span>
+                Ảnh minh chứng:
+                <Form.Item
+                  name="images"
+                  label="Danh sách ảnh (Có thể chọn nhiều ảnh khác nhau)"
+                >
+                  <USMUpload usmImages={usmImages} setUsmImages={setUsmImages} env={env}/>
+                </Form.Item>
+              </span>
             </Descriptions.Item>
             <Descriptions.Item span={2}>
               <span>

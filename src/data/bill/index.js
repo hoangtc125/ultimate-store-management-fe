@@ -2,6 +2,7 @@ import Bill from "../../model/bill"
 import Customer from "../../model/customer"
 import store from "../store"
 import * as ROLE from '../../constants/role'
+import images from "../../assets/images"
 import { moneyToText } from "../../utils/money"
 
 let bills = [
@@ -30,6 +31,7 @@ let bills = [
       },
       created_at: "02/09/2022",
       status: "Đã thanh toán",
+      images: [images.default, images.default, images.default]
     }
   ),
   new Bill(
@@ -55,6 +57,7 @@ let bills = [
       created_at: "02/09/2022",
       status: "Nợ",
       note: "Tuần sau trả",
+      images: []
     }
   ),
 ]

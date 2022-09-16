@@ -75,10 +75,12 @@ const USMProduct = ({item, CartData, env}) => {
                         'Sản phẩm đã được thêm vào giỏ hàng!'
                       )
                     }}
+                    // eslint-disable-next-line
+                    disabled={data?.quantity == 0}
                   >
                     Thêm vào giỏ hàng 
                   </Button>
-                  <InputNumber min={1} max={100} defaultValue={1} ref={inputNumberElement} onChange={(value) => {
+                  <InputNumber min={1} max={data?.quantity} defaultValue={1} ref={inputNumberElement} onChange={(value) => {
                     console.log(value)
                   }}
                     style={{
@@ -96,7 +98,12 @@ const USMProduct = ({item, CartData, env}) => {
             <Descriptions.Item label="Thương hiệu">{data?.brand}</Descriptions.Item>
             <Descriptions.Item label="Số lượng">{data?.quantity}</Descriptions.Item>
             <Descriptions.Item label="Trạng thái">
-              <Badge status="processing" text={data?.is_disabled ? <Tag color='red'>Vô hiệu hóa</Tag> : <Tag color='green'>Bình thường</Tag>} />
+              <Badge status="processing" 
+                text={ 
+                  // eslint-disable-next-line
+                  data?.quantity == 0 ? <Tag color='red'>Hết hàng</Tag> : <Tag color='green'>Bình thường</Tag>
+                }
+              />
             </Descriptions.Item>
             <Descriptions.Item label="Tên gọi khác" span={2}>
               {data?.nickname.join(", ")}

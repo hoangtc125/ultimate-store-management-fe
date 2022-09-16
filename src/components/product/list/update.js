@@ -165,7 +165,7 @@ const USMUpdateAccount = ({currentUser, visibleUpdate, setVisibleUpdate, data, s
                 name="images"
                 label="Danh sách ảnh (Có thể chọn nhiều ảnh khác nhau)"
               >
-                <USMUpload usmImages={usmImages} setUsmImages={setUsmImages}/>
+                <USMUpload usmImages={usmImages} setUsmImages={setUsmImages} env={env}/>
               </Form.Item>
             </Col>
           </Row>

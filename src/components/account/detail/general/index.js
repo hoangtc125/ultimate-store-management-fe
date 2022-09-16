@@ -128,7 +128,7 @@ const USMAccountGeneral = ({CurrentUser, env}) => {
               name="avatar"
               label="Ảnh đại diện (Ảnh đầu tiên sẽ được chọn)"
             >
-              <USMUpload usmImages={usmImages} setUsmImages={setUsmImages}/>
+              <USMUpload usmImages={usmImages} setUsmImages={setUsmImages} env={env}/>
             </Form.Item>
           </Col>
         </Row>

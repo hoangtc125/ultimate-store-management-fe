@@ -19,6 +19,7 @@ function Bill (
     },
     status = "",
     note = "",
+    images = []
   }
 ) {
   this.id = id
@@ -32,6 +33,7 @@ function Bill (
   this.seller = seller
   this.status = status
   this.note = note
+  this.images = images
 }
 
 export default Bill

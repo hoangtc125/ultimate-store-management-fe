@@ -1,4 +1,4 @@
-import { Card, Modal } from 'antd';
+import { Card, Modal, Tag } from 'antd';
 import images from '../../assets/images';
 import { useState } from 'react';
 import USMProduct from '../product/detail';
@@ -41,8 +41,21 @@ const USMItemProduct = ({item, CartData, env}) => {
                 flexWrap: "wrap",
               }}
             >
-              <span>{item?.name}</span>
-              <span>{splitMoney(item?.priceOut)}</span>
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  flexWrap: "wrap",
+                }}
+              >
+                {item?.name}
+                {
+                  // eslint-disable-next-line
+                  item?.quantity == 0 ? <Tag color='red'>Hết hàng</Tag> : <Tag color='green'>Còn hàng</Tag>
+                }
+              </div>
+              <span>{splitMoney(item?.priceOut) + " (Còn " + item?.quantity + ")"}</span>
             </div>
           } 
           description={item?.nickname.join(", ")}

@@ -248,23 +248,21 @@ const USMBill = ({CurrentUser, BillData, env}) => {
       title: 'Thời gian tạo',
       dataIndex: 'created_at',
       key: 'created_at',
-      width: '10%',
+      width: '15%',
       ...getColumnSearchProps('created_at'),
       render: (_, record) => {
         return <DatePicker format={dateFormatList} value={moment(record?.created_at, dateFormatList)} disabled />
       }
     },
     {
-      title: 'Sản phẩm đã mua',
-      dataIndex: 'productsDetail',
-      key: 'productsDetail',
-      width: '20%',
-      ...getColumnSearchProps('productsDetail'),
+      title: 'Trạng thái đơn hàng',
+      dataIndex: 'status',
+      key: 'status',
+      width: '15%',
+      ...getColumnSearchProps('status'),
       render: (_, record) => {
         return (
-          (record?.productsDetail || []).map(product => {
-            return product?.name
-          }).join(", ")
+          itemSelected?.status
         )
       }
     },

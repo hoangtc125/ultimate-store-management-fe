@@ -1,4 +1,4 @@
-import { Descriptions, List, Table, DatePicker } from "antd"
+import { Descriptions, List, Table, DatePicker, Image, Space } from "antd"
 import { moneyToText, splitMoney } from '../../../utils/money'
 import moment from 'moment'
 import * as ROLE from '../../../constants/role'
@@ -138,6 +138,14 @@ const USMBillDetail = ({Data, env}) => {
         </Descriptions.Item>
         <Descriptions.Item>
             <span>Bằng chữ: <i>{moneyToText(parseFloat(itemSelected?.customer?.pricePay) - parseFloat(itemSelected?.totalPrice))}</i></span>
+        </Descriptions.Item>
+        <Descriptions.Item span={2}>
+            <span>Ảnh minh chứng: </span>
+            <Space>
+              {itemSelected?.images.map((element, id) => {
+                return <Image key={id} src={element}/>
+              })}
+            </Space>
         </Descriptions.Item>
         <Descriptions.Item span={2}>
             <span>Ghi chú: <i>{itemSelected?.note}</i></span>
