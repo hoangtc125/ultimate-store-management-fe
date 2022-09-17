@@ -4,6 +4,7 @@
     "homepage": "./",
     "private": true,
     "dependencies": {
+        "@ant-design/flowchart": "^1.2.1",
         "@ant-design/icons": "^4.7.0",
         "@ant-design/plots": "^1.2.1",
         "@emotion/react": "^11.10.4",

@@ -15,8 +15,8 @@ const USMColumn = ({CurrentUser, env}) => {
       let fakeData = []
       for (let i = 0; i < 10; i++) {
         fakeData.push({
-          type: 'example ' + i,
-          sales: 100 * Math.random(),
+          date: 'example ' + i,
+          data: 100 * Math.random(),
         })
       }
       setData(fakeData)
@@ -41,8 +41,8 @@ const USMColumn = ({CurrentUser, env}) => {
         } else {
           const newData = data?.data.map(element => {
             return {
-              type: element?.created_at,
-              sales: element?.totalPrice,
+              date: element?.created_at,
+              data: element?.totalPrice,
             }
           })
           setData(newData)
@@ -61,8 +61,8 @@ const USMColumn = ({CurrentUser, env}) => {
 
   const config = {
     data,
-    xField: 'type',
-    yField: 'sales',
+    xField: 'date',
+    yField: 'data',
     label: {
       position: 'middle',
       style: {
@@ -72,7 +72,7 @@ const USMColumn = ({CurrentUser, env}) => {
     },
     xAxis: {
       label: {
-        autoHide: true,
+        autoHide: false,
         autoRotate: false,
       },
     },

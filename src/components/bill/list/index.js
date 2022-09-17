@@ -1,5 +1,5 @@
 import { SearchOutlined, SnippetsOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, DatePicker, Modal, Spin } from 'antd';
+import { Button, Input, Space, Table, DatePicker, Modal, Spin, Tag } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import Highlighter from 'react-highlight-words';
 import { getProducts } from '../../../utils/cart';
@@ -260,9 +260,12 @@ const USMBill = ({CurrentUser, BillData, env}) => {
       key: 'status',
       width: '15%',
       ...getColumnSearchProps('status'),
+      sorter: (a, b) => a?.status.localeCompare(b?.status),
+      sortDirections: ['descend', 'ascend'],
       render: (_, record) => {
         return (
-          itemSelected?.status
+          // eslint-disable-next-line
+          record?.status == "Nợ" ? <Tag color='red'>{record?.status}</Tag> : <Tag color='green'>{record?.status}</Tag>
         )
       }
     },

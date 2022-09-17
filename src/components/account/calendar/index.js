@@ -115,7 +115,6 @@ const USMAccountCalendar = ({CurrentUser, env}) => {
 
   return (
     <>
-      <Alert message={`Ngày đã chọn: ${selectedValue?.format('DD/MM/YYYY')}`} />
       <Calendar value={value} onSelect={onSelect} onPanelChange={onPanelChange}
         dateCellRender={dateCellRender} monthCellRender={monthCellRender}
         headerRender={({ value, type, onChange, onTypeChange }) => {
@@ -154,9 +153,10 @@ const USMAccountCalendar = ({CurrentUser, env}) => {
                 padding: 8,
                 display: "flex",
                 flexDirection: "row",
-                justifyContent: "flex-end",
+                justifyContent: "space-between",
               }}
             >
+              <Alert message={`Ngày đã chọn: ${selectedValue?.format('DD/MM/YYYY')}`} />
               <Row gutter={8}>
                 <Col>
                   <Radio.Group

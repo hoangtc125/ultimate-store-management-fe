@@ -15,8 +15,8 @@ const USMLine = ({CurrentUser, env}) => {
       let fakeData = []
       for (let i = 0; i < 100; i++) {
         fakeData.push({
-          Date: 'example ' + i,
-          scales: 1000 * Math.random(),
+          date: 'example ' + i,
+          data: 1000 * Math.random(),
         })
       }
       setData(fakeData)
@@ -41,8 +41,8 @@ const USMLine = ({CurrentUser, env}) => {
         } else {
           const newData = data?.data.map(element => {
             return {
-              Date: element?.created_at,
-              scales: element?.totalPrice,
+              date: element?.created_at,
+              data: element?.totalPrice,
             }
           })
           setData(newData)
@@ -62,8 +62,8 @@ const USMLine = ({CurrentUser, env}) => {
   const config = {
     data,
     padding: 'auto',
-    xField: 'Date',
-    yField: 'scales',
+    xField: 'date',
+    yField: 'data',
     xAxis: {
       tickCount: 50,
     },

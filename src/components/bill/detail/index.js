@@ -143,7 +143,7 @@ const USMBillDetail = ({Data, env}) => {
             <span>Ảnh minh chứng: </span>
             <Space>
               {itemSelected?.images.map((element, id) => {
-                return <Image key={id} src={element}/>
+                return <Image key={id} src={element} width={200}/>
               })}
             </Space>
         </Descriptions.Item>

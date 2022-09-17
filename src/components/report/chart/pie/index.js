@@ -15,8 +15,8 @@ const USMPie = ({CurrentUser, env}) => {
       let fakeData = []
       for (let i = 0; i < 10; i++) {
         fakeData.push({
-          type: 'example ' + i,
-          value: 100 * Math.random(),
+          date: 'example ' + i,
+          data: 100 * Math.random(),
         })
       }
       setData(fakeData)
@@ -41,8 +41,8 @@ const USMPie = ({CurrentUser, env}) => {
         } else {
           const newData = data?.data.map(element => {
             return {
-              type: element?.created_at,
-              value: element?.totalPrice,
+              date: element?.created_at,
+              data: element?.totalPrice,
             }
           })
           setData(newData)
@@ -62,8 +62,8 @@ const USMPie = ({CurrentUser, env}) => {
   const config = {
     appendPadding: 10,
     data,
-    angleField: 'value',
-    colorField: 'type',
+    angleField: 'data',
+    colorField: 'date',
     radius: 0.9,
     label: {
       type: 'inner',
@@ -76,7 +76,7 @@ const USMPie = ({CurrentUser, env}) => {
     },
     interactions: [
       {
-        type: 'element-active',
+        date: 'element-active',
       },
     ],
     

@@ -18,6 +18,7 @@ import {
   ShopOutlined,
   IdcardOutlined,
   FileDoneOutlined,
+  SplitCellsOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Image, Switch, Select } from 'antd';
 import React, { useState } from 'react';
@@ -113,7 +114,8 @@ const USMSideBar = ({Direction, ComponentSize}) => {
       ]),
     ]),
     isRole([ROLE.ADMIN]) && getItem('Cài đặt', 'setting', <SettingOutlined />, [
-      getItem(<Link to={URL.SETTING_STORE} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Cửa hàng</span><ShopOutlined /></Link>, 'me-setting'),
+      getItem(<Link to={URL.SETTING_STORE} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Cửa hàng</span><ShopOutlined /></Link>, 'store-setting'),
+      getItem(<Link to={URL.DESIGN_STORE} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Thiết kế </span><SplitCellsOutlined /></Link>, 'design-setting'),
     ]),
     getItem('Tài khoản', 'me', <UserOutlined />, [
       getItem(<Link to={URL.ACCOUNT_DETAIL} style={{display:"flex", alignItems: "center", justifyContent: "space-between"}}><span>Trang cá nhân</span><IdcardOutlined /></Link>, 'me-profile'),

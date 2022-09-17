@@ -3,7 +3,8 @@ import { Routes, Route } from 'react-router-dom';
 import { Page } from './constants/router';
 import { ConfigProvider } from 'antd';
 import moment from 'moment';
-import viVN from 'antd/es/locale/vi_VN';
+import vi_VN from 'antd/es/locale/vi_VN';
+import en_GB from 'antd/es/locale/en_GB';
 import 'moment/locale/vi';
 import './App.css';
 import * as MODE from './constants/mode'
@@ -70,7 +71,7 @@ function App() {
           const Role = page?.element?.role
           return <Route path={page.url} key={key} element={
             <ConfigProvider 
-              locale={viVN}
+              locale={vi_VN || en_GB}
               direction={direction}
               componentSize={componentSize}
             >

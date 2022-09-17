@@ -17,6 +17,7 @@ import USMHeader from '../Layouts/components/header'
 import USMBill from '../components/bill/list'
 import USMAccountDetail from '../components/account/detail'
 import USMStore from '../components/setting/store'
+import USMFlowChart from '../components/setting/design'
 
 function Mapping (
     {
@@ -132,6 +133,15 @@ export const Page = [
             layout: DefaultLayout,
             header: USMHeader,
             component: USMStore,
+            role: [ROLE.ADMIN],
+        },
+    }),
+    new Mapping({
+        url: URL.DESIGN_STORE,
+        element: {
+            layout: DefaultLayout,
+            header: USMHeader,
+            component: USMFlowChart,
             role: [ROLE.ADMIN],
         },
     }),
