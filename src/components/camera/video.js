@@ -11,7 +11,9 @@ const USMVideo = ({ipCamera, loadings, enterLoading, env}) => {
   }
 
   useEffect(() => {
-    document.getElementById("browser-video").firstChild.src = "http://" + ipCamera + env.REACT_APP_PATH_VIDEO
+    if (ipCamera !== "Online") {
+      document.getElementById("browser-video").firstChild.src = "http://" + ipCamera + env.REACT_APP_PATH_VIDEO
+    }
     // eslint-disable-next-line
   }, [ipCamera])
 
@@ -92,7 +94,7 @@ const USMVideo = ({ipCamera, loadings, enterLoading, env}) => {
         <VideoCameraOutlined /> 
         <span>Màn hình trực tuyến</span>
       </Space>
-      <Image
+        {ipCamera !== "Online" && <Image
           preview={false} 
           style={{
             position: "relative",
@@ -104,7 +106,29 @@ const USMVideo = ({ipCamera, loadings, enterLoading, env}) => {
           }}
           id="browser-video" src={"http://" + ipCamera + env.REACT_APP_PATH_VIDEO}
           onError={() => handleErrorVideo()}
-        />
+        />}
+        {ipCamera === "Online" &&
+          <div className="iv-embed" 
+            style={{
+              position: "relative",
+              padding: 10,
+              width: "100%",
+              minHeight: "300px",
+              borderRadius: "10px",
+              boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
+            }}
+          >
+            <div className="iv-v">
+              <iframe title='Cloud Camera' className="iv-i" src="https://open.ivideon.com/embed/v3/?server=100-wvMxdkAPdfUXMxURvrHgGf&autoplay=1&amp;camera=0&amp;width=&amp;height=&amp;lang=en" frameBorder="0" allowFullScreen
+                style={{
+                  width: "100%",
+                  height: "300px"
+                }}
+              >
+              </iframe>
+            </div>
+          </div>
+        }
       <Space
         style={{
           display: "flex",

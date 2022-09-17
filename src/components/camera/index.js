@@ -6,7 +6,7 @@ import USMIntro from './intro';
 
 const USMCamera = ({setImagesFromCamera, env}) => {
   // eslint-disable-next-line 
-  const [ipCamera, setIpCamera] = useState(window.localStorage.getItem("USM_IP_CAMERA"))
+  const [ipCamera, setIpCamera] = useState(window.localStorage.getItem("USM_IP_CAMERA") || "Online")
   const [images, setImages] = useState([])
   const [loadings, setLoadings] = useState([]);
 
