@@ -2,12 +2,32 @@ import { Descriptions, List, Table, DatePicker, Image, Space } from "antd"
 import { moneyToText, splitMoney } from '../../../utils/money'
 import moment from 'moment'
 import * as ROLE from '../../../constants/role'
+import { useEffect, useState } from "react";
+import { getProducts } from "../../../utils/cart";
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
 const USMBillDetail = ({Data, env}) => {
   // eslint-disable-next-line
   const [itemSelected, setItemSelected] = Data
+  const [data, setData] = useState()
 
+  const getDetail = async () => {
+    const newProducts = await getProducts(itemSelected, env)
+    let vals = newProducts.map(product => {
+      return {
+        key: product?.id,
+        itemQuantity: itemSelected.products[product?.id],
+        itemSubPrice: itemSelected.products[product?.id] * product?.priceOut,
+        ...product,
+      }
+    })
+    setData({...itemSelected, productsDetail: vals})
+  }
+
+  useEffect(() => {
+    getDetail()
+    // eslint-disable-next-line
+  }, [itemSelected])
 
   const columns = [
     {
@@ -62,52 +82,52 @@ const USMBillDetail = ({Data, env}) => {
         <Descriptions.Item>
           <List>
             <List.Item>
-              Cửa hàng: {itemSelected?.store?.name} 
+              Cửa hàng: {data?.store?.name} 
             </List.Item>
             <List.Item>
-              Địa chỉ: {itemSelected?.store?.address}
+              Địa chỉ: {data?.store?.address}
             </List.Item>
             <List.Item>
-              Liên hệ: {itemSelected?.store?.owner} - SĐT: {itemSelected?.store?.phone}
-            </List.Item>
-          </List>
-        </Descriptions.Item>
-        <Descriptions.Item>
-          <List>
-            <List.Item>
-              Khách hàng: {itemSelected?.customer?.name} 
-            </List.Item>
-            <List.Item>
-              Địa chỉ: {itemSelected?.customer?.address}
-            </List.Item>
-            <List.Item>
-              SĐT: {itemSelected?.customer?.phone}
+              Liên hệ: {data?.store?.owner} - SĐT: {data?.store?.phone}
             </List.Item>
           </List>
         </Descriptions.Item>
         <Descriptions.Item>
           <List>
             <List.Item>
-              Mã đơn hàng: <strong>{itemSelected?.id}</strong>
+              Khách hàng: {data?.customer?.name} 
             </List.Item>
             <List.Item>
-              Trạng thái đơn hàng: <strong>{itemSelected?.status}</strong>
+              Địa chỉ: {data?.customer?.address}
             </List.Item>
             <List.Item>
-              Ngày mua: <DatePicker format={dateFormatList} value={moment(itemSelected?.created_at, dateFormatList)} disabled/>
+              SĐT: {data?.customer?.phone}
             </List.Item>
           </List>
         </Descriptions.Item>
         <Descriptions.Item>
           <List>
             <List.Item>
-              Người bán:  {itemSelected?.seller?.name} 
+              Mã đơn hàng: <strong>{data?.id}</strong>
             </List.Item>
             <List.Item>
-              Mã số : {itemSelected?.seller?.id}
+              Trạng thái đơn hàng: <strong>{data?.status}</strong>
             </List.Item>
             <List.Item>
-              Chức vụ: {itemSelected?.seller?.role === ROLE.ADMIN ? "Chủ cửa hàng" : "Nhân viên bán hàng"}
+              Ngày mua: <DatePicker format={dateFormatList} value={moment(data?.created_at, dateFormatList)} disabled/>
+            </List.Item>
+          </List>
+        </Descriptions.Item>
+        <Descriptions.Item>
+          <List>
+            <List.Item>
+              Người bán:  {data?.seller?.name} 
+            </List.Item>
+            <List.Item>
+              Mã số : {data?.seller?.id}
+            </List.Item>
+            <List.Item>
+              Chức vụ: {data?.seller?.role === ROLE.ADMIN ? "Chủ cửa hàng" : "Nhân viên bán hàng"}
             </List.Item>
           </List>
         </Descriptions.Item>
@@ -116,39 +136,39 @@ const USMBillDetail = ({Data, env}) => {
             columns={columns}
             pagination={false}
             width={"100%"}
-            dataSource={itemSelected?.productsDetail}
+            dataSource={data?.productsDetail}
             bordered
             title={() => 'Danh sách sản phẩm đã mua'}
           />
         </Descriptions.Item>
         <Descriptions.Item>
-            <span>Tổng tiền: <strong>{splitMoney(itemSelected?.totalPrice)}</strong></span>
+            <span>Tổng tiền: <strong>{splitMoney(data?.totalPrice)}</strong></span>
         </Descriptions.Item>
         <Descriptions.Item>
-            <span>Bằng chữ: <i>{itemSelected?.textPrice}</i></span>
+            <span>Bằng chữ: <i>{data?.textPrice}</i></span>
         </Descriptions.Item>
         <Descriptions.Item>
-            <span>Tiền khách trả: <strong>{splitMoney(itemSelected?.customer?.pricePay)}</strong></span>
+            <span>Tiền khách trả: <strong>{splitMoney(data?.customer?.pricePay)}</strong></span>
         </Descriptions.Item>
         <Descriptions.Item>
-            <span>Bằng chữ: <i>{moneyToText(itemSelected?.customer?.pricePay)}</i></span>
+            <span>Bằng chữ: <i>{moneyToText(data?.customer?.pricePay)}</i></span>
         </Descriptions.Item>
         <Descriptions.Item>
-            <span>Tiền trả khách: <strong>{splitMoney(parseFloat(itemSelected?.customer?.pricePay) - parseFloat(itemSelected?.totalPrice))}</strong></span>
+            <span>Tiền trả khách: <strong>{splitMoney(parseFloat(data?.customer?.pricePay) - parseFloat(data?.totalPrice))}</strong></span>
         </Descriptions.Item>
         <Descriptions.Item>
-            <span>Bằng chữ: <i>{moneyToText(parseFloat(itemSelected?.customer?.pricePay) - parseFloat(itemSelected?.totalPrice))}</i></span>
+            <span>Bằng chữ: <i>{moneyToText(parseFloat(data?.customer?.pricePay) - parseFloat(data?.totalPrice))}</i></span>
         </Descriptions.Item>
         <Descriptions.Item span={2}>
             <span>Ảnh minh chứng: </span>
             <Space>
-              {itemSelected?.images.map((element, id) => {
+              {data?.images.map((element, id) => {
                 return <Image key={id} src={element} width={200}/>
               })}
             </Space>
         </Descriptions.Item>
         <Descriptions.Item span={2}>
-            <span>Ghi chú: <i>{itemSelected?.note}</i></span>
+            <span>Ghi chú: <i>{data?.note}</i></span>
         </Descriptions.Item>
       </Descriptions>
     </div>

@@ -80,6 +80,8 @@ function App() {
                   <Header 
                     CartData={[cartData, setCartData]} 
                     CurrentUser={[currentUser, setCurrentUSer]}
+                    BillData={[billData, setBillData]} 
+                    StoreData={[storeData, setStoreData]}
                     env={env}
                   />
                 }

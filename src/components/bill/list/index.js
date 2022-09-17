@@ -2,7 +2,6 @@ import { SearchOutlined, SnippetsOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table, DatePicker, Modal, Spin, Tag } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import Highlighter from 'react-highlight-words';
-import { getProducts } from '../../../utils/cart';
 import moment from 'moment'
 import USMBillDetail from '../detail';
 import { splitMoney } from '../../../utils/money';
@@ -105,26 +104,11 @@ const USMBill = ({CurrentUser, BillData, env}) => {
     )
   }
 
-  const updateData = async (b) => {
-    let newBillData = []
-    for (let i = 0; i < b.length; i++) {
-      const newProducts = await getProducts(b[i], env) || []
-      let vals = newProducts.map(product => {
-        return {
-          key: product?.id,
-          itemQuantity: b[i].products[product?.id],
-          itemSubPrice: b[i].products[product?.id] * product?.priceOut,
-          ...product,
-        }
-      })
-      newBillData.push({key: b[i].id ,...b[i], productsDetail: vals})
-    }
-    console.log(newBillData)
-    setData(newBillData)
-  }
-  
   useEffect(() => {
-    updateData(billData)
+    const newBillData = billData.map(element => {
+      return {key: element.id, ...element}
+    })
+    setData(newBillData)
     // eslint-disable-next-line
   }, [billData])
 
@@ -342,7 +326,7 @@ const USMBill = ({CurrentUser, BillData, env}) => {
         />
       </Spin>
       <Modal title="Chi tiết hóa đơn" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={"70%"} destroyOnClose={true}>
-        <USMBillDetail Data={[itemSelected, setItemSelected]}/>
+        <USMBillDetail Data={[itemSelected, setItemSelected]} env={env}/>
       </Modal>
     </div>
   );

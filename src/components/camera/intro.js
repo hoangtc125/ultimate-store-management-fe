@@ -1,189 +1,213 @@
 import { Image, Button, message, Steps, Card, Alert } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import images from '../../assets/images';
 import USMIP from './ip';
+import * as MODE from '../../constants/mode'
+import * as API from '../../constants/api'
 import { Tabs } from 'antd';
+import { isMode } from '../../utils/check';
 const { TabPane } = Tabs;
 const { Step } = Steps;
 
-const steps1 = [
-  {
-    title: 'Bước 1',
-    content: 
-      <div
-        style={{
-          margin: "20px",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-around",
-          alignItems: "center",
-          height: "100px",
-        }}
-      >
-        <span>Cài đăt phần mềm <strong>IP Camera</strong> từ <strong>CH Play</strong> hoặc <strong>App Store</strong></span>
-        <Image src={images.ipcamera} height={100} preview={false}/>
-      </div>,
-  },
-  {
-    title: 'Bước 2',
-    content: 
-    <div
-      style={{
-        margin: "20px",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-around",
-        alignItems: "center",
-        height: "100px",
-      }}
-    >
-      <span>Quét mã <strong>QR sau</strong> và truy cập đường <strong>link</strong> nhận được</span>
-      <Image src={images.qrcode} height={150} preview={false}/>
-    </div>,
-  },
-  {
-    title: 'Bước 3',
-    content: 
-    <div
-      style={{
-        margin: "20px",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-around",
-        alignItems: "center",
-        height: "100px",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <span>Truy cập <strong>IP Camera</strong>, chọn <strong>Start server</strong></span>
-        <span>tại kí hiệu <strong>3 chấm</strong> trên góc phải màn hình</span>
-      </div>
-      <Image src={images.ipstart} height={130} preview={false}/>
-    </div>,
-  },
-  {
-    title: 'Bước 4',
-    content: 
-    <div
-      style={{
-        margin: "20px",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-around",
-        alignItems: "center",
-        height: "100px",
-      }}
-    >
-      <span>Chọn thiết bị của bạn tại ô <strong>Chọn thiết bị kết nối Camera</strong></span>
-      <Image src={images.ipconnect} height={130} preview={false}/>
-    </div>,
-  },
-];
-
-const steps2 = [
-  {
-    title: 'Bước 1',
-    content: 
-      <div
-        style={{
-          margin: "20px",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-around",
-          alignItems: "center",
-          height: "100px",
-        }}
-      >
-        <span>Cài đăt phần mềm <strong>IP Camera</strong> từ <strong>CH Play</strong> hoặc <strong>App Store</strong></span>
-        <Image src={images.ipcamera} height={100} preview={false}/>
-      </div>,
-  },
-  {
-    title: 'Bước 2',
-    content: 
-    <div
-      style={{
-        margin: "20px",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-around",
-        alignItems: "center",
-        height: "100px",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <span>Truy cập <strong>IP Camera</strong>, chọn <strong>Start server</strong></span>
-        <span>tại kí hiệu <strong>3 chấm</strong> trên góc phải màn hình</span>
-      </div>
-      <Image src={images.ipstart} height={130} preview={false}/>
-    </div>,
-  },
-  {
-    title: 'Bước 3',
-    content: 
-    <div
-      style={{
-        margin: "20px",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-around",
-        alignItems: "center",
-        height: "100px",
-      }}
-    >
-      <span>Lấy mã số <strong>IPv4</strong> bên dưới màn hình thiết bị đang sử dụng <strong>IP Camera</strong>, ví dụ: 192.168.1.222</span>
-      <Image src={images.ipv4} height={100} preview={false}/>
-    </div>,
-  },
-  {
-    title: 'Bước 4',
-    content: 
-    <div
-      style={{
-        margin: "20px",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-around",
-        alignItems: "center",
-        height: "100px",
-      }}
-    >
-      <span>Chọn ô <strong>Chọn thiết bị kết nối Camera</strong> và thêm mới mã số vừa lấy được</span>
-      <Image src={images.ipinput} height={130} preview={false}/>
-    </div>,
-  },
-  {
-    title: 'Bước 5',
-    content: 
-    <div
-      style={{
-        margin: "20px",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-around",
-        alignItems: "center",
-        height: "100px",
-      }}
-    >
-      <span>Trong ô <strong>Chọn thiết bị kết nối Camera</strong>, chọn mã số bạn vừa thêm mới</span>
-      <Image src={images.ipchoose} height={130} preview={false}/>
-    </div>,
-  },
-];
-
-const StepsIntro = () => {
+const StepsIntro = ({env}) => {
   const [current1, setCurrent1] = useState(0);
   const [current2, setCurrent2] = useState(0);
+  const [qr, setQr] = useState(images.qrcode)
+
+  useEffect(() => {
+    if (isMode([MODE.TEST])) {
+      setQr(images.qrcode)
+    } else {
+      fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.CAMERA_QR, {
+        method: 'GET',
+        headers: {
+          'accept': 'application/json',
+        },
+      })
+      .then(response => {
+        return response.json()})
+      .then(data => {
+        setQr("data:image/png;base64," + data?.data)
+      })
+      .catch((error) => {console.log(error)})
+    }
+    // eslint-disable-next-line
+  }, [])
+
+  const steps1 = [
+    {
+      title: 'Bước 1',
+      content: 
+        <div
+          style={{
+            margin: "20px",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-around",
+            alignItems: "center",
+            height: "100px",
+          }}
+        >
+          <span>Cài đăt phần mềm <strong>IP Camera</strong> từ <strong>CH Play</strong> hoặc <strong>App Store</strong></span>
+          <Image src={images.ipcamera} height={100} preview={false}/>
+        </div>,
+    },
+    {
+      title: 'Bước 2',
+      content: 
+      <div
+        style={{
+          margin: "20px",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+          height: "100px",
+        }}
+      >
+        <span>Quét mã <strong>QR sau</strong> và truy cập đường <strong>link</strong> nhận được</span>
+        <Image src={qr} height={150} preview={false}/>
+      </div>,
+    },
+    {
+      title: 'Bước 3',
+      content: 
+      <div
+        style={{
+          margin: "20px",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+          height: "100px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <span>Truy cập <strong>IP Camera</strong>, chọn <strong>Start server</strong></span>
+          <span>tại kí hiệu <strong>3 chấm</strong> trên góc phải màn hình</span>
+        </div>
+        <Image src={images.ipstart} height={130} preview={false}/>
+      </div>,
+    },
+    {
+      title: 'Bước 4',
+      content: 
+      <div
+        style={{
+          margin: "20px",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+          height: "100px",
+        }}
+      >
+        <span>Chọn thiết bị của bạn tại ô <strong>Chọn thiết bị kết nối Camera</strong></span>
+        <Image src={images.ipconnect} height={130} preview={false}/>
+      </div>,
+    },
+  ];
+  
+  const steps2 = [
+    {
+      title: 'Bước 1',
+      content: 
+        <div
+          style={{
+            margin: "20px",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-around",
+            alignItems: "center",
+            height: "100px",
+          }}
+        >
+          <span>Cài đăt phần mềm <strong>IP Camera</strong> từ <strong>CH Play</strong> hoặc <strong>App Store</strong></span>
+          <Image src={images.ipcamera} height={100} preview={false}/>
+        </div>,
+    },
+    {
+      title: 'Bước 2',
+      content: 
+      <div
+        style={{
+          margin: "20px",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+          height: "100px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <span>Truy cập <strong>IP Camera</strong>, chọn <strong>Start server</strong></span>
+          <span>tại kí hiệu <strong>3 chấm</strong> trên góc phải màn hình</span>
+        </div>
+        <Image src={images.ipstart} height={130} preview={false}/>
+      </div>,
+    },
+    {
+      title: 'Bước 3',
+      content: 
+      <div
+        style={{
+          margin: "20px",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+          height: "100px",
+        }}
+      >
+        <span>Lấy mã số <strong>IPv4</strong> bên dưới màn hình thiết bị đang sử dụng <strong>IP Camera</strong>, ví dụ: 192.168.1.222</span>
+        <Image src={images.ipv4} height={100} preview={false}/>
+      </div>,
+    },
+    {
+      title: 'Bước 4',
+      content: 
+      <div
+        style={{
+          margin: "20px",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+          height: "100px",
+        }}
+      >
+        <span>Chọn ô <strong>Chọn thiết bị kết nối Camera</strong> và thêm mới mã số vừa lấy được</span>
+        <Image src={images.ipinput} height={130} preview={false}/>
+      </div>,
+    },
+    {
+      title: 'Bước 5',
+      content: 
+      <div
+        style={{
+          margin: "20px",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+          height: "100px",
+        }}
+      >
+        <span>Trong ô <strong>Chọn thiết bị kết nối Camera</strong>, chọn mã số bạn vừa thêm mới</span>
+        <Image src={images.ipchoose} height={130} preview={false}/>
+      </div>,
+    },
+  ];
 
   const next1 = () => {
     setCurrent1(current1 + 1);
@@ -323,7 +347,7 @@ const USMIntro = ({ setIpCamera, env }) => {
         justifyContent: "space-between",
       }}
     >
-      <StepsIntro/>
+      <StepsIntro env={env}/>
       <div
         style={{
           display: "flex",

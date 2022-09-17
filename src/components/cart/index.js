@@ -223,7 +223,7 @@ const USMCart = ({CartData, BillData, CurrentUser, StoreData, env}) => {
       sorter: (a, b) => a.itemQuantity - b.itemQuantity,
       sortDirections: ['descend', 'ascend'],
       render: (_, record) => {
-        return <InputNumber min={1} max={100} value={record.itemQuantity} onChange={async (value) => {
+        return <InputNumber min={1} max={record.quantity} value={record.itemQuantity} onChange={async (value) => {
           let newCart = {...cartData}
           newCart.products[record.id] = value
           setCartData(newCart)
@@ -337,34 +337,51 @@ const USMCart = ({CartData, BillData, CurrentUser, StoreData, env}) => {
                   <i>{moneyToText(totalPrice)}</i>
                 </Space>
               </Space>
-              <Button type='primary' danger 
-                icon={<SafetyCertificateOutlined 
-                style={{fontSize: "1.5rem"}}/>}
-                onClick={() => {
-                  const newBill = new Bill({
-                    id: billData.length + 1,
-                    products: cartData.products,
-                    productsDetail: data,
-                    totalPrice: totalPrice,
-                    textPrice: moneyToText(totalPrice),
-                    store: storeData,
-                    customer: new Customer({}),
-                    created_at: new Date().toLocaleDateString('en-GB'),
-                  })
-                  setBill(newBill)
-                  if(data.length === 0) {
-                    openNotificationWithIcon(
-                      'error',
-                      'Không thể thanh toán',
-                      'Không có sản phẩm nào trong giỏ hàng!'
-                    )
-                  } else {
-                    showDrawer()
+              <Space>
+                <Button type='secondary' danger 
+                  icon={
+                    <SafetyCertificateOutlined 
+                      style={{fontSize: "1.5rem"}}
+                    />
                   }
-                }}
-              > 
-                Thanh toán
-              </Button>
+                  onClick={() => {
+
+                  }}
+                > 
+                  Trả nợ
+                </Button>
+                <Button type='primary' danger 
+                  icon={
+                    <SafetyCertificateOutlined 
+                      style={{fontSize: "1.5rem"}}
+                    />
+                  }
+                  onClick={() => {
+                    const newBill = new Bill({
+                      id: billData.length + 1,
+                      products: cartData.products,
+                      productsDetail: data,
+                      totalPrice: totalPrice,
+                      textPrice: moneyToText(totalPrice),
+                      store: storeData,
+                      customer: new Customer({}),
+                      created_at: new Date().toLocaleDateString('en-GB'),
+                    })
+                    setBill(newBill)
+                    if(data.length === 0) {
+                      openNotificationWithIcon(
+                        'error',
+                        'Không thể thanh toán',
+                        'Không có sản phẩm nào trong giỏ hàng!'
+                      )
+                    } else {
+                      showDrawer()
+                    }
+                  }}
+                > 
+                  Thanh toán
+                </Button>
+              </Space>
             </div>
           )
         }}

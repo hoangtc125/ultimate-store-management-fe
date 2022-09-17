@@ -1,7 +1,8 @@
-import { Statistic, Descriptions, PageHeader, Tag, Image, InputNumber, DatePicker } from 'antd';
+import { Statistic, Descriptions, PageHeader, Tag, Image, InputNumber, DatePicker, Space, Button } from 'antd';
 import {
   ShoppingCartOutlined,
   TrademarkOutlined,
+  SafetyCertificateOutlined
 } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import images from '../../../assets/images'
@@ -10,14 +11,28 @@ import { moneyToText, splitMoney,  } from '../../../utils/money';
 import { Link } from 'react-router-dom';
 import * as URL from '../../../constants/url'
 import moment from 'moment'
+import USMCheckout from '../../../components/cart/checkout';
+import openNotificationWithIcon from '../../../utils/notification';
+import Customer from '../../../model/customer';
+import Bill from '../../../model/bill';
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const Header = ({ CartData, CurrentUser, env }) => {
+const Header = ({CartData, BillData, CurrentUser, StoreData, env}) => {
   const [data, setData] = useState([])
   const [cartData, setCartData] = CartData
   // eslint-disable-next-line
   const [currentUser, setCurrentUSer] = CurrentUser
   const [totalPrice, setTotalPrice] = useState(0)
+  // eslint-disable-next-line 
+  const [billData, setBillData] = BillData
+  // eslint-disable-next-line 
+  const [storeData, setStoreData] = StoreData
+  const [bill, setBill] = useState()
+  const [visible, setVisible] = useState(false);
+
+  const showDrawer = () => {
+    setVisible(true);
+  };
 
   const updateData = async (c) => {
     const newProducts = await getProducts(c, env)
@@ -44,7 +59,62 @@ const Header = ({ CartData, CurrentUser, env }) => {
 
   const renderContent = () => (
     <div>
-      <Link to={URL.CART}><Tag color="error" icon={<ShoppingCartOutlined style={{fontSize: "2rem"}}/>}><strong>Giỏ hàng hiện tại ({Object.keys(cartData?.products || []).length})</strong></Tag></Link>
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Link to={URL.CART}><Tag color="error" icon={<ShoppingCartOutlined style={{fontSize: "2rem"}}/>}><strong>Giỏ hàng hiện tại ({Object.keys(cartData?.products || []).length})</strong></Tag></Link>
+        <Space>
+          <Button type='secondary' danger 
+            icon={
+              <SafetyCertificateOutlined 
+                style={{fontSize: "1.5rem"}}
+              />
+            }
+            onClick={() => {
+
+            }}
+          > 
+            Trả nợ
+          </Button>
+          <Button type='primary' danger 
+            icon={
+              <SafetyCertificateOutlined 
+                style={{fontSize: "1.5rem"}}
+              />
+            }
+            onClick={() => {
+              const newBill = new Bill({
+                id: billData.length + 1,
+                products: cartData.products,
+                productsDetail: data,
+                totalPrice: totalPrice,
+                textPrice: moneyToText(totalPrice),
+                store: storeData,
+                customer: new Customer({}),
+                created_at: new Date().toLocaleDateString('en-GB'),
+              })
+              setBill(newBill)
+              if(data.length === 0) {
+                openNotificationWithIcon(
+                  'error',
+                  'Không thể thanh toán',
+                  'Không có sản phẩm nào trong giỏ hàng!'
+                )
+              } else {
+                showDrawer()
+              }
+            }}
+          > 
+            Thanh toán
+          </Button>
+        </Space>
+      </div>
       <div
         style={{
           width: "100%",
@@ -75,7 +145,7 @@ const Header = ({ CartData, CurrentUser, env }) => {
               >
                 <span>Tên: {product.name}</span>
                 <span>Số lượng: {
-                  <InputNumber min={0} max={100} value={product.itemQuantity} 
+                  <InputNumber min={0} max={product.quantity} value={product.itemQuantity} 
                     bordered={true}
                     onChange={(value) => {
                       let newCart = {...cartData}
@@ -224,6 +294,15 @@ const Header = ({ CartData, CurrentUser, env }) => {
           </Content>
         </div>
       </PageHeader>
+      <USMCheckout 
+        BillData={BillData} 
+        Data={[bill, setBill]} 
+        Visible={[visible, setVisible]} 
+        CartData={CartData} 
+        CurrentUser={CurrentUser}
+        StoreData={StoreData}
+        env={env}
+      />
     </div>
   )
 };

@@ -119,7 +119,7 @@ const USMVideo = ({ipCamera, loadings, enterLoading, env}) => {
             }}
           >
             <div className="iv-v">
-              <iframe title='Cloud Camera' className="iv-i" src="https://open.ivideon.com/embed/v3/?server=100-wvMxdkAPdfUXMxURvrHgGf&autoplay=1&amp;camera=0&amp;width=&amp;height=&amp;lang=en" frameBorder="0" allowFullScreen
+              <iframe title='Cloud Camera' className="iv-i" src="https://open.ivideon.com/embed/v3/?server=100-wvMxdkAPdfUXMxURvrHgGf&amp;camera=0&amp;width=&amp;height=&amp;lang=en" frameBorder="0" allowFullScreen
                 style={{
                   width: "100%",
                   height: "300px"
