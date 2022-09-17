@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/ultimate-store-management-fe/static/css/main.5cb5a1dd.css",
-    "main.js": "/ultimate-store-management-fe/static/js/main.216e6364.js",
-    "static/js/787.bf30905a.chunk.js": "/ultimate-store-management-fe/static/js/787.bf30905a.chunk.js",
+    "main.css": "/ultimate-store-management-fe/static/css/main.72aa1247.css",
+    "main.js": "/ultimate-store-management-fe/static/js/main.851fe8f3.js",
+    "static/js/27.4355bab8.chunk.js": "/ultimate-store-management-fe/static/js/27.4355bab8.chunk.js",
     "static/media/avatar.jpg": "/ultimate-store-management-fe/static/media/avatar.0dc0ec31f1514a15e503.jpg",
     "static/media/logo.png": "/ultimate-store-management-fe/static/media/logo.76b8d48796cf4aed0e3d.png",
     "static/media/logolong.png": "/ultimate-store-management-fe/static/media/logolong.efc30a570f1a82e4f4e2.png",
@@ -13,13 +13,10 @@
     "static/media/ipstart.jpg": "/ultimate-store-management-fe/static/media/ipstart.322b3ce0a0794804b8c6.jpg",
     "static/media/ipinput.png": "/ultimate-store-management-fe/static/media/ipinput.bdc2370dc4b87012b1f1.png",
     "static/media/ipconnect.png": "/ultimate-store-management-fe/static/media/ipconnect.a6de48d3fbbd5c624eda.png",
-    "index.html": "/ultimate-store-management-fe/index.html",
-    "main.5cb5a1dd.css.map": "/ultimate-store-management-fe/static/css/main.5cb5a1dd.css.map",
-    "main.216e6364.js.map": "/ultimate-store-management-fe/static/js/main.216e6364.js.map",
-    "787.bf30905a.chunk.js.map": "/ultimate-store-management-fe/static/js/787.bf30905a.chunk.js.map"
+    "index.html": "/ultimate-store-management-fe/index.html"
   },
   "entrypoints": [
-    "static/css/main.5cb5a1dd.css",
-    "static/js/main.216e6364.js"
+    "static/css/main.72aa1247.css",
+    "static/js/main.851fe8f3.js"
   ]
 }
