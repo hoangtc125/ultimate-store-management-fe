@@ -17,9 +17,7 @@ const USMIP = ({currentUser, ipCamera, setIpCamera, env}) => {
   const [socket, setSocket] = useState(io(API.SOCKET + env.REACT_APP_BACKEND_PORT, {path: env.REACT_APP_SOCKET_HANDSHAKE, transports: ['websocket']}))
 
   useEffect(() => {
-
     socket.on(SOCKET_EVENT.CAMERA, (data) => {
-      console.log(data)
       const newItems = data?.device.map(element => {
         return {
           ip: element?.ip,
@@ -32,6 +30,7 @@ const USMIP = ({currentUser, ipCamera, setIpCamera, env}) => {
 
     return () => {
       socket.off(SOCKET_EVENT.CAMERA);
+      socket.disconnect();
     };
     // eslint-disable-next-line
   }, []);

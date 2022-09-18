@@ -30,7 +30,7 @@ let bills = [
         role: ROLE.STAFF,
       },
       created_at: "02/09/2022",
-      status: "Đã thanh toán",
+      status: 'pay',
       images: [images.default, images.default, images.default]
     }
   ),
@@ -55,7 +55,7 @@ let bills = [
         role: ROLE.ADMIN,
       },
       created_at: "02/09/2022",
-      status: "Nợ",
+      status: 'debt',
       note: "Tuần sau trả",
       images: []
     }

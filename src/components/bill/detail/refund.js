@@ -1,15 +1,39 @@
-import { Descriptions, List, Table, DatePicker, Image, Space } from "antd"
+import { Descriptions, List, Table, DatePicker, Image, Space, InputNumber, Button } from "antd"
+import { SafetyCertificateOutlined } from "@ant-design/icons"
 import { moneyToText, splitMoney } from '../../../utils/money'
 import moment from 'moment'
 import * as ROLE from '../../../constants/role'
+import * as MODE from '../../../constants/mode'
 import { useEffect, useState } from "react";
 import { getProducts } from "../../../utils/cart";
 import { BILL_STATUS } from "../../../constants/status";
+import Bill from "../../../model/bill";
+import { isMode } from "../../../utils/check"
+import openNotificationWithIcon from "../../../utils/notification"
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMBillDetail = ({Data, env}) => {
+const USMBillRefund = ({ItemSelected, env, BillData, setIsModalVisibleReFund}) => {
   // eslint-disable-next-line
-  const [itemSelected, setItemSelected] = Data
+  const [billData, setBillData] = BillData
+  // eslint-disable-next-line
+  const [itemSelected, setItemSelected] = useState(() => {
+    const productsRefund = {}
+    Object.keys(ItemSelected.products).map(element => {
+      productsRefund[element] = 0
+      return 1
+    })
+    const newBill = new Bill({
+      id: ItemSelected?.id + '-r',
+      created_at: new Date().toLocaleDateString('en-GB'),
+      products: productsRefund,
+      customer: {...ItemSelected?.customer, priceBack: 0, pricePay: 0},
+      store: ItemSelected?.store,
+      seller: ItemSelected?.seller,
+      status: "refund",
+      note: "Mã hóa đơn gốc: " + ItemSelected?.id
+    })
+    return {...newBill, key: newBill.id}
+  })
   const [data, setData] = useState()
 
   const getDetail = async () => {
@@ -22,7 +46,11 @@ const USMBillDetail = ({Data, env}) => {
         ...product,
       }
     })
-    setData({...itemSelected, productsDetail: vals})
+    const totalPrice = vals.reduce((total, element) => {
+      return total + element.itemSubPrice
+    }, 0)
+    const textPrice = moneyToText(totalPrice)
+    setData({...itemSelected, productsDetail: vals, totalPrice: totalPrice, textPrice: textPrice})
   }
 
   useEffect(() => {
@@ -60,7 +88,16 @@ const USMBillDetail = ({Data, env}) => {
       dataIndex: 'itemQuantity',
       width: "10%",
       render: (_, record) => {
-        return record?.itemQuantity
+        return (
+          <div>
+            <InputNumber min={0} max={ItemSelected.products[record.id]} value={record.itemQuantity}onChange={(value) => {
+              let newBill = {...itemSelected}
+              newBill.products[record.id] = value
+              setItemSelected(newBill)
+            }} />
+            <span> / {ItemSelected.products[record.id]}</span>
+          </div>
+        )
       }
     },
     {
@@ -143,22 +180,10 @@ const USMBillDetail = ({Data, env}) => {
           />
         </Descriptions.Item>
         <Descriptions.Item>
-            <span>Tổng tiền: <strong>{splitMoney(data?.totalPrice)}</strong></span>
+            <span>Tiền trả khách: <strong>{splitMoney(data?.totalPrice)}</strong></span>
         </Descriptions.Item>
         <Descriptions.Item>
             <span>Bằng chữ: <i>{data?.textPrice}</i></span>
-        </Descriptions.Item>
-        <Descriptions.Item>
-            <span>Tiền khách trả: <strong>{splitMoney(data?.customer?.pricePay)}</strong></span>
-        </Descriptions.Item>
-        <Descriptions.Item>
-            <span>Bằng chữ: <i>{moneyToText(data?.customer?.pricePay)}</i></span>
-        </Descriptions.Item>
-        <Descriptions.Item>
-            <span>Tiền trả khách: <strong>{splitMoney(parseFloat(data?.customer?.pricePay) - parseFloat(data?.totalPrice))}</strong></span>
-        </Descriptions.Item>
-        <Descriptions.Item>
-            <span>Bằng chữ: <i>{moneyToText(parseFloat(data?.customer?.pricePay) - parseFloat(data?.totalPrice))}</i></span>
         </Descriptions.Item>
         <Descriptions.Item span={2}>
             <span>Ảnh minh chứng: </span>
@@ -171,9 +196,31 @@ const USMBillDetail = ({Data, env}) => {
         <Descriptions.Item span={2}>
             <span>Ghi chú: <i>{data?.note}</i></span>
         </Descriptions.Item>
+        <Descriptions.Item span={2}>
+          <Button type='secondary' danger 
+            icon={
+              <SafetyCertificateOutlined 
+                style={{fontSize: "1.5rem"}}
+              />
+            }
+            onClick={() => {
+              if (isMode([MODE.TEST])) {
+                setBillData(prev => [...prev, data])
+                setIsModalVisibleReFund(false)
+                openNotificationWithIcon(
+                  'success',
+                  'Hoàn trả sản phẩm cho khách thành công',
+                  ''
+                )
+              } 
+            }}
+          > 
+            Hoàn trả
+          </Button>
+        </Descriptions.Item>
       </Descriptions>
     </div>
   )
 }
 
-export default USMBillDetail
+export default USMBillRefund

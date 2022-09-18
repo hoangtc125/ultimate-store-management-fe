@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import images from '../../../assets/images'
 import { getProducts } from '../../../utils/cart';
 import { moneyToText, splitMoney,  } from '../../../utils/money';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as URL from '../../../constants/url'
 import moment from 'moment'
 import USMCheckout from '../../../components/cart/checkout';
@@ -29,6 +29,7 @@ const Header = ({CartData, BillData, CurrentUser, StoreData, env}) => {
   const [storeData, setStoreData] = StoreData
   const [bill, setBill] = useState()
   const [visible, setVisible] = useState(false);
+  const navigate = useNavigate(null)
 
   const showDrawer = () => {
     setVisible(true);
@@ -77,7 +78,7 @@ const Header = ({CartData, BillData, CurrentUser, StoreData, env}) => {
               />
             }
             onClick={() => {
-
+              navigate(URL.BILL)
             }}
           > 
             Hoàn trả
@@ -89,7 +90,7 @@ const Header = ({CartData, BillData, CurrentUser, StoreData, env}) => {
               />
             }
             onClick={() => {
-
+              navigate(URL.BILL)
             }}
           > 
             Trả nợ

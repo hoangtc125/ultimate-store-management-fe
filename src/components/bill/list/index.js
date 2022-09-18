@@ -1,4 +1,4 @@
-import { SearchOutlined, SnippetsOutlined } from '@ant-design/icons';
+import { SearchOutlined, SnippetsOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table, DatePicker, Modal, Spin, Tag } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import Highlighter from 'react-highlight-words';
@@ -9,8 +9,9 @@ import * as MODE from '../../../constants/mode'
 import * as API from '../../../constants/api'
 import openNotificationWithIcon from '../../../utils/notification';
 import { isMode } from '../../../utils/check';
+import { BILL_STATUS } from '../../../constants/status';
+import USMBillRefund from '../detail/refund';
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
-const { Search } = Input;
 
 const USMBill = ({CurrentUser, BillData, env}) => {
   // eslint-disable-next-line
@@ -29,6 +30,7 @@ const USMBill = ({CurrentUser, BillData, env}) => {
   const [loading, setLoading] = useState(false)
   const searchInput = useRef(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisibleReFund, setIsModalVisibleReFund] = useState(false);
 
   useEffect(() => {
     if(isMode([MODE.NORMAL])) {
@@ -67,40 +69,67 @@ const USMBill = ({CurrentUser, BillData, env}) => {
     // eslint-disable-next-line
   }, [])
 
-  const showModal = () => {
-    setIsModalVisible(true);
+  const showModal = (visibleModal) => {
+    visibleModal(true);
   };
 
-  const handleOk = () => {
-    setIsModalVisible(false);
+  const handleOk = (visibleModal) => {
+    visibleModal(false);
   };
 
-  const handleCancel = () => {
-    setIsModalVisible(false);
+  const handleCancel = (visibleModal) => {
+    visibleModal(false);
   };
 
-  const handleView = (index) => {
+  const handleView = (setIsModalVisible, index) => {
     setItemSelected(data.find(bill => index === bill.id))
-    showModal()
+    showModal(setIsModalVisible)
   }
 
-  const USMAction = ({i}) => {
+  const USMAction = ({record}) => {
     return (
-      <div
+      <Space
         style={{
           display: "flex",
           flexDirection: "row",
-          justifyContent: "space-around",
+          justifyContent: "flex-end",
           alignItems: "center",
         }}
       >
+        {record.status === 'debt' &&
+        <Button type='secondary' danger 
+          icon={
+            <SafetyCertificateOutlined 
+              style={{fontSize: "1.5rem"}}
+            />
+          }
+          onClick={() => {
+
+          }}
+        > 
+          Trả nợ
+        </Button>}
+        {record.status !== 'refund' &&
+        <Button type='secondary' danger 
+          icon={
+            <SafetyCertificateOutlined 
+              style={{fontSize: "1.5rem"}}
+            />
+          }
+          onClick={() => {
+            setItemSelected(data.find(bill => record.key === bill.id))
+            showModal(setIsModalVisibleReFund)
+          }}
+        > 
+          Hoàn trả
+        </Button>}
         <Button
           type='primary'
-          onClick={() => handleView(i)}
+          onClick={() => handleView(setIsModalVisible, record.key)}
         >
           Xem chi tiết
         </Button>
-      </div>
+      </Space>
     )
   }
 
@@ -211,7 +240,7 @@ const USMBill = ({CurrentUser, BillData, env}) => {
       title: 'Mã hóa đơn',
       dataIndex: 'id',
       key: 'id',
-      width: '8%',
+      width: '10%',
       ...getColumnSearchProps('id'),
       sorter: (a, b) => a.id.localeCompare(b.id),
       sortDirections: ['descend', 'ascend'],
@@ -232,7 +261,7 @@ const USMBill = ({CurrentUser, BillData, env}) => {
       title: 'Thời gian tạo',
       dataIndex: 'created_at',
       key: 'created_at',
-      width: '15%',
+      width: '10%',
       ...getColumnSearchProps('created_at'),
       render: (_, record) => {
         return <DatePicker format={dateFormatList} value={moment(record?.created_at, dateFormatList)} disabled />
@@ -249,7 +278,7 @@ const USMBill = ({CurrentUser, BillData, env}) => {
       render: (_, record) => {
         return (
           // eslint-disable-next-line
-          record?.status == "Nợ" ? <Tag color='red'>{record?.status}</Tag> : <Tag color='green'>{record?.status}</Tag>
+          <Tag color={BILL_STATUS[record?.status]?.color}>{BILL_STATUS[record?.status]?.content}</Tag>
         )
       }
     },
@@ -260,7 +289,7 @@ const USMBill = ({CurrentUser, BillData, env}) => {
       ...getColumnSearchProps('totalPrice'),
       sorter: (a, b) => a.totalPrice - b.totalPrice,
       sortDirections: ['descend', 'ascend'],
-      width: '15%',
+      width: '10%',
       render: (_, record) => {
         return splitMoney(record.totalPrice)
       }
@@ -269,9 +298,9 @@ const USMBill = ({CurrentUser, BillData, env}) => {
       title: 'Thao tác',
       dataIndex: 'action',
       key: 'action',
-      width: '10%',
+      width: '25%',
       render: (_, record) => (
-        <USMAction i={record.key}/>
+        <USMAction record={record}/>
       ),
     },
   ];
@@ -301,15 +330,6 @@ const USMBill = ({CurrentUser, BillData, env}) => {
                   <SnippetsOutlined style={{fontSize: "2rem"}}/>
                   <span>Danh sách hóa đơn ({Object.keys(billData).length})</span>
                 </Space>
-                <Search
-                  placeholder="Nhập sản phẩm"
-                  allowClear
-                  enterButton="Tìm kiếm nhanh"
-                  onSearch={(value) => handleSearch(value)}
-                  style={{
-                    width: "100%",
-                  }}
-                />
               </Space>
             )
           }}
@@ -325,8 +345,20 @@ const USMBill = ({CurrentUser, BillData, env}) => {
           }}
         />
       </Spin>
-      <Modal title="Chi tiết hóa đơn" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={"70%"} destroyOnClose={true}>
+      <Modal title="Chi tiết hóa đơn" visible={isModalVisible} onOk={() => handleOk(setIsModalVisible)} onCancel={() => handleCancel(setIsModalVisible)} width={"70%"} destroyOnClose={true}>
         <USMBillDetail Data={[itemSelected, setItemSelected]} env={env}/>
+      </Modal>
+      <Modal title="Hoàn trả sản phẩm" visible={isModalVisibleReFund} onCancel={() => handleCancel(setIsModalVisibleReFund)} width={"70%"} destroyOnClose={true} 
+        okButtonProps={{
+          disabled: true,
+        }}
+        cancelButtonProps={{
+          disabled: true,
+        }}
+        okText=' '
+        cancelText=' '
+      >
+        <USMBillRefund ItemSelected={itemSelected} env={env} BillData={[billData, setBillData]} setIsModalVisibleReFund={setIsModalVisibleReFund}/>
       </Modal>
     </div>
   );

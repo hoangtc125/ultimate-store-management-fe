@@ -45,7 +45,7 @@ const USMCheckout = ({ BillData, Data, Visible, CartData, CurrentUser, StoreData
     const newBill ={
       key: itemSelected.id,
       ...itemSelected,
-      status: values.status === "pay" ? "Đã thanh toán" : "Nợ",
+      status: values.status,
       customer: new Customer({
         name: values.customer_name,
         phone: values.customer_phone,
