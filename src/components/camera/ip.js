@@ -3,23 +3,84 @@ import { Divider, Input, Select, Button } from 'antd';
 import React, { useState, useRef, useEffect } from 'react';
 import { isMode } from '../../utils/check';
 import * as MODE from '../../constants/mode'
+import * as API from '../../constants/api'
+import * as SOCKET_EVENT from '../../constants/socket_event'
+import io from 'socket.io-client';
 const { Option } = Select;
 let index = 0;
 
-const USMIP = ({setIpCamera, env}) => {
+const USMIP = ({currentUser, ipCamera, setIpCamera, env}) => {
   const [items, setItems] = useState([]);
   const [name, setName] = useState('');
   const inputRef = useRef(null);
+  // eslint-disable-next-line
+  const [socket, setSocket] = useState(io(API.SOCKET + env.REACT_APP_BACKEND_PORT, {path: env.REACT_APP_SOCKET_HANDSHAKE, transports: ['websocket']}))
+
+  useEffect(() => {
+
+    socket.on(SOCKET_EVENT.CAMERA, (data) => {
+      console.log(data)
+      const newItems = data?.device.map(element => {
+        return {
+          ip: element?.ip,
+          name: element?.fullname || currentUser.fullname
+        }
+      })
+      setItems(newItems)
+      setIpCamera(data?.ip)
+    });
+
+    return () => {
+      socket.off(SOCKET_EVENT.CAMERA);
+    };
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     if (isMode([MODE.TEST])) {
       setItems([
-        "OPPO 11 PRO - Địa chỉ IP 1.1.1.1",
-        "IPHONE 12 - Địa chỉ IP 2.2.2.2",
-        "SAMSUNG - Địa chỉ IP 3.3.3.3",
-        window.localStorage.getItem("USM_IP_CAMERA") ? window.localStorage.getItem("USM_IP_CAMERA") : 'Online',
+        {
+          ip: "1.1.1.1",
+          name: "OPPO 11 PRO"
+        },
+        {
+          ip: "2.2.2.2",
+          name: "IPHONE 12"
+        },
+        {
+          ip: "3.3.3.3",
+          name: "SAMSUNG"
+        },
+        window.localStorage.getItem("USM_IP_CAMERA") ? {
+          ip: window.localStorage.getItem("USM_IP_CAMERA"),
+          name: currentUser.fullname
+        } : {
+          ip: 'Online',
+          name: 'Online - Ivideon.com'
+        },
       ])
+    } else {
+      fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.CAMERA_SELECT, {
+        method: 'GET',
+        headers: {
+          'accept': 'application/json',
+          'Authorization': currentUser.token
+        },
+      })
+      .then(response => {
+        return response.json()})
+      .then(data => {
+        const newItems = data?.data.map(element => {
+          return {
+            ip: element.ip,
+            name: element.fullname
+          }
+        })
+        setItems(newItems)
+      })
+      .catch((error) => {console.log(error)})
     }
+    // eslint-disable-next-line
   }, [])
 
   const onNameChange = (event) => {
@@ -28,7 +89,7 @@ const USMIP = ({setIpCamera, env}) => {
 
   const addItem = (e) => {
     e.preventDefault();
-    setItems([...items, name || `New item ${index++}`]);
+    setItems([...items, {ip: name, name: currentUser.fullname} || `New item ${index++}`]);
     setName('');
     setTimeout(() => {
       inputRef.current?.focus();
@@ -85,7 +146,7 @@ const USMIP = ({setIpCamera, env}) => {
       )}
     >
       {items.map((item) => (
-        <Option key={item}>{item}</Option>
+        <Option key={item.ip}>{item.ip + ' - ' + item.name}</Option>
       ))}
     </Select>
   );

@@ -4,7 +4,9 @@ import USMVideo from './video';
 import USMImage from './image';
 import USMIntro from './intro';
 
-const USMCamera = ({setImagesFromCamera, env}) => {
+const USMCamera = ({ CurrentUser, setImagesFromCamera, env}) => {
+  // eslint-disable-next-line 
+  const [currentUser, setCurrentUser] = CurrentUser
   // eslint-disable-next-line 
   const [ipCamera, setIpCamera] = useState(window.localStorage.getItem("USM_IP_CAMERA") || "Online")
   const [images, setImages] = useState([])
@@ -39,7 +41,7 @@ const USMCamera = ({setImagesFromCamera, env}) => {
       justifyContent: "space-between",
       flexWrap: "wrap"
     }}>
-      <USMIntro setIpCamera={setIpCamera} env={env}/>
+      <USMIntro currentUser={currentUser} ipCamera={ipCamera}setIpCamera={setIpCamera} env={env}/>
       <div
         style={{
           display: "flex",

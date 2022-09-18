@@ -9,7 +9,7 @@ import { isMode } from '../../utils/check';
 const { TabPane } = Tabs;
 const { Step } = Steps;
 
-const StepsIntro = ({env}) => {
+const StepsIntro = ({currentUser, env}) => {
   const [current1, setCurrent1] = useState(0);
   const [current2, setCurrent2] = useState(0);
   const [qr, setQr] = useState(images.qrcode)
@@ -22,6 +22,7 @@ const StepsIntro = ({env}) => {
         method: 'GET',
         headers: {
           'accept': 'application/json',
+          'Authorization': currentUser.token
         },
       })
       .then(response => {
@@ -92,23 +93,6 @@ const StepsIntro = ({env}) => {
           <span>tại kí hiệu <strong>3 chấm</strong> trên góc phải màn hình</span>
         </div>
         <Image src={images.ipstart} height={130} preview={false}/>
-      </div>,
-    },
-    {
-      title: 'Bước 4',
-      content: 
-      <div
-        style={{
-          margin: "20px",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-around",
-          alignItems: "center",
-          height: "100px",
-        }}
-      >
-        <span>Chọn thiết bị của bạn tại ô <strong>Chọn thiết bị kết nối Camera</strong></span>
-        <Image src={images.ipconnect} height={130} preview={false}/>
       </div>,
     },
   ];
@@ -335,7 +319,7 @@ const StepsIntro = ({env}) => {
   );
 };
 
-const USMIntro = ({ setIpCamera, env }) => {
+const USMIntro = ({ currentUser, ipCamera, setIpCamera, env }) => {
 
   return (
     <div
@@ -347,7 +331,7 @@ const USMIntro = ({ setIpCamera, env }) => {
         justifyContent: "space-between",
       }}
     >
-      <StepsIntro env={env}/>
+      <StepsIntro currentUser={currentUser} ipCamera={ipCamera} env={env}/>
       <div
         style={{
           display: "flex",
@@ -356,7 +340,7 @@ const USMIntro = ({ setIpCamera, env }) => {
           width: "35%",
         }}
       >
-        <USMIP setIpCamera={setIpCamera} env={env}/>
+        <USMIP currentUser={currentUser} setIpCamera={setIpCamera} env={env}/>
         <Alert
           message="Chú ý"
           description="Thiết bị sử dụng Camera của bạn và máy tính này cần kết nối chung trong 1 mạng (Mạng Wifi hoặc mạng Lan)"
