@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import USMCamera from '../camera';
 import { dataURLtoFile } from '../../utils/image';
 
-const USMUpload = ({usmImages, setUsmImages, env}) => {
+const USMUpload = ({CurrentUser, usmImages, setUsmImages, env}) => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [fileList, setFileList] = useState([]);
@@ -151,7 +151,7 @@ const USMUpload = ({usmImages, setUsmImages, env}) => {
         />
       </Modal>
       <Modal title="Chụp ảnh qua Camera" visible={isModalVisible} onOk={handleCameraOk} onCancel={handleCameraCancel} width={"90%"} destroyOnClose={true}>
-        <USMCamera setImagesFromCamera={setImagesFromCamera} env={env}/>
+        <USMCamera CurrentUser={CurrentUser} setImagesFromCamera={setImagesFromCamera} env={env}/>
       </Modal>
     </div>
   );

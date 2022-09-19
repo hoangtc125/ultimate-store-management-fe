@@ -360,7 +360,7 @@ const USMCheckout = ({ BillData, Data, Visible, CartData, CurrentUser, StoreData
                   name="images"
                   label="Danh sách ảnh (Có thể chọn nhiều ảnh khác nhau)"
                 >
-                  <USMUpload usmImages={usmImages} setUsmImages={setUsmImages} env={env}/>
+                  <USMUpload CurrentUser={CurrentUser} usmImages={usmImages} setUsmImages={setUsmImages} env={env}/>
                 </Form.Item>
               </span>
             </Descriptions.Item>

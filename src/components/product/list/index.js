@@ -389,8 +389,8 @@ const USMListProduct = ({CurrentUser, env}) => {
             >
               Thêm sản phẩm
             </Button>
-            <USMCreateProduct currentUser={currentUser} visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} data={data} setData={setData} env={env}/>
-            <USMUpdateProduct currentUser={currentUser} visibleUpdate={visibleUpdate} setVisibleUpdate={setVisibleUpdate} data={data} setData={setData} idSelected={idSelected} env={env}/>
+            <USMCreateProduct CurrentUser={CurrentUser} visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} data={data} setData={setData} env={env}/>
+            <USMUpdateProduct CurrentUser={CurrentUser} visibleUpdate={visibleUpdate} setVisibleUpdate={setVisibleUpdate} data={data} setData={setData} idSelected={idSelected} env={env}/>
           </div>
         }
         <USMNote />

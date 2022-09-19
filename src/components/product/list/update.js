@@ -9,11 +9,13 @@ import openNotificationWithIcon from '../../../utils/notification';
 import { isMode } from '../../../utils/check';
 const { Option } = Select;
 
-const USMUpdateAccount = ({currentUser, visibleUpdate, setVisibleUpdate, data, setData, idSelected, env}) => {
+const USMUpdateProduct = ({CurrentUser, visibleUpdate, setVisibleUpdate, data, setData, idSelected, env}) => {
   const [usmImages, setUsmImages] = useState([])
   const [tags, setTags] = useState([]);
   const [form] = Form.useForm();
   const dataSelected = data.filter(element => element?.id === idSelected)[0]
+  // eslint-disable-next-line
+  const [currentUser, setCurrentUser] = CurrentUser
   
   useEffect(() => {
     form.setFieldsValue({
@@ -307,4 +309,4 @@ const USMUpdateAccount = ({currentUser, visibleUpdate, setVisibleUpdate, data, s
   );
 };
 
-export default USMUpdateAccount;
+export default USMUpdateProduct;

@@ -1,13 +1,15 @@
+import { CameraOutlined } from "@ant-design/icons"
 import { useEffect, useRef, useState } from "react"
 import * as API from '../../constants/api'
 import * as MODE from '../../constants/mode'
 import { isMode } from "../../utils/check"
 import USMItemProduct from "./item"
-import { Input, Pagination, Card, Image, Empty } from 'antd';
+import { Input, Pagination, Card, Image, Empty, Space, Button } from 'antd';
 import products from "../../data/product";
 import images from "../../assets/images";
 import { ProductResponse } from "../../model/product"
 import openNotificationWithIcon from "../../utils/notification";
+import USMUpload from "../utils/upload"
 const { Search } = Input;
 
 const USMHome = ({CurrentUser, CartData, env}) => {
@@ -19,6 +21,42 @@ const USMHome = ({CurrentUser, CartData, env}) => {
   // eslint-disable-next-line
   const [pageSize, setPageSize] = useState(12)
   const searchElement = useRef(null)
+  const [usmImages, setUsmImages] = useState([])
+
+  const predict = () => {
+    fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.CAMERA_PREDICT, {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': currentUser.token,
+      },
+      body: JSON.stringify(usmImages.map(element => {
+        return String(element).split('data:image/jpeg;base64,')[1]
+      }))
+    })
+    .then(response => {
+      return response.json()})
+    .then(data => {
+      // eslint-disable-next-line
+      if(data?.status_code != 200) {
+        openNotificationWithIcon(
+          'error',
+          'Tìm không thành công',
+          data?.msg,
+        )
+      } else {
+        handleSearch(data?.data[0])
+      }
+    })
+    .catch((error) => {
+      openNotificationWithIcon(
+        'error',
+        'Lỗi hệ thống',
+        'Tìm không thành công!'
+      )
+    });
+  }
 
   const onChange = (page) => {
     setCurrent(page);
@@ -80,7 +118,7 @@ const USMHome = ({CurrentUser, CartData, env}) => {
       return
     }
     const res = data.filter(element => {
-      if (String(element?.name).includes(keyword)) {
+      if (String(element?.name).includes(keyword) || String(element?.id).includes(keyword)) {
         return true
       } else {
         return false
@@ -119,7 +157,7 @@ const USMHome = ({CurrentUser, CartData, env}) => {
           enterButton="Tìm kiếm"
           onSearch={(value) => handleSearch(value)}
           prefix={
-            <Image src={images.logo} width={50} preview={false} 
+            <Image src={images.logo} width={50} preview={false}
               style={{
                 margin: "-10px 20px -10px -10px"
               }}
@@ -127,10 +165,16 @@ const USMHome = ({CurrentUser, CartData, env}) => {
           }
           style={{
             flexGrow: 1,
-            width: "100%",
+            width: "95%",
           }}
         />
       </Card>
+      <Space>
+        <USMUpload CurrentUser={CurrentUser} usmImages={usmImages} setUsmImages={setUsmImages} env={env}/> 
+        <Button shape="round" type="link" danger icon={<CameraOutlined style={{fontSize: "2rem"}} />}
+          onClick={() => predict()}
+        >Tìm kiếm bằng hình ảnh</Button>
+      </Space>
       <div
         style={{
           width: "100%",

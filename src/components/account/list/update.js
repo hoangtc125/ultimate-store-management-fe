@@ -12,10 +12,12 @@ import USMAccountPassword from '../detail/password';
 const { Option } = Select;
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSelected, currentUser, env}) => {
+const USMUpdateAccount = ({CurrentUser, visibleUpdate, setVisibleUpdate, data, setData, idSelected, env}) => {
   const [usmImages, setUsmImages] = useState([])
   const [form] = Form.useForm();
   const dataSelected = data.filter(element => element?.id === idSelected)[0]
+  // eslint-disable-next-line
+  const [currentUser, setCurrentUser] = CurrentUser
   
   useEffect(() => {
     form.setFieldsValue({
@@ -171,7 +173,7 @@ const USMUpdateAccount = ({visibleUpdate, setVisibleUpdate, data, setData, idSel
                     name="avatar"
                     label="Ảnh đại diện (Ảnh đầu tiên sẽ được chọn)"
                   >
-                    <USMUpload usmImages={usmImages} setUsmImages={setUsmImages} env={env}/>
+                    <USMUpload CurrentUser={CurrentUser} usmImages={usmImages} setUsmImages={setUsmImages} env={env}/>
                   </Form.Item>
                 </Col>
               </Row>

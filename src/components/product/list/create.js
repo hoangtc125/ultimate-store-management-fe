@@ -10,9 +10,11 @@ import { isMode } from '../../../utils/check';
 import { ProductResponse } from '../../../model/product';
 const { Option } = Select;
 
-const USMCreateProduct = ({currentUser, visibleCreate, setVisibleCreate, data, setData, env}) => {
+const USMCreateProduct = ({CurrentUser, visibleCreate, setVisibleCreate, data, setData, env}) => {
   const [usmImages, setUsmImages] = useState([])
   const [tags, setTags] = useState([]);
+  // eslint-disable-next-line
+  const [currentUser, setCurrentUser] = CurrentUser
 
   const onFinish = (values) => {
     if  (usmImages.length === 0) {

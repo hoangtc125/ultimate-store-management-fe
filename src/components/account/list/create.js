@@ -11,8 +11,10 @@ import { AccountResponse } from '../../../model/account';
 const { Option } = Select;
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData, env}) => {
+const USMCreateAccount = ({CurrentUser, visibleCreate, setVisibleCreate, data, setData, env}) => {
   const [usmImages, setUsmImages] = useState([])
+  // eslint-disable-next-line
+  const [currentUser, setCurrentUser] = CurrentUser
 
   const onFinish = (values) => {
     if  (usmImages.length === 0) {
@@ -138,7 +140,7 @@ const USMCreateAccount = ({visibleCreate, setVisibleCreate, data, setData, env})
                 name="avatar"
                 label="Ảnh đại diện (Ảnh đầu tiên sẽ được chọn)"
               >
-                <USMUpload usmImages={usmImages} setUsmImages={setUsmImages} env={env}/>
+                <USMUpload CurrentUser={CurrentUser} usmImages={usmImages} setUsmImages={setUsmImages} env={env}/>
               </Form.Item>
             </Col>
           </Row>

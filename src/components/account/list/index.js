@@ -389,8 +389,8 @@ const USMListAccount = ({CurrentUser, env}) => {
             >
               Thêm tài khoản
             </Button>
-            <USMCreateAccount visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} data={data} setData={setData} env={env}/>
-            <USMUpdateAccount visibleUpdate={visibleUpdate} setVisibleUpdate={setVisibleUpdate} data={data} setData={setData} idSelected={idSelected} currentUser={currentUser} env={env}/>
+            <USMCreateAccount CurrentUser={CurrentUser} visibleCreate={visibleCreate} setVisibleCreate={setVisibleCreate} data={data} setData={setData} env={env}/>
+            <USMUpdateAccount CurrentUser={CurrentUser} visibleUpdate={visibleUpdate} setVisibleUpdate={setVisibleUpdate} data={data} setData={setData} idSelected={idSelected} env={env}/>
           </div>
         }
         <USMNote />
