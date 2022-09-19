@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/ultimate-store-management-fe/static/css/main.72aa1247.css",
-    "main.js": "/ultimate-store-management-fe/static/js/main.1d878ef1.js",
+    "main.js": "/ultimate-store-management-fe/static/js/main.b82b297e.js",
     "static/js/27.4355bab8.chunk.js": "/ultimate-store-management-fe/static/js/27.4355bab8.chunk.js",
     "static/media/avatar.jpg": "/ultimate-store-management-fe/static/media/avatar.0dc0ec31f1514a15e503.jpg",
     "static/media/logo.png": "/ultimate-store-management-fe/static/media/logo.76b8d48796cf4aed0e3d.png",
@@ -17,6 +17,6 @@
   },
   "entrypoints": [
     "static/css/main.72aa1247.css",
-    "static/js/main.1d878ef1.js"
+    "static/js/main.b82b297e.js"
   ]
 }
