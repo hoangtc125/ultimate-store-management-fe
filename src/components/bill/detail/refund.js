@@ -10,20 +10,34 @@ import { BILL_STATUS } from "../../../constants/status";
 import Bill from "../../../model/bill";
 import { isMode } from "../../../utils/check"
 import openNotificationWithIcon from "../../../utils/notification"
+import { BillRelation, BillRelationItem } from "../../../model/billRelation"
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMBillRefund = ({ItemSelected, env, BillData, setIsModalVisibleReFund}) => {
+const USMBillRefund = ({ItemSelected, env, BillData, setIsModalVisibleReFund, BillRelationData}) => {
+  // eslint-disable-next-line
+  const [billRelationData, setBillRelationData] = BillRelationData
   // eslint-disable-next-line
   const [billData, setBillData] = BillData
   // eslint-disable-next-line
   const [itemSelected, setItemSelected] = useState(() => {
-    const productsRefund = {}
-    Object.keys(ItemSelected.products).map(element => {
+    let productsRefund = {}
+    const productKeys = Object.keys(ItemSelected.products)
+    productKeys.map(element => {
       productsRefund[element] = 0
       return 1
     })
+    let refundMax = {...ItemSelected.products}
+    if (isMode([MODE.TEST])) {
+      billRelationData.find(element => element.id === ItemSelected?.id)?.childs.map(bill => {
+        productKeys.map(key => {
+          refundMax[key] = refundMax[key] - billData.find(e => e.id === bill.id).products[key]
+          return 1
+        })
+        return 1
+      })
+    }
     const newBill = new Bill({
-      id: ItemSelected?.id + '-r',
+      id: billData.length + 1,
       created_at: new Date().toLocaleDateString('en-GB'),
       products: productsRefund,
       customer: {...ItemSelected?.customer, priceBack: 0, pricePay: 0},
@@ -32,7 +46,7 @@ const USMBillRefund = ({ItemSelected, env, BillData, setIsModalVisibleReFund}) =
       status: "refund",
       note: "Mã hóa đơn gốc: " + ItemSelected?.id
     })
-    return {...newBill, key: newBill.id}
+    return {...newBill, key: newBill.id, refundMax: refundMax}
   })
   const [data, setData] = useState()
 
@@ -90,12 +104,12 @@ const USMBillRefund = ({ItemSelected, env, BillData, setIsModalVisibleReFund}) =
       render: (_, record) => {
         return (
           <div>
-            <InputNumber min={0} max={ItemSelected.products[record.id]} value={record.itemQuantity}onChange={(value) => {
+            <InputNumber min={0} max={itemSelected.refundMax[record.id]} value={record.itemQuantity} onChange={(value) => {
               let newBill = {...itemSelected}
               newBill.products[record.id] = value
               setItemSelected(newBill)
             }} />
-            <span> / {ItemSelected.products[record.id]}</span>
+            <span> / {itemSelected.refundMax[record.id]}</span>
           </div>
         )
       }
@@ -204,7 +218,33 @@ const USMBillRefund = ({ItemSelected, env, BillData, setIsModalVisibleReFund}) =
               />
             }
             onClick={() => {
+              // eslint-disable-next-line
+              if (data?.totalPrice == 0) {
+                openNotificationWithIcon(
+                  'error',
+                  'Chưa chọn sản phẩm hoàn trả',
+                  ''
+                )
+                return
+              }
               if (isMode([MODE.TEST])) {
+                const newBillRelationItem = new BillRelationItem({
+                  id: data?.id,
+                  created_at: new Date().toLocaleDateString('en-GB'),
+                  status: data?.status 
+                })
+                if (billRelationData.find(element => element?.id === ItemSelected?.id)) {
+                  const newBillRelationData = billRelationData.map(element => {
+                    if (element.id === ItemSelected?.id) {
+                      element.childs.push(newBillRelationItem)
+                    }
+                    return element
+                  })
+                  setBillRelationData(newBillRelationData)
+                } else {
+                  const newBillRelation = new BillRelation({id: ItemSelected?.id, childs: [newBillRelationItem]})
+                  setBillRelationData(pre => [...pre, newBillRelation])
+                }
                 setBillData(prev => [...prev, data])
                 setIsModalVisibleReFund(false)
                 openNotificationWithIcon(

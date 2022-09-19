@@ -17,6 +17,7 @@ function App() {
   const [componentSize, setComponentSize] = useState('large');
   const [cartData, setCartData] = useState([])
   const [billData, setBillData] = useState([])
+  const [billRelationData, setBillRelationData] = useState([])
   const [currentUser, setCurrentUSer] = useState({})
   const [storeData, setStoreData] = useState({})
   const [env, setEnv] = useState({})
@@ -28,6 +29,7 @@ function App() {
       setStoreData(JSON.parse(window.localStorage.getItem("USM_STORE")))
       if(isMode([MODE.TEST])) {
         setBillData(JSON.parse(window.localStorage.getItem("USM_BILL")))
+        setBillRelationData(JSON.parse(window.localStorage.getItem("USM_BILL_RELATION")))
       }
     } catch {
       
@@ -90,6 +92,7 @@ function App() {
                     CartData={[cartData, setCartData]} 
                     CurrentUser={[currentUser, setCurrentUSer]} 
                     BillData={[billData, setBillData]} 
+                    BillRelationData={[billRelationData, setBillRelationData]}
                     StoreData={[storeData, setStoreData]}
                     env={env}
                   />

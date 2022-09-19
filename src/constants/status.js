@@ -16,7 +16,7 @@ const BILL_STATUS = {
     content: 'Hết nợ',
   },
   'refund': {
-    color: 'yellow',
+    color: 'orange',
     content: 'Hoàn trả',
   },
   'norefund': {

@@ -10,6 +10,7 @@ import bills from '../../../data/bill'
 import admin from '../../../data/account/admin'
 import staff from '../../../data/account/staff'
 import store from '../../../data/store';
+import billRelation from '../../../data/billRelation';
 import { useNavigate } from 'react-router-dom';
 import openNotificationWithIcon from '../../../utils/notification';
 import * as API from '../../../constants/api'
@@ -33,7 +34,7 @@ const Advertise = () => {
   );
 };
 
-const Login = ({ CartData, CurrentUser, BillData, StoreData, env }) => {
+const Login = ({ CartData, CurrentUser, BillData, StoreData, env, BillRelationData }) => {
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [role, setRoles] = useState(ROLE.ADMIN);
@@ -41,6 +42,8 @@ const Login = ({ CartData, CurrentUser, BillData, StoreData, env }) => {
   const [cartData, setCartData] = CartData
   // eslint-disable-next-line
   const [billData, setBillData] = BillData
+  // eslint-disable-next-line
+  const [billRelationData, setBillRelationData] = BillRelationData
   // eslint-disable-next-line
   const [currentUser, setCurrentUSer] = CurrentUser
   // eslint-disable-next-line
@@ -54,6 +57,7 @@ const Login = ({ CartData, CurrentUser, BillData, StoreData, env }) => {
     window.localStorage.removeItem("USM_CART")
     window.localStorage.removeItem("USM_STORE")
     window.localStorage.removeItem("USM_BILL")
+    window.localStorage.removeItem("USM_BILL_RELATION")
     window.localStorage.removeItem("USM_TEMP_IMAGE")
     window.localStorage.removeItem("USM_IP_CAMERA")
   }, [])
@@ -121,10 +125,12 @@ const Login = ({ CartData, CurrentUser, BillData, StoreData, env }) => {
     window.localStorage.setItem("USM_USER", role === ROLE.ADMIN ? JSON.stringify(admin) : JSON.stringify(staff))
     window.localStorage.setItem("USM_CART", JSON.stringify(cart))
     window.localStorage.setItem("USM_BILL", JSON.stringify(bills))
+    window.localStorage.setItem("USM_BILL_RELATION", JSON.stringify(billRelation))
     window.localStorage.setItem("USM_STORE", JSON.stringify(store))
     setCartData(cart)
     setStoreData(store)
     setBillData(bills)
+    setBillRelationData(billRelation)
     setCurrentUSer(role === ROLE.ADMIN ? admin : staff)
     setTimeout(() => {
       navigate(URL.HOME)

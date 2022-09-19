@@ -1,5 +1,5 @@
 import { SearchOutlined, SnippetsOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, DatePicker, Modal, Spin, Tag } from 'antd';
+import { Button, Input, Space, Table, DatePicker, Modal, Spin, Tag, Timeline } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import Highlighter from 'react-highlight-words';
 import moment from 'moment'
@@ -13,7 +13,9 @@ import { BILL_STATUS } from '../../../constants/status';
 import USMBillRefund from '../detail/refund';
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMBill = ({CurrentUser, BillData, env}) => {
+const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
+  // eslint-disable-next-line
+  const [billRelationData, setBillRelationData] = BillRelationData
   // eslint-disable-next-line
   const [currentUser, setCurrentUSer] = CurrentUser
   const [itemSelected, setItemSelected] = useState()
@@ -343,6 +345,33 @@ const USMBill = ({CurrentUser, BillData, env}) => {
             boxShadow: "0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%)",
             margin: "10px 0px",
           }}
+          expandable={{
+            expandedRowRender: (record) => (
+              <Timeline mode={'left'}>
+                {isMode([MODE.TEST]) && billRelationData.find(element => element?.id === record?.id)?.childs.map(element => {
+                  return (
+                    <Timeline.Item key={element?.id} label={element?.created_at}>
+                      <Tag color={BILL_STATUS[element?.status]?.color}
+                        style={{
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          handleView(setIsModalVisible, element.id)
+                        }}
+                      >{BILL_STATUS[element?.status]?.content}</Tag>
+                    </Timeline.Item>
+                  )
+                })}
+              </Timeline>
+            ),
+            rowExpandable: (record) => {
+              if(isMode([MODE.TEST])) {
+                return billRelationData.find(element => element?.id === record?.id)
+              } else {
+                return false
+              }
+            },
+          }}
         />
       </Spin>
       <Modal title="Chi tiết hóa đơn" visible={isModalVisible} onOk={() => handleOk(setIsModalVisible)} onCancel={() => handleCancel(setIsModalVisible)} width={"70%"} destroyOnClose={true}>
@@ -358,7 +387,7 @@ const USMBill = ({CurrentUser, BillData, env}) => {
         okText=' '
         cancelText=' '
       >
-        <USMBillRefund ItemSelected={itemSelected} env={env} BillData={[billData, setBillData]} setIsModalVisibleReFund={setIsModalVisibleReFund}/>
+        <USMBillRefund ItemSelected={itemSelected} env={env} BillData={[billData, setBillData]} setIsModalVisibleReFund={setIsModalVisibleReFund} BillRelationData={BillRelationData}/>
       </Modal>
     </div>
   );
