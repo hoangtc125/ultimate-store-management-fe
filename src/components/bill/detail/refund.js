@@ -1,4 +1,4 @@
-import { Descriptions, List, Table, DatePicker, Image, Space, InputNumber, Button } from "antd"
+import { Descriptions, List, Table, DatePicker, InputNumber, Button } from "antd"
 import { SafetyCertificateOutlined } from "@ant-design/icons"
 import { moneyToText, splitMoney } from '../../../utils/money'
 import moment from 'moment'
@@ -11,11 +11,13 @@ import Bill from "../../../model/bill";
 import { isMode } from "../../../utils/check"
 import openNotificationWithIcon from "../../../utils/notification"
 import { BillRelation, BillRelationItem } from "../../../model/billRelation"
+import USMUpload from "../../utils/upload"
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMBillRefund = ({ItemSelected, env, BillData, setIsModalVisibleReFund, BillRelationData}) => {
+const USMBillRefund = ({CurrentUser, ItemSelected, env, BillData, setIsModalVisibleReFund, BillRelationData}) => {
+  const [usmImages, setUsmImages] = useState([])
   // eslint-disable-next-line
-  const [billRelationData, setBillRelationData] = BillRelationData
+  const [billRelationData, setBillRelationData] = isMode([MODE.TEST]) ? BillRelationData : useState([])
   // eslint-disable-next-line
   const [billData, setBillData] = BillData
   // eslint-disable-next-line
@@ -224,11 +226,7 @@ const USMBillRefund = ({ItemSelected, env, BillData, setIsModalVisibleReFund, Bi
         </Descriptions.Item>
         <Descriptions.Item span={2}>
             <span>Ảnh minh chứng: </span>
-            <Space>
-              {data?.images.map((element, id) => {
-                return <Image key={id} src={element} width={200}/>
-              })}
-            </Space>
+            <USMUpload CurrentUser={CurrentUser} usmImages={usmImages} setUsmImages={setUsmImages} env={env}/>
         </Descriptions.Item>
         <Descriptions.Item span={2}>
             <span>Ghi chú: <i>{data?.note}</i></span>
@@ -268,7 +266,7 @@ const USMBillRefund = ({ItemSelected, env, BillData, setIsModalVisibleReFund, Bi
                   const newBillRelation = new BillRelation({id: ItemSelected?.id, childs: [newBillRelationItem]})
                   setBillRelationData(pre => [...pre, newBillRelation])
                 }
-                setBillData(prev => [...prev, data])
+                setBillData(prev => [...prev, {...data, images: usmImages}])
                 setIsModalVisibleReFund(false)
                 openNotificationWithIcon(
                   'success',

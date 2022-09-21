@@ -14,24 +14,26 @@ const USMIP = ({currentUser, ipCamera, setIpCamera, env}) => {
   const [name, setName] = useState('');
   const inputRef = useRef(null);
   // eslint-disable-next-line
-  const [socket, setSocket] = useState(io(API.SOCKET + env.REACT_APP_BACKEND_PORT, {path: env.REACT_APP_SOCKET_HANDSHAKE, transports: ['websocket']}))
 
   useEffect(() => {
-    socket.on(SOCKET_EVENT.CAMERA, (data) => {
-      const newItems = data?.device.map(element => {
-        return {
-          ip: element?.ip,
-          name: element?.fullname || currentUser.fullname
-        }
-      })
-      setItems(newItems)
-      setIpCamera(data?.ip)
-    });
-
-    return () => {
-      socket.off(SOCKET_EVENT.CAMERA);
-      socket.disconnect();
-    };
+    if (isMode([MODE.NORMAL])) {
+      const socket = io(API.SOCKET + env.REACT_APP_BACKEND_PORT, {path: env.REACT_APP_SOCKET_HANDSHAKE, transports: ['websocket']})
+      socket.on(SOCKET_EVENT.CAMERA, (data) => {
+        const newItems = data?.device.map(element => {
+          return {
+            ip: element?.ip,
+            name: element?.fullname || currentUser.fullname
+          }
+        })
+        setItems(newItems)
+        setIpCamera(data?.ip)
+      });
+  
+      return () => {
+        socket.off(SOCKET_EVENT.CAMERA);
+        socket.disconnect();
+      };
+    }
     // eslint-disable-next-line
   }, []);
 

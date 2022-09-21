@@ -10,7 +10,7 @@ for (let i = 0; i < 16; i++) {
       nickname: ["name 0", "name 1", "name 2",],
       priceIn: i * 10000,
       brand: "brand " + i,
-      quantity: i,
+      quantity: i * 10,
       priceOut: i * 10000,
       images: [images.default, images.default, images.default, images.default, images.default, images.default],
       is_disabled: false,

@@ -16,7 +16,7 @@ const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
 const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
   // eslint-disable-next-line
-  const [billRelationData, setBillRelationData] = BillRelationData
+  const [billRelationData, setBillRelationData] = isMode([MODE.TEST]) ? BillRelationData : useState([])
   // eslint-disable-next-line
   const [currentUser, setCurrentUSer] = CurrentUser
   const [itemSelected, setItemSelected] = useState()
@@ -254,7 +254,7 @@ const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
       title: 'Khách hàng',
       dataIndex: 'customer',
       key: 'customer',
-      width: '20%',
+      width: '15%',
       ...getColumnSearchProps('customer'),
       sorter: (a, b) => a?.customer?.name.localeCompare(b?.customer?.name),
       sortDirections: ['descend', 'ascend'],
@@ -266,7 +266,7 @@ const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
       title: 'Thời gian tạo',
       dataIndex: 'created_at',
       key: 'created_at',
-      width: '10%',
+      width: '15%',
       ...getColumnSearchProps('created_at'),
       render: (_, record) => {
         return <DatePicker format={dateFormatList} value={moment(record?.created_at, dateFormatList)} disabled />
@@ -288,7 +288,7 @@ const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
       }
     },
     {
-      title: 'Doanh thu',
+      title: 'Thành tiền',
       dataIndex: 'totalPrice',
       key: 'totalPrice',
       ...getColumnSearchProps('totalPrice'),
@@ -300,8 +300,6 @@ const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
           return splitMoney(record.customer.pricePay)
         } else if (record.status === 'refund') {
           return splitMoney(-record.totalPrice)
-        } else if (record.status === 'debt') {
-          return splitMoney(record.customer.pricePay)
         } else {
           return splitMoney(record.totalPrice)
         }
@@ -359,7 +357,7 @@ const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
           expandable={{
             expandedRowRender: (record) => (
               <Timeline mode={'left'}>
-                {isMode([MODE.TEST]) && billRelationData.find(element => element?.id === record?.id)?.childs.map(element => {
+                {billRelationData.find(element => element?.id === record?.id)?.childs.map(element => {
                   return (
                     <Timeline.Item key={element?.id} label={element?.created_at}>
                       <Tag color={BILL_STATUS[element?.status]?.color}
@@ -376,11 +374,7 @@ const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
               </Timeline>
             ),
             rowExpandable: (record) => {
-              if(isMode([MODE.TEST])) {
-                return billRelationData.find(element => element?.id === record?.id)
-              } else {
-                return false
-              }
+              return billRelationData.find(element => element?.id === record?.id)
             },
           }}
         />
@@ -398,7 +392,7 @@ const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
         okText=' '
         cancelText=' '
       >
-        <USMBillRefund ItemSelected={itemSelected} env={env} BillData={[billData, setBillData]} setIsModalVisibleReFund={setIsModalVisibleReFund} BillRelationData={BillRelationData}/>
+        <USMBillRefund CurrentUser={CurrentUser} ItemSelected={itemSelected} env={env} BillData={[billData, setBillData]} setIsModalVisibleReFund={setIsModalVisibleReFund} BillRelationData={BillRelationData}/>
       </Modal>
       <Modal title="Trả nợ" visible={isModalVisiblePay1} onCancel={() => handleCancel(setIsModalVisiblePay1)} width={"70%"} destroyOnClose={true} 
         okButtonProps={{
@@ -410,7 +404,7 @@ const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
         okText=' '
         cancelText=' '
       >
-        <USMBillPay1 ItemSelected={itemSelected} env={env} BillData={[billData, setBillData]} setIsModalVisiblePay1={setIsModalVisiblePay1} BillRelationData={BillRelationData}/>
+        <USMBillPay1 CurrentUser={CurrentUser} ItemSelected={itemSelected} env={env} BillData={[billData, setBillData]} setIsModalVisiblePay1={setIsModalVisiblePay1} BillRelationData={BillRelationData}/>
       </Modal>
     </div>
   );
