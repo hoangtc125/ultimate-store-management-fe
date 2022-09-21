@@ -13,31 +13,18 @@ import openNotificationWithIcon from "../../../utils/notification"
 import { BillRelation, BillRelationItem } from "../../../model/billRelation"
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
-const USMBillRefund = ({ItemSelected, env, BillData, setIsModalVisibleReFund, BillRelationData}) => {
+const USMBillPay1 = ({ItemSelected, env, BillData, setIsModalVisiblePay1, BillRelationData}) => {
   // eslint-disable-next-line
   const [billRelationData, setBillRelationData] = BillRelationData
   // eslint-disable-next-line
   const [billData, setBillData] = BillData
   // eslint-disable-next-line
   const [itemSelected, setItemSelected] = useState(() => {
-    let productsRefund = {}
-    const productKeys = Object.keys(ItemSelected.products)
-    productKeys.map(element => {
-      productsRefund[element] = 0
-      return 1
-    })
-    let refundMax = {...ItemSelected.products}
     let debtPrice = ItemSelected?.customer?.priceBack < 0 ? ItemSelected?.customer?.priceBack : 0
     let pricePay = ItemSelected?.customer?.pricePay
     if (isMode([MODE.TEST])) {
       billRelationData.find(element => element.id === ItemSelected?.id)?.childs.map(bill => {
         const tempBillData = billData.find(e => e.id === bill.id)
-        if (bill.status === 'refund') {
-          productKeys.map(key => {
-            refundMax[key] = refundMax[key] - tempBillData.products[key]
-            return 1
-          })
-        }
         if (bill.status === 'pay1') {
           pricePay = pricePay + tempBillData?.customer?.pricePay
         }
@@ -48,16 +35,20 @@ const USMBillRefund = ({ItemSelected, env, BillData, setIsModalVisibleReFund, Bi
     const newBill = new Bill({
       id: billData.length + 1,
       created_at: new Date().toLocaleDateString('en-GB'),
-      products: productsRefund,
-      customer: {...ItemSelected?.customer, priceBack: debtPrice, pricePay: pricePay},
+      products: ItemSelected?.products,
+      customer: {...ItemSelected?.customer, priceBack: 0, pricePay: 0},
       store: ItemSelected?.store,
       seller: ItemSelected?.seller,
-      status: "refund",
-      note: "Mã hóa đơn gốc: " + ItemSelected?.id
+      status: "pay1",
+      note: "Mã hóa đơn gốc: " + ItemSelected?.id,
+      totalPrice: debtPrice,
+      textPrice: moneyToText(debtPrice),
     })
-    return {...newBill, key: newBill.id, refundMax: refundMax}
+    return {...newBill, key: newBill.id}
   })
   const [data, setData] = useState()
+  const [customerPricePay, setCustomerPricePay] = useState()
+  const [customerPriceBack, setcustomerPriceBack] = useState()
 
   const getDetail = async () => {
     const newProducts = await getProducts(itemSelected, env)
@@ -69,13 +60,7 @@ const USMBillRefund = ({ItemSelected, env, BillData, setIsModalVisibleReFund, Bi
         ...product,
       }
     })
-    const totalPrice = vals.reduce((total, element) => {
-      return total + element.itemSubPrice
-    }, 0)
-    const textPrice = moneyToText(totalPrice)
-    setData({...itemSelected, productsDetail: vals, totalPrice: totalPrice, textPrice: textPrice,
-      customer: {...itemSelected?.customer, priceBack: itemSelected?.customer?.priceBack + totalPrice}
-    })
+    setData({...itemSelected, productsDetail: vals})
   }
 
   useEffect(() => {
@@ -114,14 +99,7 @@ const USMBillRefund = ({ItemSelected, env, BillData, setIsModalVisibleReFund, Bi
       width: "10%",
       render: (_, record) => {
         return (
-          <div>
-            <InputNumber min={0} max={itemSelected.refundMax[record.id]} value={record.itemQuantity} onChange={(value) => {
-              let newBill = {...itemSelected}
-              newBill.products[record.id] = value
-              setItemSelected(newBill)
-            }} />
-            <span> / {itemSelected.refundMax[record.id]}</span>
-          </div>
+          record.itemQuantity
         )
       }
     },
@@ -201,27 +179,53 @@ const USMBillRefund = ({ItemSelected, env, BillData, setIsModalVisibleReFund, Bi
             width={"100%"}
             dataSource={data?.productsDetail}
             bordered
-            title={() => 'Danh sách sản phẩm cần hoàn trả'}
+            title={() => 'Danh sách sản phẩm đã mua'}
           />
         </Descriptions.Item>
         <Descriptions.Item>
-            <span>Tổng tiền: <strong>{splitMoney(data?.totalPrice)}</strong></span>
+            <span>Đang nợ: <strong>{splitMoney(data?.totalPrice)}</strong></span>
         </Descriptions.Item>
         <Descriptions.Item>
             <span>Bằng chữ: <i>{data?.textPrice}</i></span>
         </Descriptions.Item>
         <Descriptions.Item>
-            <span>Tiền khách nợ: <strong>{splitMoney(itemSelected?.customer?.priceBack)}</strong></span>
-        </Descriptions.Item>
-        <Descriptions.Item>
-            <span>Bằng chữ: <i>{moneyToText(itemSelected?.customer?.priceBack)}</i></span>
-        </Descriptions.Item>
-        <Descriptions.Item>
-            <span>Tiền trả khách: <strong>{splitMoney(parseFloat(data?.customer?.priceBack))}</strong></span>
-        </Descriptions.Item>
-        <Descriptions.Item>
-            <span>Bằng chữ: <i>{moneyToText(parseFloat(data?.customer?.priceBack))}</i></span>
-        </Descriptions.Item>
+          <span>
+            Tiền khách trả: 
+            <InputNumber
+              formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              parser={(value) => value.replace(/\$\s?|(,*)/g, '')}    
+              onChange={(value) => {
+                setCustomerPricePay(value)
+                setcustomerPriceBack(value + parseFloat(itemSelected?.totalPrice))
+              }}
+              style={{
+                width: "100%",
+              }}            
+            />
+          </span>
+      </Descriptions.Item>
+      <Descriptions.Item>
+          <span>
+            Bằng chữ: <i>{moneyToText(customerPricePay)}</i>
+          </span>
+      </Descriptions.Item>
+      <Descriptions.Item>
+          <span>
+            Tiền trả khách: 
+            <InputNumber
+              formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              parser={(value) => value.replace(/\$\s?|(,*)/g, '')}    
+              value={customerPriceBack}
+              style={{
+                width: "100%",
+              }}       
+              disabled     
+            />
+          </span>
+      </Descriptions.Item>
+      <Descriptions.Item>
+          <span>Bằng chữ: <i>{moneyToText(customerPriceBack)}</i></span>
+      </Descriptions.Item>
         <Descriptions.Item span={2}>
             <span>Ảnh minh chứng: </span>
             <Space>
@@ -242,10 +246,10 @@ const USMBillRefund = ({ItemSelected, env, BillData, setIsModalVisibleReFund, Bi
             }
             onClick={() => {
               // eslint-disable-next-line
-              if (data?.totalPrice == 0) {
+              if (customerPricePay == 0 || data?.totalPrice == 0) {
                 openNotificationWithIcon(
                   'error',
-                  'Chưa chọn sản phẩm hoàn trả',
+                  'Chưa nhập số tiền trả nợ hoặc đã trả hết nợ',
                   ''
                 )
                 return
@@ -268,17 +272,18 @@ const USMBillRefund = ({ItemSelected, env, BillData, setIsModalVisibleReFund, Bi
                   const newBillRelation = new BillRelation({id: ItemSelected?.id, childs: [newBillRelationItem]})
                   setBillRelationData(pre => [...pre, newBillRelation])
                 }
-                setBillData(prev => [...prev, data])
-                setIsModalVisibleReFund(false)
+                const newData = {...data, totalPrice: ItemSelected?.totalPrice ,customer: {...data?.customer, pricePay: customerPricePay, priceBack: customerPriceBack}}
+                setBillData(prev => [...prev, newData])
+                setIsModalVisiblePay1(false)
                 openNotificationWithIcon(
                   'success',
-                  'Hoàn trả sản phẩm cho khách thành công',
+                  'Trả nợ thành công',
                   ''
                 )
               } 
             }}
           > 
-            Hoàn trả
+            Trả nợ
           </Button>
         </Descriptions.Item>
       </Descriptions>
@@ -286,4 +291,4 @@ const USMBillRefund = ({ItemSelected, env, BillData, setIsModalVisibleReFund, Bi
   )
 }
 
-export default USMBillRefund
+export default USMBillPay1

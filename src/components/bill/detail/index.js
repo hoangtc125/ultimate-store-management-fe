@@ -139,27 +139,75 @@ const USMBillDetail = ({Data, env}) => {
             width={"100%"}
             dataSource={data?.productsDetail}
             bordered
-            title={() => 'Danh sách sản phẩm đã mua'}
+            title={() => {
+              if (data?.status === 'pay' || data?.status === 'debt' || data?.status === 'pay1') {
+                return 'Danh sách sản phẩm đã mua'
+              } else if (data?.status === 'refund') {
+                return 'Danh sách sản phẩm đã hoàn trả'
+              }
+            }}
           />
         </Descriptions.Item>
-        <Descriptions.Item>
-            <span>Tổng tiền: <strong>{splitMoney(data?.totalPrice)}</strong></span>
-        </Descriptions.Item>
-        <Descriptions.Item>
-            <span>Bằng chữ: <i>{data?.textPrice}</i></span>
-        </Descriptions.Item>
-        <Descriptions.Item>
-            <span>Tiền khách trả: <strong>{splitMoney(data?.customer?.pricePay)}</strong></span>
-        </Descriptions.Item>
-        <Descriptions.Item>
-            <span>Bằng chữ: <i>{moneyToText(data?.customer?.pricePay)}</i></span>
-        </Descriptions.Item>
-        <Descriptions.Item>
-            <span>Tiền trả khách: <strong>{splitMoney(parseFloat(data?.customer?.pricePay) - parseFloat(data?.totalPrice))}</strong></span>
-        </Descriptions.Item>
-        <Descriptions.Item>
-            <span>Bằng chữ: <i>{moneyToText(parseFloat(data?.customer?.pricePay) - parseFloat(data?.totalPrice))}</i></span>
-        </Descriptions.Item>
+        {(data?.status === 'pay' || data?.status === 'debt') &&
+          <>
+            <Descriptions.Item>
+                <span>Tổng tiền: <strong>{splitMoney(data?.totalPrice)}</strong></span>
+            </Descriptions.Item>
+            <Descriptions.Item>
+                <span>Bằng chữ: <i>{data?.textPrice}</i></span>
+            </Descriptions.Item>
+            <Descriptions.Item>
+                <span>Tiền khách trả: <strong>{splitMoney(data?.customer?.pricePay)}</strong></span>
+            </Descriptions.Item>
+            <Descriptions.Item>
+                <span>Bằng chữ: <i>{moneyToText(data?.customer?.pricePay)}</i></span>
+            </Descriptions.Item>
+            <Descriptions.Item>
+                <span>Tiền trả khách: <strong>{splitMoney(parseFloat(data?.customer?.pricePay) - parseFloat(data?.totalPrice))}</strong></span>
+            </Descriptions.Item>
+            <Descriptions.Item>
+                <span>Bằng chữ: <i>{moneyToText(parseFloat(data?.customer?.pricePay) - parseFloat(data?.totalPrice))}</i></span>
+            </Descriptions.Item>
+          </>
+        }
+        {data?.status === 'refund' &&
+          <>
+            <Descriptions.Item>
+                <span>Tổng tiền: <strong>{splitMoney(data?.totalPrice)}</strong></span>
+            </Descriptions.Item>
+            <Descriptions.Item>
+                <span>Bằng chữ: <i>{data?.textPrice}</i></span>
+            </Descriptions.Item>
+            <Descriptions.Item>
+                <span>Tiền trả khách: <strong>{splitMoney(parseFloat(data?.customer?.priceBack))}</strong></span>
+            </Descriptions.Item>
+            <Descriptions.Item>
+                <span>Bằng chữ: <i>{moneyToText(parseFloat(data?.customer?.priceBack))}</i></span>
+            </Descriptions.Item>
+          </>
+        }
+        {(data?.status === 'pay1') &&
+          <>
+            <Descriptions.Item>
+                <span>Tổng tiền: <strong>{splitMoney(data?.totalPrice)}</strong></span>
+            </Descriptions.Item>
+            <Descriptions.Item>
+                <span>Bằng chữ: <i>{data?.textPrice}</i></span>
+            </Descriptions.Item>
+            <Descriptions.Item>
+                <span>Tiền khách trả: <strong>{splitMoney(data?.customer?.pricePay)}</strong></span>
+            </Descriptions.Item>
+            <Descriptions.Item>
+                <span>Bằng chữ: <i>{moneyToText(data?.customer?.pricePay)}</i></span>
+            </Descriptions.Item>
+            <Descriptions.Item>
+                <span>Tiền trả khách: <strong>{splitMoney((data?.customer?.priceBack))}</strong></span>
+            </Descriptions.Item>
+            <Descriptions.Item>
+                <span>Bằng chữ: <i>{moneyToText((data?.customer?.priceBack))}</i></span>
+            </Descriptions.Item>
+          </>
+        }
         <Descriptions.Item span={2}>
             <span>Ảnh minh chứng: </span>
             <Space>

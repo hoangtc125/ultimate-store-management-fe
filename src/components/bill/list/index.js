@@ -11,6 +11,7 @@ import openNotificationWithIcon from '../../../utils/notification';
 import { isMode } from '../../../utils/check';
 import { BILL_STATUS } from '../../../constants/status';
 import USMBillRefund from '../detail/refund';
+import USMBillPay1 from '../detail/pay1';
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 
 const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
@@ -33,6 +34,7 @@ const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
   const searchInput = useRef(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisibleReFund, setIsModalVisibleReFund] = useState(false);
+  const [isModalVisiblePay1, setIsModalVisiblePay1] = useState(false);
 
   useEffect(() => {
     if(isMode([MODE.NORMAL])) {
@@ -106,12 +108,13 @@ const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
             />
           }
           onClick={() => {
-
+            setItemSelected(data.find(bill => record.key === bill.id))
+            showModal(setIsModalVisiblePay1)
           }}
         > 
           Trả nợ
         </Button>}
-        {record.status !== 'refund' &&
+        {(record.status === 'pay' || record.status === 'debt') &&
         <Button type='secondary' danger 
           icon={
             <SafetyCertificateOutlined 
@@ -244,7 +247,7 @@ const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
       key: 'id',
       width: '10%',
       ...getColumnSearchProps('id'),
-      sorter: (a, b) => a.id.localeCompare(b.id),
+      sorter: (a, b) => String(a.id).localeCompare(String(b.id)),
       sortDirections: ['descend', 'ascend'],
     },
     {
@@ -285,7 +288,7 @@ const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
       }
     },
     {
-      title: 'Thành tiền',
+      title: 'Doanh thu',
       dataIndex: 'totalPrice',
       key: 'totalPrice',
       ...getColumnSearchProps('totalPrice'),
@@ -293,7 +296,15 @@ const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
       sortDirections: ['descend', 'ascend'],
       width: '10%',
       render: (_, record) => {
-        return splitMoney(record.totalPrice)
+        if (record.status === 'pay1') {
+          return splitMoney(record.customer.pricePay)
+        } else if (record.status === 'refund') {
+          return splitMoney(-record.totalPrice)
+        } else if (record.status === 'debt') {
+          return splitMoney(record.customer.pricePay)
+        } else {
+          return splitMoney(record.totalPrice)
+        }
       }
     },
     {
@@ -388,6 +399,18 @@ const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
         cancelText=' '
       >
         <USMBillRefund ItemSelected={itemSelected} env={env} BillData={[billData, setBillData]} setIsModalVisibleReFund={setIsModalVisibleReFund} BillRelationData={BillRelationData}/>
+      </Modal>
+      <Modal title="Trả nợ" visible={isModalVisiblePay1} onCancel={() => handleCancel(setIsModalVisiblePay1)} width={"70%"} destroyOnClose={true} 
+        okButtonProps={{
+          disabled: true,
+        }}
+        cancelButtonProps={{
+          disabled: true,
+        }}
+        okText=' '
+        cancelText=' '
+      >
+        <USMBillPay1 ItemSelected={itemSelected} env={env} BillData={[billData, setBillData]} setIsModalVisiblePay1={setIsModalVisiblePay1} BillRelationData={BillRelationData}/>
       </Modal>
     </div>
   );

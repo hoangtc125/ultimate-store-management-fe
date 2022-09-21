@@ -1,7 +1,7 @@
 {
     "name": "fe-tsp-dashboard",
     "version": "0.1.0",
-    "homepage": "./",
+    "homepage": "https://hoangtc125.github.io/ultimate-store-management-fe/",
     "private": true,
     "dependencies": {
         "@ant-design/flowchart": "^1.2.1",

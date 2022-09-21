@@ -277,7 +277,7 @@ const USMListProduct = ({CurrentUser, env}) => {
       key: 'id',
       width: '8%',
       ...getColumnSearchProps('id'),
-      sorter: (a, b) => a.id - b.id,
+      sorter: (a, b) => String(a.id).localeCompare(String(b.id)),
       sortDirections: ['descend', 'ascend'],
     },
     {
