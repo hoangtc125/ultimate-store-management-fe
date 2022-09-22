@@ -39,6 +39,43 @@ const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
   useEffect(() => {
     if(isMode([MODE.NORMAL])) {
       setLoading(true)
+      fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.GET_RELATION, {
+        method: 'GET',
+        headers: {
+          'accept': 'application/json',
+          'Authorization': currentUser.token,
+        },
+      })
+      .then(response => {
+        return response.json()})
+      .then(data => {
+        // eslint-disable-next-line
+        if(data?.status_code != 200) {
+          openNotificationWithIcon(
+            'error',
+            'Cập nhật không thành công',
+            data?.msg,
+          )
+        } else {
+          setBillRelationData(data?.data || [])
+        }
+        setLoading(false)
+      })
+      .catch((error) => {
+        openNotificationWithIcon(
+          'error',
+          'Cập nhật không thành công',
+          'Thông tin không được cập nhật!'
+        )
+        setLoading(false)
+      });
+    }
+    // eslint-disable-next-line
+  }, [])
+
+  useEffect(() => {
+    if(isMode([MODE.NORMAL])) {
+      setLoading(true)
       fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.BILL_GET_ALL, {
         method: 'GET',
         headers: {
@@ -392,7 +429,7 @@ const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
         okText=' '
         cancelText=' '
       >
-        <USMBillRefund CurrentUser={CurrentUser} ItemSelected={itemSelected} env={env} BillData={[billData, setBillData]} setIsModalVisibleReFund={setIsModalVisibleReFund} BillRelationData={BillRelationData}/>
+        <USMBillRefund CurrentUser={CurrentUser} ItemSelected={itemSelected} env={env} BillData={[billData, setBillData]} setIsModalVisibleReFund={setIsModalVisibleReFund} BillRelationData={[billRelationData, setBillRelationData]}/>
       </Modal>
       <Modal title="Trả nợ" visible={isModalVisiblePay1} onCancel={() => handleCancel(setIsModalVisiblePay1)} width={"70%"} destroyOnClose={true} 
         okButtonProps={{
@@ -404,7 +441,7 @@ const USMBill = ({CurrentUser, BillData, env, BillRelationData}) => {
         okText=' '
         cancelText=' '
       >
-        <USMBillPay1 CurrentUser={CurrentUser} ItemSelected={itemSelected} env={env} BillData={[billData, setBillData]} setIsModalVisiblePay1={setIsModalVisiblePay1} BillRelationData={BillRelationData}/>
+        <USMBillPay1 CurrentUser={CurrentUser} ItemSelected={itemSelected} env={env} BillData={[billData, setBillData]} setIsModalVisiblePay1={setIsModalVisiblePay1} BillRelationData={[billRelationData, setBillRelationData]}/>
       </Modal>
     </div>
   );

@@ -4,6 +4,7 @@ import { moneyToText, splitMoney } from '../../../utils/money'
 import moment from 'moment'
 import * as ROLE from '../../../constants/role'
 import * as MODE from '../../../constants/mode'
+import * as API from '../../../constants/api'
 import { useEffect, useState } from "react";
 import { getProducts } from "../../../utils/cart";
 import { BILL_STATUS } from "../../../constants/status";
@@ -17,7 +18,9 @@ const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 const USMBillRefund = ({CurrentUser, ItemSelected, env, BillData, setIsModalVisibleReFund, BillRelationData}) => {
   const [usmImages, setUsmImages] = useState([])
   // eslint-disable-next-line
-  const [billRelationData, setBillRelationData] = isMode([MODE.TEST]) ? BillRelationData : useState([])
+  const [billRelationData, setBillRelationData] = BillRelationData
+  // eslint-disable-next-line
+  const [currentUser, setCurrentUSer] = CurrentUser
   // eslint-disable-next-line
   const [billData, setBillData] = BillData
   // eslint-disable-next-line
@@ -31,22 +34,20 @@ const USMBillRefund = ({CurrentUser, ItemSelected, env, BillData, setIsModalVisi
     let refundMax = {...ItemSelected.products}
     let debtPrice = ItemSelected?.customer?.priceBack < 0 ? ItemSelected?.customer?.priceBack : 0
     let pricePay = ItemSelected?.customer?.pricePay
-    if (isMode([MODE.TEST])) {
-      billRelationData.find(element => element.id === ItemSelected?.id)?.childs.map(bill => {
-        const tempBillData = billData.find(e => e.id === bill.id)
-        if (bill.status === 'refund') {
-          productKeys.map(key => {
-            refundMax[key] = refundMax[key] - tempBillData.products[key]
-            return 1
-          })
-        }
-        if (bill.status === 'pay1') {
-          pricePay = pricePay + tempBillData?.customer?.pricePay
-        }
-        debtPrice = tempBillData?.customer?.priceBack < 0 ? tempBillData?.customer?.priceBack : 0
-        return 1
-      })
-    }
+    billRelationData.find(element => element.id === ItemSelected?.id)?.childs.map(bill => {
+      const tempBillData = billData.find(e => e.id === bill.id)
+      if (bill.status === 'refund') {
+        productKeys.map(key => {
+          refundMax[key] = refundMax[key] - tempBillData.products[key]
+          return 1
+        })
+      }
+      if (bill.status === 'pay1') {
+        pricePay = pricePay + tempBillData?.customer?.pricePay
+      }
+      debtPrice = tempBillData?.customer?.priceBack < 0 ? tempBillData?.customer?.priceBack : 0
+      return 1
+    })
     const newBill = new Bill({
       id: billData.length + 1,
       created_at: new Date().toLocaleDateString('en-GB'),
@@ -60,6 +61,71 @@ const USMBillRefund = ({CurrentUser, ItemSelected, env, BillData, setIsModalVisi
     return {...newBill, key: newBill.id, refundMax: refundMax}
   })
   const [data, setData] = useState()
+
+  const handleIntoRelation = async () => {
+    let newBillRelationItem = new BillRelationItem({
+      id: data?.id,
+      created_at: new Date().toLocaleDateString('en-GB'),
+      status: data?.status 
+    })
+    const response = await fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.BILL_CREATE, {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': currentUser.token
+      },
+      body: JSON.stringify({...data, images: usmImages}),
+    })
+    const res = await response.json()
+    // eslint-disable-next-line
+    if (res?.status_code == 200) {
+      openNotificationWithIcon(
+        'success',
+        'Tạo hóa đơn thành công',
+        ''
+      )
+      newBillRelationItem.id = res?.data?.id
+      setBillData(prev => [...prev, {...data, images: usmImages, id: res?.data?.id, key: res?.data?.id}])
+    } else {
+      openNotificationWithIcon(
+        'success',
+        'Lỗi hệ thống',
+        ''
+      )
+    }
+    const response2 = await fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.INTO_RELATION + ItemSelected?.id, {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': currentUser.token
+      },
+      body: JSON.stringify(newBillRelationItem),
+    })
+    const res2 = await response2.json()
+    // eslint-disable-next-line
+    if (res2?.status_code == 200) {
+      openNotificationWithIcon(
+        'success',
+        'Tạo hóa đơn thành công',
+        ''
+      )
+      const newBillRelationData = billRelationData.map(element => {
+        if (element.id === ItemSelected?.id) {
+          element.childs.push(newBillRelationItem)
+        }
+        return element
+      })
+      setBillRelationData(newBillRelationData)
+    } else {
+      openNotificationWithIcon(
+        'success',
+        'Lỗi hệ thống',
+        ''
+      )
+    }
+  }
 
   const getDetail = async () => {
     const newProducts = await getProducts(itemSelected, env)
@@ -173,7 +239,7 @@ const USMBillRefund = ({CurrentUser, ItemSelected, env, BillData, setIsModalVisi
         <Descriptions.Item>
           <List>
             <List.Item>
-              Mã đơn hàng: <strong>{data?.id}</strong>
+              Mã đơn hàng: 
             </List.Item>
             <List.Item>
               Trạng thái đơn hàng: <strong>{BILL_STATUS[data?.status]?.content}</strong>
@@ -238,7 +304,7 @@ const USMBillRefund = ({CurrentUser, ItemSelected, env, BillData, setIsModalVisi
                 style={{fontSize: "1.5rem"}}
               />
             }
-            onClick={() => {
+            onClick={async () => {
               // eslint-disable-next-line
               if (data?.totalPrice == 0) {
                 openNotificationWithIcon(
@@ -267,13 +333,15 @@ const USMBillRefund = ({CurrentUser, ItemSelected, env, BillData, setIsModalVisi
                   setBillRelationData(pre => [...pre, newBillRelation])
                 }
                 setBillData(prev => [...prev, {...data, images: usmImages}])
-                setIsModalVisibleReFund(false)
                 openNotificationWithIcon(
                   'success',
                   'Hoàn trả sản phẩm cho khách thành công',
                   ''
                 )
-              } 
+              } else {
+                await handleIntoRelation()
+              }
+              setIsModalVisibleReFund(false)
             }}
           > 
             Hoàn trả

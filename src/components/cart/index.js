@@ -338,30 +338,6 @@ const USMCart = ({CartData, BillData, CurrentUser, StoreData, env}) => {
                 </Space>
               </Space>
               <Space>
-                <Button type='secondary' danger 
-                  icon={
-                    <SafetyCertificateOutlined 
-                      style={{fontSize: "1.5rem"}}
-                    />
-                  }
-                  onClick={() => {
-
-                  }}
-                > 
-                  Hoàn trả
-                </Button>
-                <Button type='secondary' danger 
-                  icon={
-                    <SafetyCertificateOutlined 
-                      style={{fontSize: "1.5rem"}}
-                    />
-                  }
-                  onClick={() => {
-
-                  }}
-                > 
-                  Trả nợ
-                </Button>
                 <Button type='primary' danger 
                   icon={
                     <SafetyCertificateOutlined 
