@@ -1,10 +1,56 @@
-import { Alert, Calendar, Select, Row, Col, Radio, Badge } from 'antd';
+import { Alert, Calendar, Select, Row, Col, Radio, Typography, Button, DatePicker } from 'antd';
+import { CheckCircleTwoTone, ClockCircleTwoTone, CloseCircleTwoTone, SendOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import React, { useState } from 'react';
+const { Text } = Typography;
 
 const USMAccountCalendar = ({CurrentUser, env}) => {
   const [value, setValue] = useState(moment());
   const [selectedValue, setSelectedValue] = useState(moment());
+
+  const getData = (value) => {
+    let data;
+
+    if (value.format('DD/MM/YYYY') === '27/09/2022') {
+      data = (
+        <>
+          <CheckCircleTwoTone style={{fontSize: "2rem"}} twoToneColor="#45d200"/>
+          <Text>Đã điểm danh</Text>
+          <Text type="secondary">Lúc 07:00:00</Text>
+        </>
+      )
+    }
+
+    if (value.format('DD/MM/YYYY') === '28/09/2022') {
+      data = (
+        <>
+          <ClockCircleTwoTone style={{fontSize: "2rem"}} twoToneColor="#ffaa00"/>
+          <Text>Đi muộn</Text>
+          <Text type="secondary">Lúc 07:00:01</Text>
+        </>
+      )
+    }
+
+    if (value.format('DD/MM/YYYY') === '29/09/2022') {
+      data = (
+        <>
+          <CloseCircleTwoTone style={{fontSize: "2rem"}} twoToneColor="#ff06009c"/>
+          <Text>Vắng</Text>
+          <Text type="secondary">Không phép</Text>
+        </>
+      )
+    }
+
+    if (value.format('DD/MM/YYYY') === new Date().toLocaleDateString('en-GB')) {
+      data = (
+        <>
+          <Button type="link" shape='round' icon={<SendOutlined style={{fontSize: "2rem"}}/>}>Điểm danh</Button>
+        </>
+      )
+    }
+  
+    return data;
+  };
 
   const onSelect = (newValue) => {
     setValue(newValue);
@@ -13,75 +59,6 @@ const USMAccountCalendar = ({CurrentUser, env}) => {
 
   const onPanelChange = (newValue) => {
     setValue(newValue);
-  };
-
-  const getListData = (value) => {
-    let listData;
-  
-    switch (value.date()) {
-      case 8:
-        listData = [
-          {
-            type: 'warning',
-            content: 'This is warning event.',
-          },
-          {
-            type: 'success',
-            content: 'This is usual event.',
-          },
-        ];
-        break;
-  
-      case 10:
-        listData = [
-          {
-            type: 'warning',
-            content: 'This is warning event.',
-          },
-          {
-            type: 'success',
-            content: 'This is usual event.',
-          },
-          {
-            type: 'error',
-            content: 'This is error event.',
-          },
-        ];
-        break;
-  
-      case 15:
-        listData = [
-          {
-            type: 'warning',
-            content: 'This is warning event',
-          },
-          {
-            type: 'success',
-            content: 'This is very long usual event。。....',
-          },
-          {
-            type: 'error',
-            content: 'This is error event 1.',
-          },
-          {
-            type: 'error',
-            content: 'This is error event 2.',
-          },
-          {
-            type: 'error',
-            content: 'This is error event 3.',
-          },
-          {
-            type: 'error',
-            content: 'This is error event 4.',
-          },
-        ];
-        break;
-  
-      default:
-    }
-  
-    return listData || [];
   };
   
   const getMonthData = (value) => {
@@ -101,15 +78,20 @@ const USMAccountCalendar = ({CurrentUser, env}) => {
   };
 
   const dateCellRender = (value) => {
-    const listData = getListData(value);
+    const data = getData(value)
     return (
-      <ul className="events">
-        {listData.map((item) => (
-          <li key={item.content}>
-            <Badge status={item.type} text={item.content} />
-          </li>
-        ))}
-      </ul>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          alignContent: "center",
+          alignItems: "center",
+          height: "100%",
+        }}
+      >
+        {data}
+      </div>
     );
   };
 
@@ -157,6 +139,18 @@ const USMAccountCalendar = ({CurrentUser, env}) => {
               }}
             >
               <Alert message={`Ngày đã chọn: ${selectedValue?.format('DD/MM/YYYY')}`} />
+              <DatePicker.RangePicker 
+                ranges={{
+                  'Hôm nay': [moment(), moment()],
+                  'Tuần này': [moment().startOf('week'), moment().endOf('week')],
+                  'Tháng này': [moment().startOf('month'), moment().endOf('month')],
+                  'Bắt đầu 1 tuần': [moment(), moment().add(1, 'w')],
+                  'Bắt đầu 1 tháng': [moment(), moment().add(1, 'M')],
+                }}
+                allowClear={false}
+                open={true}
+                bordered={false}
+              />
               <Row gutter={8}>
                 <Col>
                   <Radio.Group

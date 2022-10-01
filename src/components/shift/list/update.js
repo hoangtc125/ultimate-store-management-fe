@@ -1,17 +1,13 @@
-import { Button, Col, Drawer, Form, Input, Row, Select, Space, Popconfirm, message } from 'antd';
-import React, { useEffect, useState } from 'react';
-import images from '../../../assets/images';
-import USMTag from '../../utils/tag';
-import USMUpload from '../../utils/upload';
+import { Button, Col, Drawer, Form, Input, Row, Select, Space, Popconfirm, message, TimePicker } from 'antd';
+import moment from 'moment'
+import React, { useEffect } from 'react';
 import * as MODE from '../../../constants/mode'
 import * as API from '../../../constants/api'
 import openNotificationWithIcon from '../../../utils/notification';
 import { isMode } from '../../../utils/check';
 const { Option } = Select;
 
-const USMUpdateProduct = ({CurrentUser, visibleUpdate, setVisibleUpdate, data, setData, idSelected, env}) => {
-  const [usmImages, setUsmImages] = useState([])
-  const [tags, setTags] = useState([]);
+const USMUpdateShift = ({CurrentUser, visibleUpdate, setVisibleUpdate, data, setData, idSelected, env}) => {
   const [form] = Form.useForm();
   const dataSelected = data.filter(element => element?.id === idSelected)[0]
   // eslint-disable-next-line
@@ -20,28 +16,18 @@ const USMUpdateProduct = ({CurrentUser, visibleUpdate, setVisibleUpdate, data, s
   useEffect(() => {
     form.setFieldsValue({
       name: dataSelected?.name,
-      nickname: dataSelected?.nickname,
-      priceIn: dataSelected?.priceIn,
-      brand: dataSelected?.brand,
-      quantity: dataSelected?.quantity,
-      priceOut: dataSelected?.priceOut,
-      images: dataSelected?.images,
-      is_disabled: dataSelected?.is_disabled,
+      start: moment(dataSelected?.start, 'HH:mm:ss'),
+      end: moment(dataSelected?.end, 'HH:mm:ss'),
+      is_disabled: dataSelected?.is_disabled ? true : false,
     });
-    setUsmImages(dataSelected?.images)
-    setTags(dataSelected?.nickname || [])
     // eslint-disable-next-line
   }, [idSelected])
 
   const onFinish = (values) => {
-    if  (usmImages.length === 0) {
-      values.images = [images.default]
-    } else {
-      values.images = usmImages
-    }
-    values.nickname = tags
     values.id = idSelected
     values.key = idSelected
+    values.start = values.start.format("HH:mm:ss")
+    values.end = values.end.format("HH:mm:ss")
     if(isMode([MODE.NORMAL])) {
       fetch(API.DOMAIN + env.REACT_APP_BACKEND_PORT + API.PRODUCT_UPDATE + values.id, {
         method: 'PUT',
@@ -95,7 +81,7 @@ const USMUpdateProduct = ({CurrentUser, visibleUpdate, setVisibleUpdate, data, s
     openNotificationWithIcon(
       'success',
       'Chỉnh sửa thành công',
-      'Sản phẩm đã được chỉnh sửa, hãy kiểm tra!'
+      'Ca làm việc đã được chỉnh sửa, hãy kiểm tra!'
     )
     document.getElementById("usm-button-update").click()
   };
@@ -104,7 +90,7 @@ const USMUpdateProduct = ({CurrentUser, visibleUpdate, setVisibleUpdate, data, s
     openNotificationWithIcon(
       'warning',
       'Hủy chỉnh sửa',
-      'Đã hủy chỉnh sửa thông tin sản phẩm!'
+      'Đã hủy chỉnh sửa thông tin Ca làm việc!'
     )
   };
 
@@ -115,7 +101,7 @@ const USMUpdateProduct = ({CurrentUser, visibleUpdate, setVisibleUpdate, data, s
   return (
     <>
       <Drawer
-        title="Chỉnh sửa sản phẩm"
+        title="Chỉnh sửa Ca làm việc"
         width={"60%"}
         onClose={onClose}
         visible={visibleUpdate}
@@ -151,100 +137,68 @@ const USMUpdateProduct = ({CurrentUser, visibleUpdate, setVisibleUpdate, data, s
             <Col span={12}>
               <Form.Item
                 name="name"
-                label="Tên sản phẩm"
+                label="Tên ca làm"
                 rules={[
                   {
                     required: true,
-                    message: 'Tên sản phẩm không được bỏ trống',
+                    message: 'Tên Ca làm việc không được bỏ trống',
                   },
                 ]}
               >
-                <Input placeholder="Nhập tên sản phẩm"/>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="images"
-                label="Danh sách ảnh (Có thể chọn nhiều ảnh khác nhau)"
-              >
-                <USMUpload CurrentUser={CurrentUser} usmImages={usmImages} setUsmImages={setUsmImages} env={env}/>
+                <Input placeholder="Nhập tên ca làm"/>
               </Form.Item>
             </Col>
           </Row>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="brand"
-                label="Thương hiệu"
+                name="start"
+                label="Bắt đầu"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Không được bỏ trống',
+                  },
+                ]}
               >
-                <Input placeholder="Nhập thương hiệu"/>
+                <TimePicker defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} 
+                  style={{
+                    width: "100%",
+                  }}
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                name="quantity"
-                label="Số lượng"
+                name="end"
+                label="Kết thúc"
                 rules={[
                   {
                     required: true,
-                    message: 'Số lượng không được bỏ trống',
+                    message: 'Không được bỏ trống',
                   },
                 ]}
               >
-                <Input placeholder="Nhập số lượng" />
+                <TimePicker defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} 
+                  style={{
+                    width: "100%",
+                  }}
+                />
               </Form.Item>
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="priceIn"
-                label="Giá nhập vào"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Giá nhập vào không được để trống',
-                  },
-                ]}
-              >
-                <Input placeholder="Nhập giá nhập vào" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="priceOut"
-                label="Giá bán ra"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Giá bán ra không được để trống',
-                  },
-                ]}
-              >
-                <Input placeholder="Nhập giá bán ra" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="nickname"
-                label="Tên gọi khác"
-              >
-                <USMTag Tags={[tags, setTags]}/>
-              </Form.Item>
-            </Col>
             <Col span={12}>
               <Form.Item
                 name="is_disabled"
-                label="Trạng thái của sản phẩm"
+                label="Trạng thái của Ca làm việc"
                 rules={[
                   {
                     required: true,
                   },
                 ]}
               >
-                <Select placeholder="Chọn trạng thái của sản phẩm" 
+                <Select placeholder="Chọn trạng thái của Ca làm việc" 
                       onChange={value => {
                         if (isMode([MODE.NORMAL])) {
                           const url = value ? API.PRODUCT_DISABLE : API.PRODUCT_UNDISABLED
@@ -309,4 +263,4 @@ const USMUpdateProduct = ({CurrentUser, visibleUpdate, setVisibleUpdate, data, s
   );
 };
 
-export default USMUpdateProduct;
+export default USMUpdateShift;

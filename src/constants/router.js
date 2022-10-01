@@ -18,6 +18,8 @@ import USMBill from '../components/bill/list'
 import USMAccountDetail from '../components/account/detail'
 import USMStore from '../components/setting/store'
 import USMFlowChart from '../components/setting/design'
+import USMShift from '../components/shift/list'
+import USMEmployyShift from '../components/employeeShift'
 
 function Mapping (
     {
@@ -133,6 +135,24 @@ export const Page = [
             layout: DefaultLayout,
             header: USMHeader,
             component: USMStore,
+            role: [ROLE.ADMIN],
+        },
+    }),
+    new Mapping({
+        url: URL.SETTING_SHIFT,
+        element: {
+            layout: DefaultLayout,
+            header: USMHeader,
+            component: USMShift,
+            role: [ROLE.ADMIN],
+        },
+    }),
+    new Mapping({
+        url: URL.SETTING_CALENDAR,
+        element: {
+            layout: DefaultLayout,
+            header: USMHeader,
+            component: USMEmployyShift,
             role: [ROLE.ADMIN],
         },
     }),

@@ -83,6 +83,7 @@ button {
 .ant-layout-sider-children {
     position: fixed;
     width: 200px;
+    overflow: auto;
   }
 
 ul.ant-menu.ant-menu-root.ant-menu-inline.ant-menu-light {
